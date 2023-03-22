@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
-import { UserContext } from "@/contexts/userContext";
+import { AuthContext } from "@/contexts/AuthContext";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/router";
+import { Router } from "next/router";
 import { useContext, useState } from "react";
+import { useForm } from "react-hook-form";
 
 const StyledForm = styled.form`
   width: clamp(200px, 40vw, 500px);
@@ -51,32 +51,17 @@ const StyledForm = styled.form`
 `;
 
 export default function LoginForm() {
-  const { authenticate, changeUserData } = useContext(UserContext);
+  const { signIn } = useContext(AuthContext);
   const [isLoading, setLoading] = useState(false);
-  const { push } = useRouter();
+  const { register, handleSubmit } = useForm();
+  const { push } = Authouter();
 
-  async function tryLogin() {
-    const email = (document.querySelector("input[type='email']") as HTMLInputElement)
-      .value;
-    const senha = (document.querySelector("input[type='password']") as HTMLInputElement)
-      .value;
-
-    setLoading(true);
-
-    const authResult = await authenticate(email, senha);
-
-    if (authResult === null) {
-      setLoading(false);
-      return window.alert("Usuário não encontrado");
-    }
-
-    push("/projetos");
-    changeUserData(authResult);
-    return setLoading(false);
+  async function handleSignIn({ email, senha }: any) {
+    console.log(email, senha);
   }
 
   return (
-    <StyledForm>
+    <StyledForm onSubmit={handleSubmit(handleSignIn)}>
       <fieldset>
         <legend>
           <img
@@ -90,14 +75,20 @@ export default function LoginForm() {
           <>
             <div className="padding-div">
               <TextField
+                {...register("email")}
                 label="E-mail"
                 variant="standard"
                 type={"email"}
+                name="email"
+                required
               />
               <TextField
+                {...register("senha")}
                 label="Senha"
                 variant="standard"
                 type={"password"}
+                name="senha"
+                required
               />
             </div>
           </>
@@ -106,7 +97,7 @@ export default function LoginForm() {
 
       <Button
         variant="contained"
-        onClick={tryLogin}
+        type="submit"
         disabled={isLoading ? true : false}
       >
         Entrar
