@@ -3,7 +3,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { Router } from "next/router";
+import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -54,7 +54,7 @@ export default function LoginForm() {
   const { signIn } = useContext(AuthContext);
   const [isLoading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
-  const { push } = Authouter();
+  const { push } = useRouter();
 
   async function handleSignIn({ email, senha }: any) {
     console.log(email, senha);
