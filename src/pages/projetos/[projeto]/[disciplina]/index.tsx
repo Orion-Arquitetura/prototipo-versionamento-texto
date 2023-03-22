@@ -9,10 +9,11 @@ import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import { useContext } from "react";
 import FileContextProvider, { FileContext } from "@/contexts/fileContext";
+import FileUploadDownloadArea from "@/components/FileUploadDownloadArea";
 
 const StyledBox = styled(Box)`
   display: flex;
-  column-gap: 50px;
+  justify-content: space-between;
 `;
 
 export default function Disciplina() {
@@ -45,6 +46,7 @@ export default function Disciplina() {
           <StyledBox>
             <VersionFilesList list={data} />
             <FileStatus />
+            <FileUploadDownloadArea />
           </StyledBox>
         </StyledSection>
       </PageWrapper>

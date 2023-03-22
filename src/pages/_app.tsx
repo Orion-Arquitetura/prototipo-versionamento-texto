@@ -8,6 +8,7 @@ import { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FileContextProvider from "@/contexts/fileContext";
+import UserContextProvider from "@/contexts/userContext";
 
 const queryClient = new QueryClient();
 
@@ -15,11 +16,13 @@ export default function App({ Component, pageProps }: AppProps) {
   const { pathname } = useRouter();
 
   return (
-    <FileContextProvider>
-      <QueryClientProvider client={queryClient}>
-        {pathname === "/" ? null : <ResponsiveAppBar />}
-        <Component {...pageProps} />
-      </QueryClientProvider>
-    </FileContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <UserContextProvider>
+        <FileContextProvider>
+          {pathname === "/" ? null : <ResponsiveAppBar />}
+          <Component {...pageProps} />
+        </FileContextProvider>
+      </UserContextProvider>
+    </QueryClientProvider>
   );
 }

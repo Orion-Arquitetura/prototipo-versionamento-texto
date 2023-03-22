@@ -3,13 +3,16 @@ import { useContext } from "react";
 import { FileContext } from "@/contexts/fileContext";
 
 const Styled = styled.div`
-  border-left: solid 1px black;
   padding: 10px 20px;
   font-family: monospace;
   font-size: 1rem;
   display: flex;
   flex-direction: column;
-  row-gap: 20px;
+  justify-content: space-between;
+  border-right: solid 1px black;
+  border-left: solid 1px black;
+  flex-grow: 1;
+  margin-inline: 10px;
 `;
 
 export default function FileStatus() {

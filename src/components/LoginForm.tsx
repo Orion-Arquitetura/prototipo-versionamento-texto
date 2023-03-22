@@ -1,8 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
+import { UserContext } from "@/contexts/userContext";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 
 const StyledForm = styled.form`
   width: clamp(200px, 40vw, 500px);
@@ -40,13 +43,38 @@ const StyledForm = styled.form`
     padding-top: 10px;
     padding-bottom: 10px;
   }
+
+  & .loading-div {
+    padding: 40px 40px 60px 40px;
+    text-align: center;
+  }
 `;
 
 export default function LoginForm() {
+  const { authenticate, changeUserData } = useContext(UserContext);
+  const [isLoading, setLoading] = useState(false);
   const { push } = useRouter();
-  function goToInitialPage() {
+
+  async function tryLogin() {
+    const email = (document.querySelector("input[type='email']") as HTMLInputElement)
+      .value;
+    const senha = (document.querySelector("input[type='password']") as HTMLInputElement)
+      .value;
+
+    setLoading(true);
+
+    const authResult = await authenticate(email, senha);
+
+    if (authResult === null) {
+      setLoading(false);
+      return window.alert("Usuário não encontrado");
+    }
+
     push("/projetos");
+    changeUserData(authResult);
+    return setLoading(false);
   }
+
   return (
     <StyledForm>
       <fieldset>
@@ -56,21 +84,33 @@ export default function LoginForm() {
             alt="Orion logo"
           ></img>
         </legend>
-        <div className="padding-div">
-          <TextField
-            label="E-mail"
-            variant="standard"
-            type={"email"}
-          />
-          <TextField
-            label="Senha"
-            variant="standard"
-            type={"password"}
-          />
-        </div>
+        {isLoading ? (
+          <div className="loading-div">Carregando...</div>
+        ) : (
+          <>
+            <div className="padding-div">
+              <TextField
+                label="E-mail"
+                variant="standard"
+                type={"email"}
+              />
+              <TextField
+                label="Senha"
+                variant="standard"
+                type={"password"}
+              />
+            </div>
+          </>
+        )}
       </fieldset>
 
-      <Button variant="contained" onClick={goToInitialPage}>Entrar</Button>
+      <Button
+        variant="contained"
+        onClick={tryLogin}
+        disabled={isLoading ? true : false}
+      >
+        Entrar
+      </Button>
     </StyledForm>
   );
 }

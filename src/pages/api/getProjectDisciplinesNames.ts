@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { projectsData } from '@/utils/projectsObject';
+import { projectsData } from '@/utils/projects';
 
 export default function handler(
   req: NextApiRequest,
