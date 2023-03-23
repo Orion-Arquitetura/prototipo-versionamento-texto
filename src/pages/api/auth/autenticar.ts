@@ -19,6 +19,9 @@ export default async function handler(
 
   const userData = await db.collection("Usuarios").find({ email, senha }).toArray();
 
+  console.log("Authenticate")
+
+
   res.status(200).json({
     usuario: { userName: userData[0].userName, email: userData[0].email },
     token: uuid(),

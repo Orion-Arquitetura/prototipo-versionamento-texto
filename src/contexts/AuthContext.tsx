@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-import { setCookie, parseCookies } from "nookies";
+import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router from "next/router";
 
 type signInData = {
@@ -14,6 +14,7 @@ type userData = {
 
 type AuthContextType = {
   signIn: ({ email, senha }: signInData) => Promise<void>;
+  signOff: () => void
   userData: userData | null;
 };
 
@@ -40,6 +41,11 @@ export default function AuthContextProvider({ children }: any) {
       });
   }
 
+  async function signOff() {
+    destroyCookie(undefined, "orion-token")
+    destroyCookie(undefined, "user-email")
+  }
+
   useEffect(() => {
     const { "orion-token": token, "user-email": email } = parseCookies();
 
@@ -51,13 +57,14 @@ export default function AuthContextProvider({ children }: any) {
         }).then((res) => res.json());
 
         setUserData(userData);
-
-        Router.push("/projetos");
+        return Router.push("/projetos");
       })();
     }
+
+    Router.push("/")
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, userData }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ signIn, userData, signOff }}>{children}</AuthContext.Provider>
   );
 }

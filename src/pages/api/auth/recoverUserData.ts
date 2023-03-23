@@ -8,5 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const userData = await db.collection("Usuarios").find({email}).toArray();
 
+  console.log("Recover data")
+
   res.status(200).json({usuario: { userName: userData[0].userName, email: userData[0].email }});
 }
