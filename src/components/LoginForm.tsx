@@ -51,13 +51,12 @@ const StyledForm = styled.form`
 `;
 
 export default function LoginForm() {
-  const { signIn } = useContext(AuthContext);
+  const { signIn, teste } = useContext(AuthContext);
   const [isLoading, setLoading] = useState(false);
   const { register, handleSubmit } = useForm();
-  const { push } = useRouter();
 
   async function handleSignIn({ email, senha }: any) {
-    console.log(email, senha);
+    await signIn({email, senha})
   }
 
   return (
