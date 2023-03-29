@@ -1,42 +1,68 @@
-import PageWrapper from "@/components/PageWrapper";
-import Link from "next/link";
 import PageTitle from "@/components/PageTitle";
-import { StyledSection } from "@/components/BaseSection";
 import { useQuery } from "@tanstack/react-query";
+import { parseCookies } from "nookies";
+import NotAllowed from "@/components/NotAllowed";
+import ProjectWidget from "@/components/ProjectWidget";
+import WidgetBox from "@/components/WidgetBox";
+import Loading from "@/components/Loading";
 
-export default function Projetos() {
+export default function Projetos({ allow }: any) {
   const projetos = useQuery({
     queryKey: ["Nome-de-projetos"],
-    queryFn: getProjectsNames
+    queryFn: getProjectsNames,
   });
 
   async function getProjectsNames() {
-    const data = await fetch("/api/getProjectsNames").then(res => res.json())
-    return data
+    const data = await fetch("/api/getProjectsData/getProjectsNames").then((res) =>
+      res.json()
+    );
+    return data;
   }
 
   if (projetos.isLoading) {
-    return <div>Loading...</div>
+    return <Loading/>;
   }
 
   return (
-    <PageWrapper>
-      <StyledSection>
-        <PageTitle title="Projetos" />
-        <div className="list-wrapper">
-          <ul>
-            {projetos.data.map((projeto:string) => {
-              return (
-                <li key={projeto}>
-                  <Link href={`/projetos/${projeto.toLowerCase()}`}>
-                    {projeto}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      </StyledSection>
-    </PageWrapper>
+    <>
+      {allow ? (
+        <>
+          <PageTitle title="Projetos" />
+          <WidgetBox>
+            <ul>
+              {projetos.data.map((projeto: string) => {
+                return (
+                  <ProjectWidget
+                    key={projeto}
+                    projectName={projeto}
+                    link={`/projetos/${projeto.toLowerCase()}`}
+                  />
+                );
+              })}
+            </ul>
+          </WidgetBox>
+        </>
+      ) : (
+        <NotAllowed />
+      )}
+    </>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const cookies = parseCookies(context)["orion-token"];
+
+  if (cookies) {
+    return {
+      props: {
+        allow: true,
+      },
+    };
+  }
+
+  return {
+    props: {
+      allow: false,
+    },
+  };
 }

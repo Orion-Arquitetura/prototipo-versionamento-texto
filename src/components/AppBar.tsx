@@ -6,11 +6,15 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { AuthContext } from "@/contexts/AuthContext";
+import PersonIcon from "@mui/icons-material/Person";
+import styled from "@emotion/styled";
+
+const StyledImage = styled.img`
+  width: 10%;
+`;
 
 const settings = ["Perfil", "Sair"];
 
@@ -22,75 +26,65 @@ function ResponsiveAppBar() {
     setAnchorElUser(event.currentTarget);
   };
 
+  function logOff() {
+    signOff();
+    handleCloseUserMenu();
+  }
+
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
-    signOff();
   };
 
   return (
     <AppBar
       position="fixed"
-      sx={{ padding: "0 !important" }}
+      sx={{
+        padding: "10px clamp(12px, 10%, 60px)",
+        backgroundColor: "#fdfdfd",
+      }}
     >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <Typography
-            variant="h6"
-            noWrap
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-              flexGrow: 1,
-            }}
-          >
-            ORION ARQUITETURA
-          </Typography>
+      <Toolbar disableGutters sx={{justifyContent: "space-between"}}>
+        <StyledImage
+          src="./orion-arq-marca-final.png"
+          alt="Orion Arquitetura"
+        />
 
-          <Box>
-            <Tooltip title="Menu do usuário">
-              <IconButton
-                onClick={handleOpenUserMenu}
-                sx={{ p: 0 }}
-              >
-                <Avatar
-                  alt="Remy Sharp"
-                  src="/static/images/avatar/2.jpg"
-                />
-              </IconButton>
-            </Tooltip>
-
-            <Menu
-              sx={{ mt: "45px" }}
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
+        <Box>
+          <Tooltip title="Menu do usuário">
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{border: "solid 1px rgba(0,0,0,0.3)"}}
             >
-              {settings.map((setting) => (
-                <MenuItem
-                  key={setting}
-                  onClick={handleCloseUserMenu}
-                >
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+              <PersonIcon />
+            </IconButton>
+          </Tooltip>
+
+          <Menu
+            sx={{ mt: "45px" }}
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "left",
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: "top",
+              horizontal: "right",
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem
+                key={setting}
+                onClick={setting === "Sair" ? logOff : handleCloseUserMenu}
+              >
+                <Typography textAlign="center">{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   );
 }

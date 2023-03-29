@@ -13,40 +13,71 @@ type userData = {
 };
 
 type AuthContextType = {
-  signIn: ({ email, senha }: signInData) => Promise<void>;
-  signOff: () => void
+  signIn: ({ email, senha }: signInData) => Promise<boolean>;
+  signOff: () => void;
   userData: userData | null;
+  isLoadingUserData: boolean;
+  toggleUserDataLoadingState: () => void;
 };
 
 export const AuthContext = createContext({} as AuthContextType);
 
 export default function AuthContextProvider({ children }: any) {
   const [userData, setUserData] = useState<userData | null>(null);
+  const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
   async function signIn({ email, senha }: signInData) {
-    return await fetch("/api/auth/autenticar", {
-      method: "POST",
-      body: JSON.stringify({ email, senha }),
-    })
-      .then((res) => res.json())
-      .then((dados) => {
-        setCookie(undefined, "orion-token", dados.token, {
-          maxAge: 60 * 60 * 24,
-        });
-        setCookie(undefined, "user-email", dados.usuario.email, {
-          maxAge: 60 * 60 * 24,
+    try {
+      toggleUserDataLoadingState();
+      await fetch("/api/auth/autenticar", {
+        method: "POST",
+        body: JSON.stringify({ email, senha }),
+      })
+        .then((res) => res.json())
+        .then((dados) => {
+          setCookie(undefined, "orion-token", dados.token, {
+            maxAge: 60 * 60 * 24,
+          });
+          setCookie(undefined, "user-email", dados.usuario.email, {
+            maxAge: 60 * 60 * 24,
+          });
+
+          setUserData(dados.usuario);
         });
 
-        setUserData(dados.usuario);
-      });
+      return true;
+    } catch (e) {
+      console.log(e);
+      toggleUserDataLoadingState();
+      return false;
+    }
   }
 
   async function signOff() {
-    destroyCookie(undefined, "orion-token")
-    destroyCookie(undefined, "user-email")
+    try {
+      destroyCookie(undefined, "orion-token");
+      destroyCookie(undefined, "user-email");
+    } catch (e) {
+      throw e;
+    } finally {
+      toggleUserDataLoadingState();
+      setUserData(null);
+      Router.push("/");
+    }
+  }
+
+  function toggleUserDataLoadingState(state: undefined | boolean = undefined) {
+    if (state) {
+      setIsLoadingUserData(state);
+      return;
+    }
+    setIsLoadingUserData((prevState) => !prevState);
+    return;
   }
 
   useEffect(() => {
+    toggleUserDataLoadingState();
+
     const { "orion-token": token, "user-email": email } = parseCookies();
 
     if (token) {
@@ -57,14 +88,18 @@ export default function AuthContextProvider({ children }: any) {
         }).then((res) => res.json());
 
         setUserData(userData);
-        return Router.push("/projetos");
+        Router.push("/projetos");
       })();
+    } else {
+      Router.push("/");
     }
-
-    Router.push("/")
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, userData, signOff }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider
+      value={{ signIn, userData, signOff, isLoadingUserData, toggleUserDataLoadingState }}
+    >
+      {children}
+    </AuthContext.Provider>
   );
 }

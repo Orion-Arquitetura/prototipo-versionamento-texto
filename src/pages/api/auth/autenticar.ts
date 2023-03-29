@@ -8,7 +8,7 @@ type ResponseDataType = {
     userName: string;
     email: string;
   };
-};
+} | Error;
 
 export default async function handler(
   req: NextApiRequest,
@@ -21,6 +21,9 @@ export default async function handler(
 
   console.log("Authenticate")
 
+  if (!userData) {
+    res.status(404).json(new Error("Não encontrado."))
+  }
 
   res.status(200).json({
     usuario: { userName: userData[0].userName, email: userData[0].email },

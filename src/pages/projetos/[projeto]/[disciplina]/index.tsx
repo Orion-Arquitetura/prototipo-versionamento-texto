@@ -1,8 +1,6 @@
 import PageTitle from "@/components/PageTitle";
-import PageWrapper from "@/components/PageWrapper";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { StyledSection } from "@/components/BaseSection";
 import VersionFilesList from "@/components/VersionFilesList";
 import FileStatus from "@/components/FileStatus";
 import styled from "@emotion/styled";
@@ -30,7 +28,7 @@ export default function Disciplina() {
   });
 
   async function getDisciplineVersionFiles() {
-    const url = `/api/getDisciplineVersionFiles?project_name=${pathWays[1]}&discipline_name=${pathWays[2]}`;
+    const url = `/api/getProjectsData/getDisciplineVersionFiles?project_name=${pathWays[1]}&discipline_name=${pathWays[2]}`;
     const data = await fetch(url).then((res) => res.json());
     return data;
   }
@@ -40,15 +38,13 @@ export default function Disciplina() {
   }
 
   return (
-      <PageWrapper>
-        <StyledSection>
+        <>
           <PageTitle title={pathWays[1].toUpperCase() + " - " + data.disciplina} />
           <StyledBox>
             <VersionFilesList list={data} />
             <FileStatus />
             <FileUploadDownloadArea />
           </StyledBox>
-        </StyledSection>
-      </PageWrapper>
+        </>
   );
 }

@@ -2,9 +2,8 @@
 import { AuthContext } from "@/contexts/AuthContext";
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import { useRouter } from "next/router";
-import { useContext, useState } from "react";
+import Router from "next/router";
+import { useContext } from "react";
 import { useForm } from "react-hook-form";
 
 const StyledForm = styled.form`
@@ -14,6 +13,7 @@ const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   border-radius: 3px;
+  box-shadow: 0px 0px 125px rgba(0, 0, 0, 0.1);
 
   & fieldset:not(input) {
     display: flex;
@@ -32,8 +32,20 @@ const StyledForm = styled.form`
       padding-top: 40px;
       padding-bottom: 80px;
       display: flex;
-      row-gap: 40px;
+      row-gap: 20px;
       flex-direction: column;
+
+      & > label {
+        display: flex;
+        flex-direction: column;
+
+        & input {
+          padding: 12px 10px;
+          background-color: white;
+          border: solid 1px black;
+          border-radius: 4px;
+        }
+      }
     }
   }
 
@@ -42,6 +54,11 @@ const StyledForm = styled.form`
     align-self: center;
     padding-top: 10px;
     padding-bottom: 10px;
+    background-color: #1b1b3d;
+
+    &:hover {
+      background-color: #4a4aa8;
+    }
   }
 
   & .loading-div {
@@ -50,13 +67,14 @@ const StyledForm = styled.form`
   }
 `;
 
-export default function LoginForm() {
-  const { signIn, teste } = useContext(AuthContext);
-  const [isLoading, setLoading] = useState(false);
+export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
+  const { signIn, isLoadingUserData } = useContext(AuthContext);
   const { register, handleSubmit } = useForm();
 
   async function handleSignIn({ email, senha }: any) {
-    await signIn({email, senha})
+    await signIn({ email, senha }).then((res) => {
+      res ? Router.push("/projetos") : (() => window.alert("Erro"))();
+    });
   }
 
   return (
@@ -68,39 +86,43 @@ export default function LoginForm() {
             alt="Orion logo"
           ></img>
         </legend>
-        {isLoading ? (
+        {hasCookies ? (
           <div className="loading-div">Carregando...</div>
         ) : (
           <>
             <div className="padding-div">
-              <TextField
-                {...register("email")}
-                label="E-mail"
-                variant="standard"
-                type={"email"}
-                name="email"
-                required
-              />
-              <TextField
-                {...register("senha")}
-                label="Senha"
-                variant="standard"
-                type={"password"}
-                name="senha"
-                required
-              />
+              <label>
+                E-mail:
+                <input
+                  {...register("email")}
+                  type={"email"}
+                  name="email"
+                  required
+                />
+              </label>
+              <label>
+                Senha:
+                <input
+                  {...register("senha")}
+                  type={"password"}
+                  name="senha"
+                  required
+                />
+              </label>
             </div>
           </>
         )}
       </fieldset>
 
-      <Button
-        variant="contained"
-        type="submit"
-        disabled={isLoading ? true : false}
-      >
-        Entrar
-      </Button>
+      {hasCookies ? null : (
+        <Button
+          variant="contained"
+          type="submit"
+          disabled={isLoadingUserData ? true : false}
+        >
+          Entrar
+        </Button>
+      )}
     </StyledForm>
   );
 }
