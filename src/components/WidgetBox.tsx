@@ -1,15 +1,22 @@
 import styled from "@emotion/styled";
 
-const StyledDiv = styled.div`
+type BoxProps = {
+  direction: "column" | "row";
+  children: any;
+};
+
+const StyledDiv = styled.ul<BoxProps>`
   min-width: 100%;
   min-height: 100%;
-
-  & > ul {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: ${(props) => props.direction};
+  justify-content: space-between;
+  row-gap: 10px;
+  & > li {
+    max-width: ${(props) => (props.direction === "column" ? "30%" : "100%")}
   }
 `;
 
-export default function WidgetBox({ children }: any) {
-  return <StyledDiv>{children}</StyledDiv>;
+export default function WidgetBox({ direction = "row", children }: BoxProps) {
+  return <StyledDiv direction={direction}>{children}</StyledDiv>;
 }

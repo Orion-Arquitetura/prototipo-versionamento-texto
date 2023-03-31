@@ -1,8 +1,9 @@
 import PageTitle from "@/components/PageTitle";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
+import Widget from "@/components/Widget";
+import WidgetBox from "@/components/WidgetBox";
 
 export default function Disciplinas() {
   const { asPath } = useRouter();
@@ -31,21 +32,15 @@ export default function Disciplinas() {
     <>
       <PageTitle title={`${pathWays[1].toUpperCase()} - Disciplinas`} />
       <div>
-        <ul>
+        <WidgetBox direction="column">
           {disciplinas.map((disciplina: string) => (
-            <li key={disciplina}>
-              <Link
-                href={`${asPath}/${disciplina
-                  .replaceAll(" ", "_")
-                  .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")}`}
-              >
-                {disciplina}
-              </Link>
-            </li>
+            <Widget
+              link="#"
+              title={disciplina}
+              key={disciplina}
+            />
           ))}
-        </ul>
+        </WidgetBox>
       </div>
     </>
   );

@@ -29,15 +29,15 @@ const StyledLi = styled.li`
   }
 `;
 
-type ProjectWidgetData = {
-  projectName: string;
+type WidgetData = {
+  title: string;
   link: string;
 };
 
-export default function ProjectWidget({ projectName, link }: ProjectWidgetData) {
+export default function Widget({ title, link }: WidgetData) {
   return (
     <StyledLi>
-      <Link href={link}>{projectName}</Link>
+      <Link href={link}>{title}</Link>
     </StyledLi>
   );
 }

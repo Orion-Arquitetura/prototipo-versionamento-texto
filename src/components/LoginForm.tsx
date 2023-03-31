@@ -118,7 +118,6 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
         <Button
           variant="contained"
           type="submit"
-          disabled={isLoadingUserData ? true : false}
         >
           Entrar
         </Button>

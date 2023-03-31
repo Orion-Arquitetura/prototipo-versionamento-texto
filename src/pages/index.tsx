@@ -5,7 +5,7 @@ import { parseCookies } from "nookies";
 export default function Home({hasCookies}:any) {
   return (
     <Box sx={{ display: "grid", placeItems: "center", height: "100vh" }}>
-      <LoginForm hasCookies />
+      <LoginForm hasCookies={hasCookies} />
     </Box>
   );
 }

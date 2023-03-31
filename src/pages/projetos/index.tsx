@@ -2,7 +2,7 @@ import PageTitle from "@/components/PageTitle";
 import { useQuery } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
 import NotAllowed from "@/components/NotAllowed";
-import ProjectWidget from "@/components/ProjectWidget";
+import Widget from "@/components/Widget";
 import WidgetBox from "@/components/WidgetBox";
 import Loading from "@/components/Loading";
 
@@ -28,18 +28,16 @@ export default function Projetos({ allow }: any) {
       {allow ? (
         <>
           <PageTitle title="Projetos" />
-          <WidgetBox>
-            <ul>
+          <WidgetBox direction="row">
               {projetos.data.map((projeto: string) => {
                 return (
-                  <ProjectWidget
+                  <Widget
                     key={projeto}
-                    projectName={projeto}
+                    title={projeto}
                     link={`/projetos/${projeto.toLowerCase()}`}
                   />
                 );
               })}
-            </ul>
           </WidgetBox>
         </>
       ) : (
