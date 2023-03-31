@@ -114,7 +114,7 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
         )}
       </fieldset>
 
-      {hasCookies ? null : (
+      {hasCookies || isLoadingUserData ? null : (
         <Button
           variant="contained"
           type="submit"

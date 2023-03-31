@@ -66,11 +66,7 @@ export default function AuthContextProvider({ children }: any) {
     }
   }
 
-  function toggleUserDataLoadingState(state: undefined | boolean = undefined) {
-    if (state) {
-      setIsLoadingUserData(state);
-      return;
-    }
+  function toggleUserDataLoadingState() {
     setIsLoadingUserData((prevState) => !prevState);
     return;
   }
