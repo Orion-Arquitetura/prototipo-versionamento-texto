@@ -1,4 +1,4 @@
-import { createContext, useState, useEffect, useCallback } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router from "next/router";
 
@@ -60,7 +60,7 @@ export default function AuthContextProvider({ children }: any) {
     } catch (e) {
       throw e;
     } finally {
-      toggleUserDataLoadingState();
+      setIsLoadingUserData(false);
       setUserData(null);
       Router.push("/");
     }

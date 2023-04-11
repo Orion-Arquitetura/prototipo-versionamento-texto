@@ -73,7 +73,11 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
 
   async function handleSignIn({ email, senha }: any) {
     await signIn({ email, senha }).then((res) => {
-      res ? Router.push("/projetos") : (() => window.alert("Erro"))();
+      if (res) {
+        Router.push("/projetos");
+      } else {
+        window.alert("Erro")
+      }
     });
   }
 

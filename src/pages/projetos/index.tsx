@@ -1,12 +1,10 @@
 import PageTitle from "@/components/PageTitle";
 import { useQuery } from "@tanstack/react-query";
-import { parseCookies } from "nookies";
-import NotAllowed from "@/components/NotAllowed";
 import Widget from "@/components/Widget";
 import WidgetBox from "@/components/WidgetBox";
 import Loading from "@/components/Loading";
 
-export default function Projetos({ allow }: any) {
+export default function Projetos() {
   const projetos = useQuery({
     queryKey: ["Nome-de-projetos"],
     queryFn: getProjectsNames,
@@ -20,47 +18,23 @@ export default function Projetos({ allow }: any) {
   }
 
   if (projetos.isLoading) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   return (
     <>
-      {allow ? (
-        <>
-          <PageTitle title="Projetos" />
-          <WidgetBox direction="row">
-              {projetos.data.map((projeto: string) => {
-                return (
-                  <Widget
-                    key={projeto}
-                    title={projeto}
-                    link={`/projetos/${projeto.toLowerCase()}`}
-                  />
-                );
-              })}
-          </WidgetBox>
-        </>
-      ) : (
-        <NotAllowed />
-      )}
+      <PageTitle title="Projetos" />
+      <WidgetBox direction="row">
+        {projetos.data.map((projeto: string) => {
+          return (
+            <Widget
+              key={projeto}
+              title={projeto}
+              link={`/projetos/${projeto.toLowerCase()}`}
+            />
+          );
+        })}
+      </WidgetBox>
     </>
   );
-}
-
-export async function getServerSideProps(context: any) {
-  const cookies = parseCookies(context)["orion-token"];
-
-  if (cookies) {
-    return {
-      props: {
-        allow: true,
-      },
-    };
-  }
-
-  return {
-    props: {
-      allow: false,
-    },
-  };
 }

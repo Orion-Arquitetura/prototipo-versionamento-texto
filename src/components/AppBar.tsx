@@ -11,10 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { AuthContext } from "@/contexts/AuthContext";
 import PersonIcon from "@mui/icons-material/Person";
 import styled from "@emotion/styled";
-
-const StyledImage = styled.img`
-  width: 10%;
-`;
+import Image from "next/image";
 
 const settings = ["Perfil", "Sair"];
 
@@ -44,9 +41,11 @@ function ResponsiveAppBar() {
       }}
     >
       <Toolbar disableGutters sx={{justifyContent: "space-between"}}>
-        <StyledImage
-          src="./orion-arq-marca-final.png"
+        <Image
+          src="/orion-arq-marca-final.png"
           alt="Orion Arquitetura"
+          width={130}
+          height={60}
         />
 
         <Box>

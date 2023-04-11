@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useContext } from "react";
 import { FileContext } from "@/contexts/fileContext";
+import BackButton from "./BackButton";
 
 const StyledDiv = styled.div`
   padding-bottom: 16px;
@@ -41,23 +41,9 @@ const StyledDiv = styled.div`
 `;
 
 export default function PageTitle({ title }: { title: string }) {
-  const { back, asPath } = useRouter();
-  const { changeSelectedVersionFile, currentSelectedVersion } = useContext(FileContext);
   return (
     <StyledDiv>
-      {asPath === "/projetos" ? null : (
-        <button
-          title="Voltar"
-          onClick={() => {
-            currentSelectedVersion !== null
-              ? changeSelectedVersionFile(null)
-              : () => null;
-            back();
-          }}
-        >
-          <ArrowBackIcon />
-        </button>
-      )}
+      <BackButton />
       <div>
         <h2>{title}</h2>
       </div>

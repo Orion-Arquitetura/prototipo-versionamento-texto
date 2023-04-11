@@ -1,41 +1,25 @@
-import { FileContext } from "@/contexts/fileContext";
 import styled from "@emotion/styled";
-import Button from "@mui/material/Button";
-import { useContext } from "react";
+import VersionWidget from "./VersionWidget";
 
 const StyledList = styled.ul`
-  list-style-type: none !important;
-  padding: 0 !important;
-  width: fit-content;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  padding: 20px 0;
+  border: solid 1px rgba(0, 0, 0, 0.1);
 
-  & li {
-    border: solid 1px black;
-    border-radius: 4px;
-
-    & button {
-      padding: 10px;
-      border: 0;
-      border-radius: 4px;
-      cursor: pointer;
-      color: black;
-    }
-
-    &:hover {
-      background-color: antiquewhite;
-    }
-  }
 `;
 
 export default function VersionFilesList({ list }: any) {
-  const { changeSelectedVersionFile } = useContext(FileContext);
   return (
     <StyledList>
-      {list.versoes.map((element: any) => (
-        <li key={element.versao}>
-          <Button onClick={() => changeSelectedVersionFile(element)}>
-            {list.nomePadronizado + "-" + element.versao}
-          </Button>
-        </li>
+      {list.versoes.map((file: any) => (
+        <VersionWidget
+          key={file.versao}
+          file={file}
+          fileName={list.nomePadronizado}
+          fileVersion={file.versao}
+        />
       ))}
     </StyledList>
   );

@@ -12,16 +12,15 @@ import Layout from "./layout";
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
-
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthContextProvider>
-        <FileContextProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </FileContextProvider>
-      </AuthContextProvider>
+        <AuthContextProvider>
+          <FileContextProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </FileContextProvider>
+        </AuthContextProvider>
     </QueryClientProvider>
   );
 }

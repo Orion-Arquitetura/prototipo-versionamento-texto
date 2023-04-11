@@ -1,26 +1,19 @@
 import PageTitle from "@/components/PageTitle";
-import { useRouter } from "next/router";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "@/components/Loading";
 import Widget from "@/components/Widget";
 import WidgetBox from "@/components/WidgetBox";
 
-export default function Disciplinas() {
-  const { asPath } = useRouter();
+export default function Disciplinas({ projeto }: any) {
   const { data: disciplinas, isLoading } = useQuery({
     queryKey: ["disciplinas-do-projeto"],
     queryFn: getDisciplinsNames,
   });
 
-  const pathWays = asPath.match(/\w+/g) as RegExpMatchArray;
-
   async function getDisciplinsNames() {
     const data = await fetch(
-      `/api/getProjectsData/getProjectDisciplinesNames/?project_name=${/(?<=.+\/).+/
-        .exec(asPath.toString())
-        ?.join("")}`
+      `/api/getProjectsData/getProjectDisciplinesNames/?project_name=${projeto}`
     ).then((res) => res.json());
-    console.log(data);
     return data;
   }
 
@@ -30,12 +23,15 @@ export default function Disciplinas() {
 
   return (
     <>
-      <PageTitle title={`${pathWays[1].toUpperCase()} - Disciplinas`} />
+      <PageTitle title={`${projeto.toUpperCase() + " - Disciplinas"}`} />
       <div>
         <WidgetBox direction="column">
           {disciplinas.map((disciplina: string) => (
             <Widget
-              link="#"
+              link={`/projetos/${projeto}/${disciplina
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/, "")}`}
               title={disciplina}
               key={disciplina}
             />
@@ -44,4 +40,14 @@ export default function Disciplinas() {
       </div>
     </>
   );
+}
+
+export async function getServerSideProps(context: any) {
+  const { params } = context;
+
+  return {
+    props: {
+      projeto: params.projeto,
+    },
+  };
 }

@@ -5,7 +5,7 @@ const StyledBox = styled(Box)`
     height: calc(100vh - 64px);
     
     h1 {
-        margin-top: 50px;
+        padding-top: 50px;
     }
 `;
 

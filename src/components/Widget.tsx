@@ -8,12 +8,13 @@ const StyledLi = styled.li`
   background-color: #1b1b3d;
   color: #ffffffdc;
   transition: background-color 0.2s ease, color 0.2s ease;
-  box-shadow: 1px 1px 10px      rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
 
-  &:hover, &:focus-within {
+  &:hover,
+  &:focus-within {
     background-color: #d8d8d829;
     color: darkblue;
-    background-image: url("./orion-estrela.png");
+    background-image: url("/orion-estrela.png");
     background-size: 155px;
     background-repeat: no-repeat;
     background-position-x: 120%;
@@ -29,12 +30,13 @@ const StyledLi = styled.li`
   }
 `;
 
-type WidgetData = {
+interface WidgetData {
   title: string;
   link: string;
-};
+}
 
 export default function Widget({ title, link }: WidgetData) {
+
   return (
     <StyledLi>
       <Link href={link}>{title}</Link>
