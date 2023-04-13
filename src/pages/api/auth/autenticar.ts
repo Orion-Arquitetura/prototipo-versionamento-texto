@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../../utils/mongodb";
+import connectToDatabase from "../../../utils/mongodb";
 import { v4 as uuid } from "uuid";
+import User from "@/utils/userModel";
 
 type ResponseDataType = {
   token: string;
@@ -14,10 +15,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseDataType>
 ) {
-  const { db } = await connectToDatabase();
+  connectToDatabase();
   const { email, senha } = JSON.parse(req.body);
 
-  const userData = await db.collection("Usuarios").find({ email, senha }).toArray();
+  const query = User.findOne({email, senha}).exec()
+  const userData = await query.then(res => res)
 
   console.log("Authenticate")
 
@@ -26,7 +28,7 @@ export default async function handler(
   }
 
   res.status(200).json({
-    usuario: { userName: userData[0].userName, email: userData[0].email },
+    usuario: { userName: userData.userName, email: userData.email },
     token: uuid(),
   });
 }

@@ -1,14 +1,18 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { connectToDatabase } from "../../../utils/mongodb";
+import connectToDatabase from "../../../utils/mongodb";
+import User from "@/utils/userModel";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { db } = await connectToDatabase();
+  connectToDatabase();
 
   const email = req.body;
 
-  const userData = await db.collection("Usuarios").find({email}).toArray();
+  const query = User.findOne({ email }).exec();
+  const userData = await query.then((res) => res);
 
-  console.log("Recover data")
+  console.log("Recover data");
 
-  res.status(200).json({usuario: { userName: userData[0].userName, email: userData[0].email }});
+  res
+    .status(200)
+    .json({ usuario: { userName: userData.userName, email: userData.email } });
 }

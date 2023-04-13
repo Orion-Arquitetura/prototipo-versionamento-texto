@@ -15,7 +15,7 @@ const StyledMain = styled.main`
 
 export default function Layout({ children }: any) {
   const { pathname } = useRouter();
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const { "orion-token": token } = parseCookies();
