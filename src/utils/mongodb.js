@@ -42,26 +42,21 @@ async function connectToDatabase() {
   if (mongoose.connection.readyState === 1) {
     console.log("Já está conectado");
     return mongoose.connection;
-  } else {
-    console.log("Não está conectado");
-    try {
-      await mongoose.connect(uri, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
-
-      console.log("Connected");
-
-      mongoose.connection.on('disconnected', () => {
-        console.log('Mongoose disconnected from MongoDB cluster');
-      })
-
-      return mongoose.connection;
-    } catch (error) {
-      console.log("Error: " + error);
-      throw error;
-    }
   }
+  console.log("Não está conectado");
+
+  return await mongoose
+    .connect(uri, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      console.log("Connected");
+      mongoose.connection.on("disconnected", () => {
+        console.log("Mongoose disconnected from MongoDB cluster");
+      });
+      return mongoose.connection;
+    });
 }
 
 export default connectToDatabase;
@@ -97,6 +92,5 @@ export default connectToDatabase;
 //   await mongoose.connection.close().then(() => console.log("closed"));
 //   process.exit(0);
 // });
-
 
 // export default db

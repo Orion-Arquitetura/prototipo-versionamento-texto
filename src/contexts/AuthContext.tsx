@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router from "next/router";
 
@@ -17,7 +17,6 @@ type AuthContextType = {
   signOff: () => void;
   userData: userData | null;
   isLoadingUserData: boolean;
-  toggleUserDataLoadingState: () => void;
 };
 
 export const AuthContext = createContext({} as AuthContextType);
@@ -28,7 +27,7 @@ export default function AuthContextProvider({ children }: any) {
 
   async function signIn({ email, senha }: signInData) {
     try {
-      toggleUserDataLoadingState();
+      setIsLoadingUserData(true);
       await fetch("/api/auth/autenticar", {
         method: "POST",
         body: JSON.stringify({ email, senha }),
@@ -48,53 +47,43 @@ export default function AuthContextProvider({ children }: any) {
       return true;
     } catch (e) {
       console.log(e);
-      toggleUserDataLoadingState();
+      setIsLoadingUserData(false);
       return false;
     }
   }
 
   async function signOff() {
-    try {
-      destroyCookie(undefined, "orion-token");
-      destroyCookie(undefined, "user-email");
-    } catch (e) {
-      throw e;
-    } finally {
-      setIsLoadingUserData(false);
-      setUserData(null);
-      Router.push("/");
-    }
-  }
-
-  function toggleUserDataLoadingState() {
-    setIsLoadingUserData((prevState) => !prevState);
-    return;
+    destroyCookie(undefined, "orion-token");
+    destroyCookie(undefined, "user-email");
+    setIsLoadingUserData(false);
+    setUserData(null);
+    Router.push("/");
   }
 
   useEffect(() => {
-    toggleUserDataLoadingState();
-
-    const { "orion-token": token, "user-email": email } = parseCookies();
-
-    if (token) {
-      (async () => {
-        let userData = await fetch("api/auth/recoverUserData", {
-          method: "POST",
-          body: email,
-        }).then((res) => res.json());
-
-        setUserData(userData);
-        Router.push("/projetos");
-      })();
+    if (userData) {
+      return;
     } else {
-      Router.push("/");
+      const { "orion-token": token, "user-email": email } = parseCookies();
+
+      if (token && userData === null) {
+        setIsLoadingUserData(true);
+
+        (async () => {
+          let userData = await fetch("api/auth/recoverUserData", {
+            method: "POST",
+            body: email,
+          }).then((res) => res.json());
+          setUserData(userData);
+
+          Router.pathname === "/" ? Router.push("/projetos") : () => {};
+        })();
+      }
     }
-  }, []);
+  }, [userData]);
 
   return (
-    <AuthContext.Provider
-      value={{ signIn, userData, signOff, isLoadingUserData, toggleUserDataLoadingState }}
-    >
+    <AuthContext.Provider value={{ signIn, userData, signOff, isLoadingUserData }}>
       {children}
     </AuthContext.Provider>
   );
