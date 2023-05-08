@@ -36,8 +36,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 const mongoose = require("mongoose");
 
-async function connectToDatabase() {
-  const uri = process.env.MONGO_URI;
+async function connectToDatabase(dbname = "") {
+  const uri = process.env.MONGO_URI.replace("{dbname}", dbname);
 
   if (mongoose.connection.readyState === 1) {
     console.log("Já está conectado");

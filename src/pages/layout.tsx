@@ -24,19 +24,19 @@ export default function Layout({ children }: any) {
       setLoading(false)
     }
 
-    if (!token && pathname === "/") {
+    if (!token && (pathname === "/" || pathname === "/admin")) {
       setLoading(false)
     }
 
     if (!token && pathname !== "/") {
-      setLoading(true)
+      pathname !== "/admin" ? setLoading(true) : setLoading(false)
     }
   }, [pathname]);
 
   return (
     <>
-      {pathname === "/" || loading ? null : <ResponsiveAppBar />}
-      <StyledMain style={pathname === "/" ? { paddingTop: 0 } : {}}>
+      {(pathname === "/" || pathname === "/admin") || loading ? null : <ResponsiveAppBar />}
+      <StyledMain style={(pathname === "/" || pathname === "/admin") ? { paddingTop: 0 } : {}}>
         {loading ? <Loading /> : children}
       </StyledMain>
     </>

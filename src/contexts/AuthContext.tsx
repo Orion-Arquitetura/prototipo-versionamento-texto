@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
 type signInData = {
   email: string;
@@ -26,9 +26,14 @@ export default function AuthContextProvider({ children }: any) {
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
   async function signIn({ email, senha }: signInData) {
+    const route =
+      Router.pathname === "/admin"
+        ? "/api/usuario/administrador/autenticarAdministrador"
+        : "/api/usuario/funcionario/autenticarFuncionario";
     try {
       setIsLoadingUserData(true);
-      await fetch("/api/auth/autenticar", {
+
+      await fetch(route, {
         method: "POST",
         body: JSON.stringify({ email, senha }),
       })
@@ -60,27 +65,28 @@ export default function AuthContextProvider({ children }: any) {
     Router.push("/");
   }
 
-  useEffect(() => {
-    if (userData) {
-      return;
-    } else {
-      const { "orion-token": token, "user-email": email } = parseCookies();
+  //O código abaixo é para recuperar os dados de um usuário já autenticado
+  // useEffect(() => {
+  //   if (userData) {
+  //     return;
+  //   } else {
+  //     const { "orion-token": token, "user-email": email } = parseCookies();
 
-      if (token && userData === null) {
-        setIsLoadingUserData(true);
+  //     if (token && userData === null) {
+  //       setIsLoadingUserData(true);
 
-        (async () => {
-          let userData = await fetch("api/auth/recoverUserData", {
-            method: "POST",
-            body: email,
-          }).then((res) => res.json());
-          setUserData(userData);
+  //       (async () => {
+  //         let userData = await fetch("api/auth/recoverUserData", {
+  //           method: "POST",
+  //           body: email,
+  //         }).then((res) => res.json());
+  //         setUserData(userData);
 
-          Router.pathname === "/" ? Router.push("/projetos") : () => {};
-        })();
-      }
-    }
-  }, [userData]);
+  //         Router.pathname === "/" ? Router.push("/projetos") : () => {};
+  //       })();
+  //     }
+  //   }
+  // }, [userData]);
 
   return (
     <AuthContext.Provider value={{ signIn, userData, signOff, isLoadingUserData }}>

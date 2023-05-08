@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { AuthContext } from "@/contexts/AuthContext";
 import styled from "@emotion/styled";
+import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Router from "next/router";
 import { useContext } from "react";
@@ -76,56 +77,58 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
       if (res) {
         Router.push("/projetos");
       } else {
-        window.alert("Erro")
+        window.alert("Erro");
       }
     });
   }
 
   return (
-    <StyledForm onSubmit={handleSubmit(handleSignIn)}>
-      <fieldset>
-        <legend>
-          <img
-            src="./orion-logo.png"
-            alt="Orion logo"
-          ></img>
-        </legend>
-        {hasCookies ? (
-          <div className="loading-div">Carregando...</div>
-        ) : (
-          <>
-            <div className="padding-div">
-              <label>
-                E-mail:
-                <input
-                  {...register("email")}
-                  type={"email"}
-                  name="email"
-                  required
-                />
-              </label>
-              <label>
-                Senha:
-                <input
-                  {...register("senha")}
-                  type={"password"}
-                  name="senha"
-                  required
-                />
-              </label>
-            </div>
-          </>
-        )}
-      </fieldset>
+    <Box sx={{ display: "grid", placeItems: "center", height: "100vh" }}>
+      <StyledForm onSubmit={handleSubmit(handleSignIn)}>
+        <fieldset>
+          <legend>
+            <img
+              src="./orion-logo.png"
+              alt="Orion logo"
+            ></img>
+          </legend>
+          {hasCookies ? (
+            <div className="loading-div">Carregando...</div>
+          ) : (
+            <>
+              <div className="padding-div">
+                <label>
+                  E-mail:
+                  <input
+                    {...register("email")}
+                    type={"email"}
+                    name="email"
+                    required
+                  />
+                </label>
+                <label>
+                  Senha:
+                  <input
+                    {...register("senha")}
+                    type={"password"}
+                    name="senha"
+                    required
+                  />
+                </label>
+              </div>
+            </>
+          )}
+        </fieldset>
 
-      {hasCookies || isLoadingUserData ? null : (
-        <Button
-          variant="contained"
-          type="submit"
-        >
-          Entrar
-        </Button>
-      )}
-    </StyledForm>
+        {hasCookies || isLoadingUserData ? null : (
+          <Button
+            variant="contained"
+            type="submit"
+          >
+            Entrar
+          </Button>
+        )}
+      </StyledForm>
+    </Box>
   );
 }
