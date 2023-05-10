@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const clienteSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   nome: {
     type: String,
     required: true,
@@ -21,10 +21,10 @@ const clienteSchema = new mongoose.Schema({
   nivel: {
     type: String,
     enum: ["funcionario", "administrador", "cliente"],
-    default: "cliente"
+    default: "funcionario"
   },
 })
 
-const Cliente = mongoose.models.Cliente || mongoose.model("Cliente", clienteSchema, "Clientes");
+const User = mongoose.models.User || mongoose.model("User", userSchema, "Users");
 
-export default Cliente;
+export default User;

@@ -11,12 +11,15 @@ const projectSchema = mongoose.Schema({
         default: Date.now
     },
     funcionariosPermitidos: {
-        type: [{type: mongoose.Schema.Types.ObjectId, ref: "User"}],
+        type: [{type: mongoose.Schema.Types.ObjectId, ref: "Funcionario"}],
         required: true,
         default: []
     },
     documentos: {
         type: []
     }
-
 })
+
+const Projeto = mongoose.models.Projeto || mongoose.model("Projeto", projectSchema, "Projetos")
+
+export default Projeto

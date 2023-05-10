@@ -26,14 +26,10 @@ export default function AuthContextProvider({ children }: any) {
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
   async function signIn({ email, senha }: signInData) {
-    const route =
-      Router.pathname === "/admin"
-        ? "/api/usuario/administrador/autenticarAdministrador"
-        : "/api/usuario/funcionario/autenticarFuncionario";
     try {
       setIsLoadingUserData(true);
 
-      await fetch(route, {
+      await fetch("/api/user/auth", {
         method: "POST",
         body: JSON.stringify({ email, senha }),
       })
@@ -43,6 +39,9 @@ export default function AuthContextProvider({ children }: any) {
             maxAge: 60 * 60 * 24,
           });
           setCookie(undefined, "user-email", dados.usuario.email, {
+            maxAge: 60 * 60 * 24,
+          });
+          setCookie(undefined, "user-id", dados.usuario.id, {
             maxAge: 60 * 60 * 24,
           });
 

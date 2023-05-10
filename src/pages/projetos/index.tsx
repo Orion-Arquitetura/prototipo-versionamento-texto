@@ -3,21 +3,25 @@ import { useQuery } from "@tanstack/react-query";
 import Widget from "@/components/Widget";
 import WidgetBox from "@/components/WidgetBox";
 import Loading from "@/components/Loading";
+import AddProject from "@/components/AddProject";
 
 export default function Projetos() {
-  const projetos = useQuery({
+  const {data, isLoading} = useQuery({
     queryKey: ["Nome-de-projetos"],
     queryFn: getProjectsNames,
+    refetchOnWindowFocus: false
   });
 
   async function getProjectsNames() {
-    const data = await fetch("/api/getProjectsData/getProjectsNames").then((res) =>
+    const data = await fetch("/api/projetos/getAllProjects").then((res) =>
       res.json()
     );
     return data;
   }
 
-  if (projetos.isLoading) {
+  console.log(data)
+
+  if (isLoading) {
     return <Loading />;
   }
 
@@ -25,15 +29,17 @@ export default function Projetos() {
     <>
       <PageTitle title="Projetos" />
       <WidgetBox direction="row">
-        {projetos.data.map((projeto: string) => {
+        {data.map((projeto: any) => {
           return (
             <Widget
-              key={projeto}
-              title={projeto}
-              link={`/projetos/${projeto.toLowerCase()}`}
+              key={projeto.nome}
+              title={projeto.nome}
+              // link={`/projetos/${projeto.toLowerCase()}`}
+              link={"#"}
             />
           );
         })}
+        <AddProject />
       </WidgetBox>
     </>
   );

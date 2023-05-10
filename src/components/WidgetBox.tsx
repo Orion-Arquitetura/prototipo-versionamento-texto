@@ -11,7 +11,8 @@ const StyledDiv = styled.ul<BoxProps>`
   display: flex;
   flex-direction: ${(props) => props.direction};
   justify-content: space-between;
-  row-gap: 10px;
+  flex-wrap: wrap;
+  row-gap: 20px;
   & > li {
     max-width: ${(props) => (props.direction === "column" ? "30%" : "100%")}
   }
