@@ -9,7 +9,8 @@ type signInData = {
 
 type userData = {
   email: string;
-  userName: string;
+  nome: string;
+  id: string;
 };
 
 type AuthContextType = {

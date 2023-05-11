@@ -2,8 +2,8 @@ import styled from "@emotion/styled";
 import Link from "next/link";
 
 const StyledLi = styled.li`
+  flex: 0 0 calc(33.33% - 10px); /* Adjust the width as needed */
   display: inline-block;
-  flex-basis: 30%;
   border-radius: 6px;
   background-color: #1b1b3d;
   color: #ffffffdc;
@@ -36,7 +36,6 @@ interface WidgetData {
 }
 
 export default function Widget({ title, link }: WidgetData) {
-
   return (
     <StyledLi>
       <Link href={link}>{title}</Link>

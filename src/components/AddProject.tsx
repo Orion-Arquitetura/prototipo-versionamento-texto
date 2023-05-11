@@ -8,6 +8,8 @@ const StyledLi = styled.li`
   flex-basis: 30%;
   transition: background-color 0.2s ease, color 0.2s ease;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
+  flex: 0 0 calc(33.33% - 10px);
+  margin-right: auto;
 
   button {
     cursor: pointer;
@@ -24,13 +26,13 @@ const StyledLi = styled.li`
       display: inline-block;
       font-weight: 500;
       border: 0;
-      flex-basis: 80%;
+      flex-basis: 85%;
     }
 
     button {
       height: 100%;
       border: 0;
-      flex-basis: 20%;
+      flex-basis: 15%;
       background: white;
     }
   }
@@ -61,6 +63,15 @@ export default function AddProject() {
     }
   }
 
+  function inputModeOn() {
+    setInputMode(true)
+    setTimeout(() => {
+      const input = document.querySelector(".projectNameInput") as HTMLInputElement
+      input.focus()
+    }, 100)
+
+  }
+
   function inputKeyDown(event: any) {
     if (event.key === "Enter") {
         createProject(event.target.value)
@@ -79,6 +90,7 @@ export default function AddProject() {
             type="text"
             placeholder="Nome do projeto"
             onKeyDown={inputKeyDown}
+            className="projectNameInput"
           ></input>
           <button onClick={() => setInputMode(false)}>
             <CloseIcon />
@@ -86,7 +98,7 @@ export default function AddProject() {
         </div>
       ) : (
         <div className="inputModeOff">
-          <button onClick={() => setInputMode(true)}>
+          <button onClick={inputModeOn}>
             Adicionar novo projeto <AddCircleIcon />
           </button>
         </div>

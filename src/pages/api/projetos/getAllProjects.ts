@@ -6,7 +6,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await connectToDatabase("App");
 
   const data = await Projeto.find().exec().then(res => res)
-  console.log(data)
 
   res.status(200).json(data);
 }

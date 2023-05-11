@@ -6,20 +6,16 @@ import Loading from "@/components/Loading";
 import AddProject from "@/components/AddProject";
 
 export default function Projetos() {
-  const {data, isLoading} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["Nome-de-projetos"],
     queryFn: getProjectsNames,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   async function getProjectsNames() {
-    const data = await fetch("/api/projetos/getAllProjects").then((res) =>
-      res.json()
-    );
+    const data = await fetch("/api/projetos/getAllProjects").then((res) => res.json());
     return data;
   }
-
-  console.log(data)
 
   if (isLoading) {
     return <Loading />;
@@ -28,14 +24,14 @@ export default function Projetos() {
   return (
     <>
       <PageTitle title="Projetos" />
+
       <WidgetBox direction="row">
         {data.map((projeto: any) => {
           return (
             <Widget
               key={projeto.nome}
               title={projeto.nome}
-              // link={`/projetos/${projeto.toLowerCase()}`}
-              link={"#"}
+              link={`/projetos/${projeto._id}`}
             />
           );
         })}

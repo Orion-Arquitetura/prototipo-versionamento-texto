@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { parseCookies } from "nookies";
 import Loading from "@/components/Loading";
+import NotAllowed from "../components/NotAllowed";
 
 const StyledMain = styled.main`
   min-height: 100vh;
@@ -17,21 +18,21 @@ export default function Layout({ children }: any) {
   const { pathname } = useRouter();
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    const { "orion-token": token } = parseCookies();
+  // useEffect(() => {
+  //   const { "orion-token": token } = parseCookies();
 
-    if (token && pathname !== "/") {
-      setLoading(false)
-    }
+  //   if (token && pathname !== "/") {
+  //     setLoading(false)
+  //   }
 
-    if (!token && (pathname === "/" || pathname === "/admin")) {
-      setLoading(false)
-    }
+  //   if (!token && (pathname === "/" || pathname === "/admin")) {
+  //     setLoading(false)
+  //   }
 
-    if (!token && pathname !== "/") {
-      pathname !== "/admin" ? setLoading(true) : setLoading(false)
-    }
-  }, [pathname]);
+  //   if (!token && pathname !== "/") {
+  //     pathname !== "/admin" ? setLoading(true) : setLoading(false)
+  //   }
+  // }, [pathname]);
 
   return (
     <>
