@@ -1,23 +1,32 @@
 import PageTitle from "@/components/PageTitle";
-import { useQuery } from "@tanstack/react-query";
-import Loading from "@/components/Loading";
-import Widget from "@/components/Widget";
-import WidgetBox from "@/components/WidgetBox";
 import Arquivo from "@/database/models/arquivoModel";
+import FilesList from "@/components/FilesList";
+import FilesFiltersContextProvider from "@/contexts/filesFiltersContext";
+import styled from "@emotion/styled";
+import FilesFilters from "@/components/FilesFilters";
+import { FilesFiltersContext } from "@/contexts/filesFiltersContext";
+import { useContext } from "react";
+import ActiveFilters from "@/components/ActiveFilters";
+
+const StyledDiv = styled.div`
+  .filterAndListDiv {
+    display: flex;
+  }
+`;
 
 export default function Disciplinas({ projeto }: any) {
-  // const { data: disciplinas, isLoading } = useQuery({
-  //   queryKey: ["disciplinas-do-projeto"],
-  //   queryFn: getDisciplinsNames,
-  // });
-  console.log(JSON.parse(projeto.arquivos))
+  const { filesFilters } = useContext(FilesFiltersContext);
   return (
-    <>
-      <PageTitle title={"Selecione o tipo de arquivo"} />
-      <div>
-        <WidgetBox direction="column">oi</WidgetBox>
-      </div>
-    </>
+    <StyledDiv>
+      <FilesFiltersContextProvider>
+        <PageTitle title={"Selecione o tipo de arquivo"} />
+        <ActiveFilters filters={filesFilters} />
+        <div className="filterAndListDiv">
+          <FilesFilters />
+          <FilesList files={JSON.parse(projeto.arquivos)} />
+        </div>
+      </FilesFiltersContextProvider>
+    </StyledDiv>
   );
 }
 
@@ -27,13 +36,13 @@ export async function getServerSideProps(context: any) {
 
   const data = await Arquivo.find({ projeto: projectId })
     .exec()
-    .then(res => res);
+    .then((res) => res);
 
-  console.log(data)
+  console.log(data);
   return {
     props: {
       projeto: {
-        arquivos: JSON.stringify(data)
+        arquivos: JSON.stringify(data),
       },
     },
   };

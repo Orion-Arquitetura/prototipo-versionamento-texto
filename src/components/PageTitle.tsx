@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import { useRouter } from "next/router";
 import { useContext } from "react";
-import { FileContext } from "@/contexts/fileContext";
+import { FileContext } from "@/contexts/filesFiltersContext";
 import BackButton from "./BackButton";
 
 const StyledDiv = styled.div`

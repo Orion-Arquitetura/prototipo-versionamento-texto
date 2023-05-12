@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 import { useContext } from "react";
-import { FileContext } from "@/contexts/fileContext";
+import { FileContext } from "@/contexts/filesFiltersContext";
 
 const Styled = styled.div`
   padding: 10px 20px;
