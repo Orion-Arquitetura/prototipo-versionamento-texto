@@ -5,7 +5,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import FileContextProvider from "@/contexts/filesFiltersContext";
+import FilesFiltersContextProvider from "@/contexts/filesFiltersContext";
 import AuthContextProvider from "@/contexts/AuthContext";
 import Layout from "./layout";
 
@@ -14,13 +14,13 @@ const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
+      <FilesFiltersContextProvider>
         <AuthContextProvider>
-          <FileContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </FileContextProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </AuthContextProvider>
+      </FilesFiltersContextProvider>
     </QueryClientProvider>
   );
 }

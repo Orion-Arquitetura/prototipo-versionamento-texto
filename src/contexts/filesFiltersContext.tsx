@@ -1,110 +1,50 @@
 import { createContext, useState } from "react";
 
-type FilesFiltersContext = {
+type FilesFiltersContextType = {
   filesFilters: FileFiltersType;
-  addFilter: (filterType: "disciplina" | "tipo" | "etapa", filterName: string) => void;
+  addFilter: (filterType: "disciplina" | "tipo" | "etapa", filterName: string, filterSigla: string) => void;
   removeFilter: (filterType: "disciplina" | "tipo" | "etapa", filterName: string) => void;
 };
 
 type FileFiltersType = {
-  disciplina: string[];
-  tipo: string[];
-  etapa: string[];
+  disciplina: {nome: string, sigla: string}[];
+  tipo: {nome: string, sigla: string}[];
+  etapa: {nome: string, sigla: string}[];
 };
 
-export const FilesFiltersContext = createContext({} as FilesFiltersContext);
+export const FilesFiltersContext = createContext({} as FilesFiltersContextType);
 
 export default function FilesFiltersContextProvider({ children }: any) {
-  const [filesFilters, setFileFilters] = useState<FileFiltersType>({
+  const [filesFilters, setFilesFilters] = useState<FileFiltersType>({
     disciplina: [],
     tipo: [],
     etapa: [],
   });
 
-  function addFilter(filterType: "disciplina" | "tipo" | "etapa", filterName: string) {
-    if (filterType === "disciplina") {
-      console.log("oi")
-      setFileFilters((prevState) => {
-        return {
-          disciplina: [filterName],
-        } as FileFiltersType;
-      });
+  function addFilter(filterType: "disciplina" | "tipo" | "etapa", filterName: string, filterSigla: string) {
+    setFilesFilters((prevState: FileFiltersType) => {
+      const newArray = prevState[filterType].some(el => el.sigla === filterSigla) ? [...prevState[filterType]] : [...prevState[filterType], {nome: filterName, sigla: filterSigla}];
 
-      return;
-    }
+      const newState = {
+        ...prevState,
+        [filterType]: newArray,
+      };
 
-    if (filterType === "tipo") {
-      setFileFilters((prevState) => {
-        return {
-          ...filesFilters,
-          tipo: [...prevState.tipo, filterName],
-        } as FileFiltersType;
-      });
-
-      return;
-    }
-
-    if (filterType === "etapa") {
-      setFileFilters((prevState) => {
-        return {
-          ...filesFilters,
-          etapa: [...prevState.etapa, filterName],
-        } as FileFiltersType;
-      });
-
-      return;
-    }
+      return newState;
+    });
   }
 
   function removeFilter(filterType: "disciplina" | "tipo" | "etapa", filterName: string) {
-    if (filterType === "disciplina") {
-      setFileFilters((prevState) => {
-        const index = filesFilters.disciplina.findIndex((element) => {
-          element === filterName;
-        });
-
-        prevState.disciplina.splice(index, 1);
-
-        return {
-          ...filesFilters,
-          disciplina: [...prevState.disciplina],
-        } as FileFiltersType;
-      });
-
-      return;
-    }
-
-    if (filterType === "tipo") {
-      setFileFilters((prevState) => {
-        const index = filesFilters.disciplina.findIndex((element) => {
-          element === filterName;
-        });
-
-        prevState.tipo.splice(index, 1);
-
-        return {
-          ...filesFilters,
-          tipo: [...prevState.tipo, filterName],
-        } as FileFiltersType;
-      });
-    }
-
-    if (filterType === "etapa") {
-      setFileFilters((prevState) => {
-        const index = filesFilters.disciplina.findIndex((element) => {
-          element === filterName;
-        });
-
-        prevState.tipo.splice(index, 1);
-
-        return {
-          ...filesFilters,
-          etapa: [...prevState.etapa, filterName],
-        } as FileFiltersType;
-      });
-    }
-
-    return;
+    setFilesFilters((prevState: FileFiltersType) => {
+      const newArray = prevState[filterType].map(el => el)
+      newArray.splice(newArray.findIndex(el => el.nome === filterName), 1)
+      console.log(newArray)
+      const newState = {
+        ...prevState,
+        [filterType]: newArray
+      }
+      return newState
+    })
   }
 
   return (

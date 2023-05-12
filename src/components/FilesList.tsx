@@ -3,6 +3,7 @@ import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
+import FolderIcon from '@mui/icons-material/Folder';
 
 export default function FilesList({ files }: any) {
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -12,7 +13,7 @@ export default function FilesList({ files }: any) {
   }
 
   return (
-      <Box sx={{ width: "100%", bgcolor: "background.paper" }}>
+      <Box sx={{ bgcolor: "#1b1b3d", flexBasis: "69%", color: "white" }}>
         <List component="nav">
           {files.map((file: any, index: number) => {
             return (
@@ -20,7 +21,9 @@ export default function FilesList({ files }: any) {
                 selected={selectedIndex === index}
                 onClick={() => handleListItemClick(index)}
                 key={Math.random() * 10000}
+                
               >
+                <FolderIcon sx={{marginRight: 2}}/>
                 <ListItemText primary={file.nome} />
               </ListItemButton>
             );

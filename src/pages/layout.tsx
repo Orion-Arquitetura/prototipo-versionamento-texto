@@ -8,7 +8,7 @@ import NotAllowed from "../components/NotAllowed";
 
 const StyledMain = styled.main`
   min-height: 100vh;
-  padding-top: 124px;
+  padding-top: 104px;
   padding-inline: clamp(12px, 10%, 50px);
   background-image: url("/background.png");
   background-size: 90%;
