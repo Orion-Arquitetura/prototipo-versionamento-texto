@@ -3,6 +3,11 @@ import FilesList from "@/components/FilesList";
 import styled from "@emotion/styled";
 import FilesFilters from "@/components/FilesFilters";
 import BackButton from "@/components/BackButton";
+import AddFile from "@/components/AddFile";
+import PageTitle from "@/components/PageTitle";
+import { GetServerSidePropsContext } from "next";
+import Projeto from "@/database/models/projectModel";
+import FilesToolbar from "@/components/FilesToolbar";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -15,9 +20,11 @@ const StyledDiv = styled.div`
 `;
 
 export default function Disciplinas({ projeto }: any) {
+  console.log(projeto);
   return (
     <StyledDiv>
-      <BackButton />
+      <PageTitle title={projeto.nome} />
+      <FilesToolbar />
       <div className="filters-and-files">
         <FilesFilters />
         <FilesList files={JSON.parse(projeto.arquivos)} />
@@ -26,18 +33,23 @@ export default function Disciplinas({ projeto }: any) {
   );
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context;
   const projectId = query.projeto;
 
-  const data = await Arquivo.find({ projeto: projectId })
+  const files = await Arquivo.find({ projeto: projectId })
     .exec()
     .then((res) => res);
+
+  const projectName = await Projeto.findOne({ _id: query.projeto })
+    .exec()
+    .then((res) => res.nome);
 
   return {
     props: {
       projeto: {
-        arquivos: JSON.stringify(data),
+        nome: projectName,
+        arquivos: JSON.stringify(files),
       },
     },
   };

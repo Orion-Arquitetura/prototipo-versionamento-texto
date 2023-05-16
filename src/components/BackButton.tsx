@@ -12,9 +12,10 @@ const StyledButton = styled.button`
   background: 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  margin: 0 0 10px 0;
 
-  &:hover {
+  &:hover,
+  &:focus,
+  &:focus-within {
     background-color: #1b1b3d;
 
     svg {
@@ -27,15 +28,11 @@ export default function BackButton() {
   const { back, asPath } = useRouter();
 
   return (
-    <>
-      {asPath === "/projetos" ? null : (
-        <StyledButton
-          title="Voltar"
-          onClick={back}
-        >
-          <ArrowBackIcon />
-        </StyledButton>
-      )}
-    </>
+    <StyledButton
+      title="Voltar"
+      onClick={back}
+    >
+      <ArrowBackIcon />
+    </StyledButton>
   );
 }

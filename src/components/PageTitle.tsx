@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import BackButton from "./BackButton";
+import { useRouter } from "next/router";
 
 const StyledDiv = styled.div`
   padding-left: 16px;
@@ -8,14 +9,13 @@ const StyledDiv = styled.div`
   margin-bottom: 20px;
   letter-spacing: 0.5px;
   color: #1b1b3d;
-  border-radius: 4px;
-  align-items: center;
 `;
 
-export default function PageTitle({ title }: { title: string }) {
+export default function PageTitle({ title = "titulo" }: { title: string }) {
+  const {asPath} = useRouter()
   return (
     <StyledDiv>
-      <BackButton />
+      {asPath === "/projetos" ? null : <BackButton />}
       <div>
         <h2>{title}</h2>
       </div>

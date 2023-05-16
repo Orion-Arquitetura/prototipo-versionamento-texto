@@ -10,6 +10,7 @@ const StyledLi = styled.li`
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.3);
   flex: 0 0 calc(33.33% - 10px);
   margin-right: auto;
+  height: 100px;
 
   button {
     cursor: pointer;
@@ -26,6 +27,7 @@ const StyledLi = styled.li`
       display: inline-block;
       font-weight: 500;
       border: 0;
+      height: 100%;
       flex-basis: 85%;
     }
 
@@ -51,34 +53,42 @@ const StyledLi = styled.li`
   }
 `;
 
-export default function AddProject() {
+export default function AddProject({ refetch }: any) {
   const [inputMode, setInputMode] = useState(false);
 
-  async function createProject(name:string) {
-    const data = await fetch("/api/projetos/createProject", {method: "POST", body: name}).then(res => res.json())
-    
-    if (data.status === "Criado com sucesso.") {
-        window.alert("Criado com sucesso.")
-        setInputMode(false)
+  async function createProject(name: string) {
+    const data = await fetch("/api/projetos/createProject", {
+      method: "POST",
+      body: JSON.stringify({ nome: name }),
+    }).then((res) => res.json());
+
+    if (data.status === "Sucesso") {
+      window.alert("Criado com sucesso.");
+      setInputMode(false);
+      refetch();
+    }
+
+    if (data.status === "Erro") {
+      window.alert(data.message);
+      setInputMode(false);
     }
   }
 
   function inputModeOn() {
-    setInputMode(true)
+    setInputMode(true);
     setTimeout(() => {
-      const input = document.querySelector(".projectNameInput") as HTMLInputElement
-      input.focus()
-    }, 100)
-
+      const input = document.querySelector(".projectNameInput") as HTMLInputElement;
+      input.focus();
+    }, 100);
   }
 
   function inputKeyDown(event: any) {
     if (event.key === "Enter") {
-        createProject(event.target.value)
+      createProject(event.target.value);
     }
 
     if (event.key === "Escape") {
-        setInputMode(false)
+      setInputMode(false);
     }
   }
 
