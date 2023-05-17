@@ -60,33 +60,33 @@ export default function AuthContextProvider({ children }: any) {
   async function signOff() {
     destroyCookie(undefined, "orion-token");
     destroyCookie(undefined, "user-email");
+    destroyCookie(undefined, "user-id");
     setIsLoadingUserData(false);
     setUserData(null);
     Router.push("/");
   }
 
-  //O código abaixo é para recuperar os dados de um usuário já autenticado
-  // useEffect(() => {
-  //   if (userData) {
-  //     return;
-  //   } else {
-  //     const { "orion-token": token, "user-email": email } = parseCookies();
+  useEffect(() => {
+    if (userData) {
+      return;
+    } else {
+      const { "user-id": id } = parseCookies();
 
-  //     if (token && userData === null) {
-  //       setIsLoadingUserData(true);
+      if (id && userData === null) {
+        setIsLoadingUserData(true);
 
-  //       (async () => {
-  //         let userData = await fetch("api/auth/recoverUserData", {
-  //           method: "POST",
-  //           body: email,
-  //         }).then((res) => res.json());
-  //         setUserData(userData);
+        (async () => {
+          let userData = await fetch("api/user/recoverUserData", {
+            method: "POST",
+            body: id,
+          }).then((res) => res.json());
+          setUserData(userData);
 
-  //         Router.pathname === "/" ? Router.push("/projetos") : () => {};
-  //       })();
-  //     }
-  //   }
-  // }, [userData]);
+          Router.pathname === "/" ? Router.push("/projetos") : () => {};
+        })();
+      }
+    }
+  }, [userData]);
 
   return (
     <AuthContext.Provider value={{ signIn, userData, signOff, isLoadingUserData }}>
