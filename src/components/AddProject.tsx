@@ -57,7 +57,7 @@ export default function AddProject({ refetch }: any) {
   const [inputMode, setInputMode] = useState(false);
 
   async function createProject(name: string) {
-    const data = await fetch("/api/projetos/createProject", {
+    const data = await fetch("/api/projects/createProject", {
       method: "POST",
       body: JSON.stringify({ nome: name }),
     }).then((res) => res.json());

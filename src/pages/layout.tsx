@@ -1,8 +1,9 @@
 import ResponsiveAppBar from "@/components/AppBar";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Loading from "@/components/Loading";
+import { parseCookies } from "nookies";
 
 const StyledMain = styled.main`
   min-height: 100vh;
@@ -15,28 +16,30 @@ const StyledMain = styled.main`
 
 export default function Layout({ children }: any) {
   const { pathname } = useRouter();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
-  // useEffect(() => {
-  //   const { "orion-token": token } = parseCookies();
+  useEffect(() => {
+    const { "orion-token": token } = parseCookies();
 
-  //   if (token && pathname !== "/") {
-  //     setLoading(false)
-  //   }
+    if (token && pathname !== "/") {
+      setLoading(false);
+    }
 
-  //   if (!token && (pathname === "/" || pathname === "/admin")) {
-  //     setLoading(false)
-  //   }
+    if (!token && pathname === "/") {
+      setLoading(false);
+    }
 
-  //   if (!token && pathname !== "/") {
-  //     pathname !== "/admin" ? setLoading(true) : setLoading(false)
-  //   }
-  // }, [pathname]);
+    if (!token && pathname !== "/") {
+      pathname !== "/admin" ? setLoading(true) : setLoading(false);
+    }
+  }, [pathname]);
 
   return (
     <>
-      {(pathname === "/" || pathname === "/admin") || loading ? null : <ResponsiveAppBar />}
-      <StyledMain style={(pathname === "/" || pathname === "/admin") ? { paddingTop: 0 } : {}}>
+      {pathname === "/" || loading ? null : <ResponsiveAppBar />}
+      <StyledMain
+        style={pathname === "/" || pathname === "/admin" ? { paddingTop: 0 } : {}}
+      >
         {loading ? <Loading /> : children}
       </StyledMain>
     </>

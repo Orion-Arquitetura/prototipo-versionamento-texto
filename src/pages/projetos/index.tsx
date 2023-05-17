@@ -14,7 +14,7 @@ export default function Projetos() {
   const queryClient = useQueryClient();
 
   async function getProjectsNames() {
-    const data = await fetch("/api/projetos/getAllProjects").then((res) => res.json());
+    const data = await fetch("/api/projects/getAllProjects").then((res) => res.json());
     return data;
   }
 

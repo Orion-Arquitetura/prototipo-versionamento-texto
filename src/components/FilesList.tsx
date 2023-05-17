@@ -4,6 +4,7 @@ import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import FolderIcon from '@mui/icons-material/Folder';
+import { useQuery } from "@tanstack/react-query";
 
 export default function FilesList({ files }: any) {
   const [selectedIndex, setSelectedIndex] = useState(1);

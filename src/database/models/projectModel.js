@@ -15,8 +15,8 @@ const projectSchema = mongoose.Schema({
     required: true,
     default: [],
   },
-  documentos: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  pastas: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pasta" }],
     default: []
   },
 });

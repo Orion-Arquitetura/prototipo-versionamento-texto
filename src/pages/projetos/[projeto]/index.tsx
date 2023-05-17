@@ -2,12 +2,12 @@ import Arquivo from "@/database/models/arquivoModel";
 import FilesList from "@/components/FilesList";
 import styled from "@emotion/styled";
 import FilesFilters from "@/components/FilesFilters";
-import BackButton from "@/components/BackButton";
-import AddFile from "@/components/AddFile";
 import PageTitle from "@/components/PageTitle";
-import { GetServerSidePropsContext } from "next";
 import Projeto from "@/database/models/projectModel";
 import FilesToolbar from "@/components/FilesToolbar";
+import { GetServerSidePropsContext } from "next";
+import { useQuery } from "@tanstack/react-query";
+import Pasta from "@/database/models/pastaModel";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -20,14 +20,14 @@ const StyledDiv = styled.div`
 `;
 
 export default function Disciplinas({ projeto }: any) {
-  console.log(projeto);
+  console.log(projeto)
   return (
     <StyledDiv>
       <PageTitle title={projeto.nome} />
-      <FilesToolbar />
+      <FilesToolbar projectId={projeto.id} />
       <div className="filters-and-files">
         <FilesFilters />
-        <FilesList files={JSON.parse(projeto.arquivos)} />
+        <FilesList files={JSON.parse(projeto.pastas)} />
       </div>
     </StyledDiv>
   );
@@ -35,21 +35,19 @@ export default function Disciplinas({ projeto }: any) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context;
-  const projectId = query.projeto;
 
-  const files = await Arquivo.find({ projeto: projectId })
+  const projectData = await Projeto.findOne({ _id: query.projeto })
     .exec()
     .then((res) => res);
 
-  const projectName = await Projeto.findOne({ _id: query.projeto })
-    .exec()
-    .then((res) => res.nome);
+  const folders = await Pasta.find({projeto: projectData._id}).then(res => res)
 
   return {
     props: {
       projeto: {
-        nome: projectName,
-        arquivos: JSON.stringify(files),
+        nome: projectData.nome,
+        id: JSON.stringify(projectData._id),
+        pastas: JSON.stringify(folders)
       },
     },
   };
