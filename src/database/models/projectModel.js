@@ -15,8 +15,8 @@ const projectSchema = mongoose.Schema({
     required: true,
     default: [],
   },
-  pastas: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pasta" }],
+  arquivos: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" }],
     default: []
   },
 });
