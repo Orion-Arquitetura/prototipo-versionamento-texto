@@ -1,4 +1,3 @@
-import Arquivo from "@/database/models/arquivoModel";
 import FilesList from "@/components/FilesList";
 import styled from "@emotion/styled";
 import FilesFilters from "@/components/FilesFilters";
@@ -6,8 +5,7 @@ import PageTitle from "@/components/PageTitle";
 import Projeto from "@/database/models/projectModel";
 import FilesToolbar from "@/components/FilesToolbar";
 import { GetServerSidePropsContext } from "next";
-import { useQuery } from "@tanstack/react-query";
-import Pasta from "@/database/models/pastaModel";
+import Arquivo from "@/database/models/arquivoModel";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -20,14 +18,13 @@ const StyledDiv = styled.div`
 `;
 
 export default function Disciplinas({ projeto }: any) {
-  console.log(projeto)
   return (
     <StyledDiv>
       <PageTitle title={projeto.nome} />
       <FilesToolbar projectId={projeto.id} />
       <div className="filters-and-files">
         <FilesFilters />
-        <FilesList files={JSON.parse(projeto.pastas)} />
+        <FilesList files={JSON.parse(projeto.arquivos)} />
       </div>
     </StyledDiv>
   );
@@ -40,14 +37,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .exec()
     .then((res) => res);
 
-  const folders = await Pasta.find({projeto: projectData._id}).then(res => res)
+  const arquivos = await Arquivo.find({projeto: projectData._id}).then(res => res)
+  console.log(arquivos)
+  console.log(projectData)
 
   return {
     props: {
       projeto: {
         nome: projectData.nome,
         id: JSON.stringify(projectData._id),
-        pastas: JSON.stringify(folders)
+        arquivos: JSON.stringify(arquivos)
       },
     },
   };
