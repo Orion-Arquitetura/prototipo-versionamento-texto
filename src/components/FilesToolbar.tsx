@@ -7,10 +7,10 @@ const StyledDiv = styled.div`
     flex-direction: row-reverse;
 `;
 
-export default function FilesToolbar({projectId, projectName}:{projectId:string , projectName:string}) {
+export default function FilesToolbar({projectId}:{projectId:string}) {
     return (
         <StyledDiv>
-            <AddFileModal projectId={projectId} projectName={projectName} />
+            <AddFileModal projectId={projectId} />
         </StyledDiv>
     )
 }
