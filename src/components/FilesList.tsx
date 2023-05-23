@@ -1,35 +1,41 @@
-import { useState } from "react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import FolderIcon from '@mui/icons-material/Folder';
-import { useQuery } from "@tanstack/react-query";
+import { ListItem, ListItemButton } from "@mui/material";
+
+const ListBoxStyles = {
+  flexBasis: "69%",
+  color: "white",
+};
+
+const ListStyles = {
+  border: "solid 1px red",
+};
+
+const ListItemButtonStyles = {
+  bgcolor: "#9797ff",
+  ":hover": {
+  bgcolor: "#1010a5",
+  }
+}
 
 export default function FilesList({ files }: any) {
-  const [selectedIndex, setSelectedIndex] = useState(1);
-
-  function handleListItemClick(index: number) {
-    setSelectedIndex(index);
-  }
-
   return (
-      <Box sx={{ bgcolor: "#1b1b3d", flexBasis: "69%", color: "white" }}>
-        <List component="nav">
-          {files.map((file: any, index: number) => {
-            return (
-              <ListItemButton
-                selected={selectedIndex === index}
-                onClick={() => handleListItemClick(index)}
-                key={Math.random() * 10000}
-                
-              >
-                <FolderIcon sx={{marginRight: 2}}/>
+    <Box sx={ListBoxStyles}>
+      <List
+        component="nav"
+        sx={ListStyles}
+      >
+        {files.map((file: any, index: number) => {
+          return (
+            <ListItemButton key={file.nome} sx={ListItemButtonStyles}>
+              <ListItem>
                 <ListItemText primary={file.nome} />
-              </ListItemButton>
-            );
-          })}
-        </List>
-      </Box>
+              </ListItem>
+            </ListItemButton>
+          );
+        })}
+      </List>
+    </Box>
   );
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import AddFolderModal from './AddFolderModal';
+import AddFileModal from './AddFileModal';
 
 const StyledDiv = styled.div`
     margin-bottom: 10px;
@@ -7,10 +7,10 @@ const StyledDiv = styled.div`
     flex-direction: row-reverse;
 `;
 
-export default function FilesToolbar({projectId}:{projectId:string}) {
+export default function FilesToolbar({projectId, projectName}:{projectId:string , projectName:string}) {
     return (
         <StyledDiv>
-            <AddFolderModal projectId={projectId} />
+            <AddFileModal projectId={projectId} projectName={projectName} />
         </StyledDiv>
     )
 }
