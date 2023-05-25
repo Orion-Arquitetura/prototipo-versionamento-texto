@@ -6,6 +6,7 @@ import Projeto from "@/database/models/projectModel";
 import FilesToolbar from "@/components/FilesToolbar";
 import { GetServerSidePropsContext } from "next";
 import Arquivo from "@/database/models/arquivoModel";
+import { useQuery } from "@tanstack/react-query";
 
 const StyledDiv = styled.div`
   display: flex;
@@ -18,13 +19,24 @@ const StyledDiv = styled.div`
 `;
 
 export default function Disciplinas({ projeto }: any) {
+  const { data, isLoading } = useQuery({
+    queryKey: ["Arquivos-do-projeto"],
+    queryFn: getProjectFiles,
+    refetchOnWindowFocus: false,
+  });
+
+  async function getProjectFiles() {
+    const data = await fetch("/api/files/getAllFilesFromProject", {method: "POST", body: projeto.id}).then(res => res.json())
+    return data
+  }
+
   return (
     <StyledDiv>
       <PageTitle title={projeto.nome} />
       <FilesToolbar projectId={projeto.id} />
       <div className="filters-and-files">
         <FilesFilters />
-        <FilesList files={JSON.parse(projeto.arquivos)} />
+        {isLoading ? null : <FilesList files={data} />}
       </div>
     </StyledDiv>
   );
@@ -37,16 +49,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     .exec()
     .then((res) => res);
 
-  const arquivos = await Arquivo.find({projeto: projectData._id}).then(res => res)
-  console.log(arquivos)
-  console.log(projectData)
-
   return {
     props: {
       projeto: {
         nome: projectData.nome,
-        id: JSON.stringify(projectData._id),
-        arquivos: JSON.stringify(arquivos)
+        id: JSON.stringify(projectData._id).replace(/"/g, ""),
       },
     },
   };
