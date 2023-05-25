@@ -13,7 +13,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const newFile = new Arquivo({
       nome: `${projectData.nome}.${reqData.filtros.tipo}.${reqData.filtros.disciplina}.${reqData.filtros.etapa}`,
-      projeto: reqData.projectId
+      projeto: reqData.projectId,
+      tipo: reqData.filtros.tipo,
+      disciplina: reqData.filtros.disciplina,
+      etapa: reqData.filtros.etapa
     })
 
     console.log(newFile)

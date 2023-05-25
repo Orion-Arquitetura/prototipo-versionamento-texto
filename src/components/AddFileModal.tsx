@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import SelectInput from "./SelectInput";
 import { disciplina, etapa, tipo } from "@/utils/documentos";
+import { useQueryClient } from "@tanstack/react-query";
 
 const StyledForm = styled.form`
   display: flex;
@@ -43,36 +44,41 @@ export default function AddFileModal({ projectId }: any) {
   const [open, setOpen] = useState(false);
   const [fileFilters, setFileFilters] = useState({ tipo: "", disciplina: "", etapa: "" });
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone();
+  const queryClient = useQueryClient();
 
   const handleOpen = () => setOpen(true);
 
   const handleClose = () => setOpen(false);
 
-  function setTipo(tipo:string) {
-    setFileFilters(prevState => {
+  function setTipo(tipo: string) {
+    setFileFilters((prevState) => {
       return {
         ...prevState,
-        tipo
-      }
-    })
+        tipo,
+      };
+    });
   }
 
-  function setDisciplina(disciplina:string) {
-    setFileFilters(prevState => {
+  function setDisciplina(disciplina: string) {
+    setFileFilters((prevState) => {
       return {
         ...prevState,
-        disciplina
-      }
-    })
+        disciplina,
+      };
+    });
   }
 
-  function setEtapa(etapa:string) {
-    setFileFilters(prevState => {
+  function setEtapa(etapa: string) {
+    setFileFilters((prevState) => {
       return {
         ...prevState,
-        etapa
-      }
-    })
+        etapa,
+      };
+    });
+  }
+
+  function refetchProjects() {
+    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
   }
 
   async function submitNewFileData() {
@@ -81,11 +87,13 @@ export default function AddFileModal({ projectId }: any) {
       filtros: fileFilters,
     };
 
-    console.log(bodyData)
     await fetch("/api/files/createFile", {
       method: "POST",
       body: JSON.stringify(bodyData),
     });
+
+    refetchProjects();
+    handleClose();
   }
 
   return (
