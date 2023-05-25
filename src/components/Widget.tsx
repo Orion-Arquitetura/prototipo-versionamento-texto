@@ -3,6 +3,7 @@ import { Button, Menu, MenuItem } from "@mui/material";
 import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import React from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
 const StyledLi = styled.li`
   flex: 0 0 calc(33.33% - 10px);
@@ -53,6 +54,18 @@ export default function Widget({ title, link }: WidgetData) {
     setAnchorEl(null);
   };
 
+  async function deleteProject() {
+    await fetch("api/projects/deleteProject", {method: "POST", body: title})
+    handleClose()
+    refetchProjects()
+  }
+
+  const queryClient = useQueryClient();
+  
+  function refetchProjects() {
+    queryClient.invalidateQueries(["Nome-de-projetos"]);
+  }
+
   return (
     <StyledLi>
       <div className="widget-project-data-div">
@@ -77,7 +90,7 @@ export default function Widget({ title, link }: WidgetData) {
               "aria-labelledby": "basic-button",
             }}
           >
-            <MenuItem onClick={handleClose}>Excluir</MenuItem>
+            <MenuItem onClick={deleteProject}>Excluir</MenuItem>
             <MenuItem onClick={handleClose}>Renomear</MenuItem>
           </Menu>
         </div>
