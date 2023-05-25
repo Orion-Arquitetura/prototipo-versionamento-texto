@@ -55,6 +55,9 @@ const arquivoSchema = mongoose.Schema({
     required: true,
     enum: ["LV", "EP", "AP", "PB", "PE"],
   },
+  projeto: {
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
+  }
 });
 
 const Arquivo =
