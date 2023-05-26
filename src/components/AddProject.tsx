@@ -53,7 +53,7 @@ const StyledLi = styled.li`
   }
 `;
 
-export default function AddProject({ refetch }: any) {
+export default function AddProject({ refetch }: {refetch: () => void}) {
   const [inputMode, setInputMode] = useState(false);
 
   async function createProject(name: string) {
