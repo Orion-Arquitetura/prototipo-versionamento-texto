@@ -6,9 +6,9 @@ const StyledDiv = styled.div`
   padding-left: 16px;
   display: flex;
   column-gap: 15px;
-  margin-bottom: 20px;
   letter-spacing: 0.5px;
   color: #1b1b3d;
+  align-items: center;
 `;
 
 export default function PageTitle({ title = "titulo" }: { title: string }) {

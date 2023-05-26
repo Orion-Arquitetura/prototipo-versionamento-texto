@@ -7,7 +7,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const arquivos = await Arquivo.find({ projeto: req.body }).exec();
-    console.log(arquivos);
 
     res.status(200).json(arquivos);
     return;

@@ -6,10 +6,11 @@ import { ListItem, ListItemButton } from "@mui/material";
 const ListBoxStyles = {
   flexBasis: "69%",
   color: "white",
+
 };
 
 const ListStyles = {
-  border: "solid 1px red",
+  
 };
 
 const ListItemButtonStyles = {
