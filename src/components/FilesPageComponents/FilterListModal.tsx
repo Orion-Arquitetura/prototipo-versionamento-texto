@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import { FilesFiltersContext } from "@/contexts/filesFiltersContext";
 import { useContext } from "react";
-import FilesFilters from "../FilesFilters";
+import FilesFilters from "./FilesFilters";
 
 const StyledBox = styled(Box)`
   position: absolute;

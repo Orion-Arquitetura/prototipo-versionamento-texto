@@ -2,7 +2,7 @@ import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import FileUploader from "../FileUploadInput";
+import FileUploader from "./FileUploadInput";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import SelectInput from "../SelectInput";
