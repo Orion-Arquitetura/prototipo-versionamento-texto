@@ -1,7 +1,7 @@
-import FilesList from "@/components/FilesList";
+import FilesList from "@/components/FilesPageComponents/FilesList";
 import styled from "@emotion/styled";
 import Projeto from "@/database/models/projectModel";
-import FilesToolbar from "@/components/FilesToolbar";
+import FilesToolbar from "@/components/FilesPageComponents/FilesToolbar";
 import { GetServerSidePropsContext } from "next";
 import { useQuery } from "@tanstack/react-query";
 

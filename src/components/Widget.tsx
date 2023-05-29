@@ -70,7 +70,7 @@ export default function Widget({ title, link }: WidgetData) {
     <StyledLi>
       <div className="widget-project-data-div">
         <Link href={link}>{title}</Link>
-
+{/* AQUI FICA O MENU DO WIDGET. PENSANDO EM TIRÁ-LO
         <div>
           <Button
             id="basic-button"
@@ -93,7 +93,7 @@ export default function Widget({ title, link }: WidgetData) {
             <MenuItem onClick={deleteProject}>Excluir</MenuItem>
             <MenuItem onClick={handleClose}>Renomear</MenuItem>
           </Menu>
-        </div>
+        </div> */}
       </div>
     </StyledLi>
   );

@@ -1,16 +1,23 @@
 import LoginForm from "@/components/LoginForm";
 import { parseCookies } from "nookies";
+import { GetServerSidePropsContext } from "next";
 
-export default function Home({ hasCookies }: any) {
-  return <LoginForm hasCookies={hasCookies} />;
+//essa é a rota "/", que vai mostrar a tela de login caso nao hajam cookies
+export default function Home() {
+  return <LoginForm />;
 }
 
-export async function getServerSideProps(context: any) {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookies = parseCookies(context)["orion-token"];
 
-  return {
-    props: {
-      hasCookies: cookies ? true : false,
-    },
-  };
+  if (cookies) {
+    return {
+      redirect: {
+        destination: "/projetos",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 }

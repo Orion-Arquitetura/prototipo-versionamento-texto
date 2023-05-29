@@ -57,6 +57,7 @@ const arquivoSchema = mongoose.Schema({
   },
   projeto: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
+    required: true
   }
 });
 

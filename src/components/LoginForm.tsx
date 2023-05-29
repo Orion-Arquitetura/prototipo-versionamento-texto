@@ -55,10 +55,10 @@ const StyledForm = styled.form`
     align-self: center;
     padding-top: 10px;
     padding-bottom: 10px;
-    background-color: #1b1b3d;
+    background-color: var(--midnight-green);
 
     &:hover {
-      background-color: #4a4aa8;
+      background-color: var(--gray5);
     }
   }
 
@@ -68,7 +68,7 @@ const StyledForm = styled.form`
   }
 `;
 
-export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
+export default function LoginForm() {
   const { signIn, isLoadingUserData } = useContext(AuthContext);
   const { register, handleSubmit } = useForm();
 
@@ -84,18 +84,14 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
 
   return (
     <Box sx={{ display: "grid", placeItems: "center", height: "100vh" }}>
-      <StyledForm onSubmit={handleSubmit(handleSignIn)}>
+     <StyledForm onSubmit={handleSubmit(handleSignIn)}>
         <fieldset>
           <legend>
             <img
-              src="./orion-logo.png"
+              src="./orion-arq-marca-final.png"
               alt="Orion logo"
             ></img>
           </legend>
-          {hasCookies ? (
-            <div className="loading-div">Carregando...</div>
-          ) : (
-            <>
               <div className="padding-div">
                 <label>
                   E-mail:
@@ -104,6 +100,7 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
                     type={"email"}
                     name="email"
                     required
+                    disabled={isLoadingUserData ? true : false}
                   />
                 </label>
                 <label>
@@ -113,14 +110,13 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
                     type={"password"}
                     name="senha"
                     required
+                    disabled={isLoadingUserData ? true : false}
                   />
                 </label>
               </div>
-            </>
-          )}
         </fieldset>
 
-        {hasCookies || isLoadingUserData ? null : (
+        {isLoadingUserData ? null : (
           <Button
             variant="contained"
             type="submit"
@@ -128,7 +124,7 @@ export default function LoginForm({ hasCookies }: { hasCookies: boolean }) {
             Entrar
           </Button>
         )}
-      </StyledForm>
+      </StyledForm> 
     </Box>
   );
 }

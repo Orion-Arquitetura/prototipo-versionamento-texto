@@ -1,7 +1,8 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import CloseIcon from "@mui/icons-material/Close";
+import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 
 const StyledLi = styled.li`
   display: inline-block;
@@ -53,26 +54,9 @@ const StyledLi = styled.li`
   }
 `;
 
-export default function AddProject({ refetch }: {refetch: () => void}) {
+export default function AddProject() {
   const [inputMode, setInputMode] = useState(false);
-
-  async function createProject(name: string) {
-    const data = await fetch("/api/projects/createProject", {
-      method: "POST",
-      body: JSON.stringify({ nome: name }),
-    }).then((res) => res.json());
-
-    if (data.status === "Sucesso") {
-      window.alert("Criado com sucesso.");
-      setInputMode(false);
-      refetch();
-    }
-
-    if (data.status === "Erro") {
-      window.alert(data.message);
-      setInputMode(false);
-    }
-  }
+  const { createProject } = useContext(ProjectCRUDContext);
 
   function inputModeOn() {
     setInputMode(true);
@@ -83,8 +67,9 @@ export default function AddProject({ refetch }: {refetch: () => void}) {
   }
 
   function inputKeyDown(event: any) {
-    if (event.key === "Enter") {
+    if (event.key === "Enter" && event.target.value !== "") {
       createProject(event.target.value);
+      setInputMode(false);
     }
 
     if (event.key === "Escape") {

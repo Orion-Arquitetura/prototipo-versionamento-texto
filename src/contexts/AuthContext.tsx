@@ -45,6 +45,7 @@ export default function AuthContextProvider({ children }: any) {
           setCookie(undefined, "user-id", dados.usuario.id, {
             maxAge: 60 * 60 * 24,
           });
+          setCookie(undefined, "user-level", dados.usuario.nivel)
 
           setUserData(dados.usuario);
         });
@@ -61,6 +62,7 @@ export default function AuthContextProvider({ children }: any) {
     destroyCookie(undefined, "orion-token");
     destroyCookie(undefined, "user-email");
     destroyCookie(undefined, "user-id");
+    destroyCookie(undefined, "user-level");
     setIsLoadingUserData(false);
     setUserData(null);
     Router.push("/");

@@ -1,5 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500&display=swap');
 
+:root {
+  --gray1: #8EA3A8;
+  --gray2: #839A9F;
+  --gray3: #779095;
+  --gray4: #5A797E;
+  --gray5: #496C71;
+  --midnight-green: #1D424D;
+  --navy-blue: #1b1b3d;
+}
+
 * {
   box-sizing: border-box;
   padding: 0;

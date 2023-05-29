@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import FilesFiltersContextProvider from "@/contexts/filesFiltersContext";
 import AuthContextProvider from "@/contexts/AuthContext";
 import Layout from "./layout";
+import ProjectCRUDContextProvider from "@/contexts/ProjectCrudContext";
 
 const queryClient = new QueryClient();
 
@@ -16,9 +17,11 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <FilesFiltersContextProvider>
         <AuthContextProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <ProjectCRUDContextProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ProjectCRUDContextProvider>
         </AuthContextProvider>
       </FilesFiltersContextProvider>
     </QueryClientProvider>
