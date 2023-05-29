@@ -6,6 +6,8 @@ export default function AddFileButton({ handleOpen }: { handleOpen: () => void }
     <Button
       onClick={handleOpen}
       variant="contained"
+      title={"Adicionar novo arquivo"}
+      sx={{backgroundColor: "var(--gray5)", ":hover": {backgroundColor: "var(--gray1)"}}}
     >
       <Add />
     </Button>

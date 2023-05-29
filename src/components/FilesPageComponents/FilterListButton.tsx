@@ -1,12 +1,17 @@
 import { Button } from "@mui/material";
-import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 
 //considerar renomear para "OpenFilters"
 
-export default function FilterListButton({handleOpen}: {handleOpen: () => void}) {
-    return (
-        <Button variant="contained" onClick={handleOpen}>
-            <FilterAltIcon />
-        </Button>
-    )
+export default function FilterListButton({ handleOpen }: { handleOpen: () => void }) {
+  return (
+    <Button
+      variant="contained"
+      onClick={handleOpen}
+      title={"Filtrar lista"}
+      sx={{backgroundColor: "var(--gray5)", ":hover": {backgroundColor: "var(--gray1)"}}}
+    >
+      <FilterAltIcon />
+    </Button>
+  );
 }
