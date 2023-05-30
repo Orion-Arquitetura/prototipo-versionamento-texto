@@ -3,7 +3,6 @@ import BackButton from "./BackButton";
 import { useRouter } from "next/router";
 
 const StyledDiv = styled.div`
-  padding-left: 16px;
   display: flex;
   column-gap: 15px;
   letter-spacing: 0.5px;
