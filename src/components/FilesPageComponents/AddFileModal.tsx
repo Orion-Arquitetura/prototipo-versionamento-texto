@@ -6,7 +6,7 @@ import FileUploader from "./FileUploadInput";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
 import SelectInput from "../SelectInput";
-import { disciplina, etapa, tipo } from "@/utils/documentos";
+import { disciplina, etapa, tipo, conteudo } from "@/utils/documentos";
 import { useQueryClient } from "@tanstack/react-query";
 
 const StyledForm = styled.form`
@@ -40,9 +40,12 @@ const StyledBox = styled(Box)`
   height: fit-content;
 `;
 export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
-  const [fileFilters, setFileFilters] = useState({ tipo: "", disciplina: "", etapa: "" });
+  //arquivos que tem "disciplina" nao podem ter "tipo" e vice-versa
+  //"disciplina" também é chamada de "natureza do projeto" - Seção 2[C] da nomenclatura
+  //"disciplina" é para arquivos de projeto, enquanto "tipo" é para arquivos de documentação
+  const [fileFilters, setFileFilters] = useState({ tipo: "", disciplina: "", etapa: "", conteudo: "" });
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone();
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   function setTipo(tipo: string) {
     setFileFilters((prevState) => {
@@ -71,7 +74,16 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     });
   }
 
-  function refetchProjects() {
+  function setConteudo(conteudo: string) {
+    setFileFilters((prevState) => {
+      return {
+        ...prevState,
+        conteudo,
+      };
+    });
+  }
+
+  function refetchProjectFiles() {
     queryClient.invalidateQueries(["Arquivos-do-projeto"]);
   }
 
@@ -86,24 +98,29 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
       body: JSON.stringify(bodyData),
     });
 
-    refetchProjects();
+    refetchProjectFiles();
     handleClose();
   }
 
   return (
-      <Modal
-        open={isOpen}
-        onClose={handleClose}
-      >
-        <StyledBox>
-          <StyledForm>
-            <legend>
-              <h3>Adicionar novo arquivo</h3>
-            </legend>
-            <fieldset>
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+    >
+      <StyledBox>
+        <StyledForm>
+          <legend>
+            <h3>Adicionar novo arquivo</h3>
+          </legend>
+          <fieldset>
+            <Box
+              display="flex"
+              flexDirection={"column"}
+              rowGap={"20px"}
+            >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <SelectInput
-                  filterName="Tipo de arquivo"
+                  filterName="Tipo de documento"
                   list={tipo}
                   setFileFilters={setTipo}
                 />
@@ -112,34 +129,42 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
                   list={disciplina}
                   setFileFilters={setDisciplina}
                 />
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <SelectInput
                   filterName="Etapa do projeto"
                   list={etapa}
                   setFileFilters={setEtapa}
                 />
+                <SelectInput
+                  filterName="Conteúdo do arquivo"
+                  list={conteudo}
+                  setFileFilters={setConteudo}
+                />
               </Box>
-              <FileUploader
-                getRootProps={getRootProps}
-                getInputProps={getInputProps}
-                isDragActive={isDragActive}
-              />
+            </Box>
+            <FileUploader
+              getRootProps={getRootProps}
+              getInputProps={getInputProps}
+              isDragActive={isDragActive}
+            />
 
-              <div>
-                {acceptedFiles.map((el) => (
-                  <p key={el.name}>
-                    Arquivo selecionado: <strong>{el.name}</strong>
-                  </p>
-                ))}
-              </div>
-            </fieldset>
-            <Button
-              variant="contained"
-              onClick={submitNewFileData}
-            >
-              Enviar
-            </Button>
-          </StyledForm>
-        </StyledBox>
-      </Modal>
+            <div>
+              {acceptedFiles.map((el) => (
+                <p key={el.name}>
+                  Arquivo selecionado: <strong>{el.name}</strong>
+                </p>
+              ))}
+            </div>
+          </fieldset>
+          <Button
+            variant="contained"
+            onClick={submitNewFileData}
+          >
+            Enviar
+          </Button>
+        </StyledForm>
+      </StyledBox>
+    </Modal>
   );
 }

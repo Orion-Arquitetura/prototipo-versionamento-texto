@@ -16,7 +16,7 @@ export default function SelectInput({ list, filterName, setFileFilters }: Select
   };
 
   return (
-    <FormControl sx={{width: "30%"}}>
+    <FormControl sx={{width: "47%"}}>
       <InputLabel>{filterName}</InputLabel>
       <Select
         value={state}

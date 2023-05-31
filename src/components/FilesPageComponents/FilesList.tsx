@@ -1,15 +1,11 @@
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import ListItemText from "@mui/material/ListItemText";
-import { ListItem, ListItemButton, SxProps } from "@mui/material";
-import FileListItemOptions from "./FileListItemOptions";
-import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
+import FileListItem from "./FileListItem";
+
 const ListBoxStyles = {
   flexBasis: "69%",
   color: "white",
-
 };
-
 
 const ListStyles = {
   padding: 0,
@@ -17,31 +13,13 @@ const ListStyles = {
   overflow: "hidden",
 };
 
-const ListItemButtonStyles:SxProps = {
-  bgcolor: "var(--midnight-green)",
-  border: "solid 1px var(--gray1)",
-  ":hover": {
-  bgcolor: "var(--gray1)",
-  }
-}
-
 export default function FilesList({ files }: any) {
+  console.log(files)
   return (
     <Box sx={ListBoxStyles}>
-      <List
-        component="nav"
-        sx={ListStyles}
-      >
+      <List sx={ListStyles}>
         {files.map((file: any) => {
-          return (
-            <ListItemButton key={file.nome} sx={ListItemButtonStyles}>
-              <ListItem>
-                <PictureAsPdfOutlinedIcon sx={{marginRight: 7}} />
-                <ListItemText primary={file.nome} />
-                <FileListItemOptions />
-              </ListItem>
-            </ListItemButton>
-          );
+          return <FileListItem key={file.nome} file={file} />;
         })}
       </List>
     </Box>

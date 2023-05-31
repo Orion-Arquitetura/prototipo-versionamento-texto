@@ -17,13 +17,12 @@ const arquivoSchema = mongoose.Schema({
   },
   tipo: {
     type: String,
-    required: true,
-    enum: ["MED", "CAD", "ORC", "CRO", "SIN", "ANA", "LSD", "LSM", "LSP", "COT"],
+    enum: ["","MED", "CAD", "ORC", "CRO", "SIN", "ANA", "LSD", "LSM", "LSP", "COT"],
   },
   disciplina: {
     type: String,
-    required: true,
     enum: [
+      "",
       "ACS",
       "LOG",
       "ARQ",
@@ -52,12 +51,59 @@ const arquivoSchema = mongoose.Schema({
   },
   etapa: {
     type: String,
-    required: true,
     enum: ["LV", "EP", "AP", "PB", "PE"],
   },
+  conteudo: {
+    type: Object,
+    enum: [
+      "PLA.LOC",
+      "PLA.SIT",
+      "PLA.LOA",
+      "PLA.LEV",
+      "PLA.SET",
+      "PLA.IMP",
+      "PLA.LAY",
+      "PLA.ACB",
+      "PLA.DEM",
+      "PLA.COB",
+      "PLA.PIS",
+      "PLA.FOR",
+      "PTO.ELE",
+      "PLA.MOB",
+      "PTO.HID",
+      "PTO.LOG",
+      "PTO.GAS",
+      "PTO.ESG",
+      "PLA.TET",
+      "PLA.LUM",
+      "PLA.FUR",
+      "CRT.AA.BB",
+      "ELV.1.2",
+      "PRS.1.4",
+      "AMP.GER",
+      "AMP.SAN",
+      "DET.GER",
+      "DET.MAR",
+    ],
+  },
   projeto: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
-    required: true
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Projeto",
+    required: true,
+  },
+  criadoPor: {
+    userName: {
+      type: String,
+      required: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  comentario: {
+    type: String
   }
 });
 
