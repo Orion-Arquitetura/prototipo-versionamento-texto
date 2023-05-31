@@ -3,7 +3,7 @@ import List from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
 import { ListItem, ListItemButton, SxProps } from "@mui/material";
 import FileListItemOptions from "./FileListItemOptions";
-
+import PictureAsPdfOutlinedIcon from '@mui/icons-material/PictureAsPdfOutlined';
 const ListBoxStyles = {
   flexBasis: "69%",
   color: "white",
@@ -32,10 +32,11 @@ export default function FilesList({ files }: any) {
         component="nav"
         sx={ListStyles}
       >
-        {files.map((file: any, index: number) => {
+        {files.map((file: any) => {
           return (
             <ListItemButton key={file.nome} sx={ListItemButtonStyles}>
               <ListItem>
+                <PictureAsPdfOutlinedIcon sx={{marginRight: 7}} />
                 <ListItemText primary={file.nome} />
                 <FileListItemOptions />
               </ListItem>
