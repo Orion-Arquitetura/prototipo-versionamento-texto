@@ -9,6 +9,7 @@ import FilesFiltersContextProvider from "@/contexts/filesFiltersContext";
 import AuthContextProvider from "@/contexts/AuthContext";
 import Layout from "./layout";
 import ProjectCRUDContextProvider from "@/contexts/ProjectCrudContext";
+import UserCRUDContextProvider from "@/contexts/UserCrudContext";
 
 const queryClient = new QueryClient();
 
@@ -17,11 +18,13 @@ export default function App({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <FilesFiltersContextProvider>
         <AuthContextProvider>
-          <ProjectCRUDContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ProjectCRUDContextProvider>
+          <UserCRUDContextProvider>
+            <ProjectCRUDContextProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </ProjectCRUDContextProvider>
+          </UserCRUDContextProvider>
         </AuthContextProvider>
       </FilesFiltersContextProvider>
     </QueryClientProvider>

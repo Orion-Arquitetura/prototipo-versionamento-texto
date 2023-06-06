@@ -18,30 +18,31 @@ const StyledLi = styled.li`
   &:hover,
   &:focus,
   &:focus-within {
-    background-color: var(--gray5);
-    /* background-image: url("/orion-estrela.png"); */
-    /* background-size: 155px;
-      background-repeat: no-repeat;
-      background-position-x: 120%;
-      background-position-y: 50%; */
+    background-color: var(--gray1);
+    background-image: url("/orion-estrela.png");
+    background-size: 155px;
+    background-repeat: no-repeat;
+    background-position-x: 120%;
+    background-position-y: 50%;
+    color: #1d424d;
   }
 
   .widget-project-data-div {
     height: 100%;
-    width: 100%;
     display: flex;
+    width: 100%;
 
     .project-data-icons {
       position: absolute;
       bottom: 0;
-      right: 0;
+      left: 0;
       display: flex;
-      justify-content: space-around;
+      margin-left: 16px;
+      margin-bottom: 16px;
+      column-gap: 10px;
 
       & a svg {
         width: 20px;
-        margin-bottom: 4px;
-        margin-right: 10px;
       }
     }
 

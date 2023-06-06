@@ -1,16 +1,26 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import User from "@/database/models/userModel";
+import { UserFuncionario } from "@/database/models/userFuncionarioModel";
+import { v4 as uuid } from "uuid";
 import connectToDatabase from "@/database/mongodbConnection";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase("App");
 
+  const { nome, email } = JSON.parse(req.body);
+
   try {
-    const userData = await User.findById(req.body).exec();
+    const newUser = new UserFuncionario({nome, email, permissoes: {
+        projetos: [],
+        arquivos: []
+    }})
+
+    await newUser.save()
 
     res.status(200).json({
-      usuario: { nome: userData.nome, email: userData.email, tipo: userData.tipo, id: userData._id }
+      ...newUser,
+      token: uuid(),
     });
+    res.status(200).end()
     return;
   } catch (e) {
     console.log(e);

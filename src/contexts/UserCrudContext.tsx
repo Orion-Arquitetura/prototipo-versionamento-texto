@@ -2,9 +2,9 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createContext } from "react";
 
 type UserCRUDContextType = {
-  createUser: (name: string) => Promise<boolean>;
+  createUser: ({nome, email}:{nome: string, email: string}) => Promise<boolean>;
   deleteUser: (UserID: string) => Promise<boolean>;
-  getUsersMetadata: () => Promise<UserType[]>
+  getAllUsers: () => Promise<UserType[]>
 };
 
 type UserType = {
@@ -25,18 +25,20 @@ export default function UserCRUDContextProvider({ children }: any) {
     queryClient.invalidateQueries([queryName]);
   }
 
-  async function getUsersMetadata() {
-    const data = await fetch("/api/Users/getAllUsers").then((res) => res.json()) as UserType[];
+  async function getAllUsers() {
+    const data = await fetch("/api/user/getAllUsers").then((res) => res.json());
     return data;
   }
 
-  async function createUser(name: string) {
+  async function createUser({nome, email}:{nome: string, email: string}) {
     try {
-      await fetch("/api/Users/createUser", {
+      const newUserData = await fetch("/api/user/createUser", {
         method: "POST",
-        body: JSON.stringify({ nome: name }),
+        body: JSON.stringify({ nome, email }),
       }).then((res) => res.json());
-      invalidadeQuery("Users-metadata");
+      console.log(newUserData)
+      invalidadeQuery("get-all-users-query");
+      
       return true;
     } catch (e) {
       window.alert(e);
@@ -47,7 +49,7 @@ export default function UserCRUDContextProvider({ children }: any) {
   async function deleteUser(UserID: string) {
     try {
       await fetch("api/Users/deleteUser", { method: "POST", body: UserID });
-      invalidadeQuery("Users-metadata");
+      invalidadeQuery("get-all-users-query");
       return true;
     } catch (e) {
       window.alert(e);
@@ -56,7 +58,7 @@ export default function UserCRUDContextProvider({ children }: any) {
   }
 
   return (
-    <UserCRUDContext.Provider value={{ createUser, deleteUser, getUsersMetadata }}>
+    <UserCRUDContext.Provider value={{ createUser, deleteUser, getAllUsers }}>
       {children}
     </UserCRUDContext.Provider>
   );

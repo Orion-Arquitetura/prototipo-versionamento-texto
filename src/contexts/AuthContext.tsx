@@ -78,7 +78,7 @@ export default function AuthContextProvider({ children }: any) {
         setIsLoadingUserData(true);
 
         (async () => {
-          let userData = await fetch("api/user/recoverUserData", {
+          let userData = await fetch("/api/user/recoverUserData", {
             method: "POST",
             body: id,
           }).then((res) => res.json());

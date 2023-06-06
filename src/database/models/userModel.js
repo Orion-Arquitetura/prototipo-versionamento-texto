@@ -17,12 +17,7 @@ export const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
     default: "senha"
-  },
-  nivel: {
-    type: String,
-    enum: ["funcionario", "administrador", "cliente"],
-    default: "funcionario"
-  },
+  }
 })
 
 const User = mongoose.models.User || mongoose.model("User", userSchema, "Users");
