@@ -5,7 +5,7 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { AppProps } from "next/app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import FilesFiltersContextProvider from "@/contexts/filesFiltersContext";
+import FilesFiltersContextProvider from "@/contexts/FilesFiltersContext";
 import AuthContextProvider from "@/contexts/AuthContext";
 import Layout from "./layout";
 import ProjectCRUDContextProvider from "@/contexts/ProjectCrudContext";

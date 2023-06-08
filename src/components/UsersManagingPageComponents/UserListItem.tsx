@@ -46,7 +46,7 @@ export default function UserListItem({ nome, tipo, dados }: UserListItemType) {
           component="th"
           scope="row"
         >
-          {tipo}
+          {tipo.charAt(0).toUpperCase() + tipo.substring(1)}
         </TableCell>
         <TableCell
           component="th"

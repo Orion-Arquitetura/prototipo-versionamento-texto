@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
-import { FilesFiltersContext } from "@/contexts/filesFiltersContext";
+import { FilesFiltersContext } from "@/contexts/FilesFiltersContext";
 import { useContext } from "react";
 import FilesFilters from "./FilesFilters";
 

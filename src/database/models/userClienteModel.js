@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export const userFuncionarioSchema = mongoose.Schema({
+export const userClienteSchema = mongoose.Schema({
   nome: {
     type: String,
     required: true,
@@ -20,7 +20,7 @@ export const userFuncionarioSchema = mongoose.Schema({
   },
   tipo: {
     type: String,
-    default: "funcionario"
+    default: "cliente"
   },
   permissoes: {
     projetos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
@@ -36,6 +36,6 @@ export const userFuncionarioSchema = mongoose.Schema({
   },
 });
 
-export const UserFuncionario =
-  mongoose.models.UserFuncionario ||
-  mongoose.model("UserFuncionario", userFuncionarioSchema, "Users");
+export const UserCliente =
+  mongoose.models.UserCliente ||
+  mongoose.model("UserCliente", userClienteSchema, "Users");

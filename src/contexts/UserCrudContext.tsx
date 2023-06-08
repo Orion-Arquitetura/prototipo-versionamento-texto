@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { createContext } from "react";
 
 type UserCRUDContextType = {
-  createUser: ({nome, email}:{nome: string, email: string}) => Promise<boolean>;
+  createUser: ({nome, email, tipo}:{nome: string, email: string, tipo: string}) => Promise<boolean>;
   deleteUser: (UserID: string) => Promise<boolean>;
   getAllUsers: () => Promise<UserType[]>
 };
@@ -30,11 +30,11 @@ export default function UserCRUDContextProvider({ children }: any) {
     return data;
   }
 
-  async function createUser({nome, email}:{nome: string, email: string}) {
+  async function createUser({nome, email, tipo}:{nome: string, email: string, tipo: string}) {
     try {
       const newUserData = await fetch("/api/user/createUser", {
         method: "POST",
-        body: JSON.stringify({ nome, email }),
+        body: JSON.stringify({ nome, email, tipo }),
       }).then((res) => res.json());
       console.log(newUserData)
       invalidadeQuery("get-all-users-query");

@@ -20,7 +20,7 @@ export const userAdministradorSchema = mongoose.Schema({
   },
   tipo: {
     type: String,
-    default: "Administrador"
+    default: "administrador"
   },
 });
 

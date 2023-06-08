@@ -1,10 +1,10 @@
-import AdminSideMenu from "@/components/UsersListFilter";
-import PageTitle from "@/components/PageTitle";
-import UsersList from "@/components/UsersList";
+import UsersList from "@/components/UsersManagingPageComponents/UsersList";
+import UsersListFilter from "@/components/UsersManagingPageComponents/UsersListFilter";
+import UsersListToolbar from "@/components/UsersManagingPageComponents/UsersListToolbar";
+import { UserCRUDContext } from "@/contexts/UserCrudContext";
 import styled from "@emotion/styled";
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
-import { UserCRUDContext } from "@/contexts/UserCrudContext";
+import { useState, useContext } from "react";
 
 const StyledDiv = styled.div`
   margin-top: 20px;
@@ -13,6 +13,9 @@ const StyledDiv = styled.div`
 `;
 
 export default function UsersControlPage() {
+  const [filters, setFilters] = useState({
+    tipo: "",
+  });
   const { getAllUsers } = useContext(UserCRUDContext);
   const { data } = useQuery({
     queryKey: ["get-all-users-query"],
@@ -22,14 +25,21 @@ export default function UsersControlPage() {
     refetchOnMount: false,
   });
 
-  if (data) console.log(data)
+  function setFilterState(newFilter: string) {
+    setFilters({
+      tipo: newFilter,
+    });
+  }
 
   return (
     <>
-      <PageTitle title="Controle de usuários" />
+      <UsersListToolbar />
       <StyledDiv>
-        <AdminSideMenu />
-        <UsersList list={data} />
+        <UsersListFilter setFilterState={setFilterState} />
+        <UsersList
+          list={data}
+          filters={filters}
+        />
       </StyledDiv>
     </>
   );

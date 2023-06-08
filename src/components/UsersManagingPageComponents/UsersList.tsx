@@ -7,8 +7,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import UserListItem from "./UserListItem";
 
-export default function UsersList({ list }: any) {
-  console.log(list)
+export default function UsersList({ list, filters }: any) {
+  
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
