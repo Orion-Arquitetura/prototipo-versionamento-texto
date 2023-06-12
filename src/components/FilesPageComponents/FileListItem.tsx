@@ -47,7 +47,6 @@ export default function FileListItem({ file }: any) {
           <PictureAsPdfOutlinedIcon sx={{ marginRight: 4, color: "white" }} />
         </ListItemIcon>
         <ListItemText primary={file.nome} />
-        {/* <FileListItemOptions /> */}
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse

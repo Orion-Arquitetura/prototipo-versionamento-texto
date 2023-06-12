@@ -15,9 +15,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       reqData.filtros.disciplina ? reqData.filtros.disciplina : reqData.filtros.tipo
     }.${reqData.filtros.etapa}`
 
+    console.log(reqData.projectId)
+
     const newFile = new Arquivo({
       nome: fileName,
-      projeto: reqData.projectId,
+      projeto: {
+        id: reqData.projectId,
+        nome: projectData.nome
+      },
       tipo: reqData.filtros.tipo,
       disciplina: reqData.filtros.disciplina,
       etapa: reqData.filtros.etapa,
@@ -27,8 +32,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         userId: cookies['user-id']
       }
     });
-
-    console.log(newFile);
 
     const newFileData = await newFile.save();
 
@@ -41,6 +44,4 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res.status(500).json({ Erro: e });
     return;
   }
-  console.log(cookies);
-  res.status(200).json({ ok: "ok" });
 }

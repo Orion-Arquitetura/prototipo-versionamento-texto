@@ -14,13 +14,12 @@ const ListStyles = {
 };
 
 export default function FilesList({ files }: any) {
-  console.log(files)
   return (
     <Box sx={ListBoxStyles}>
       <List sx={ListStyles}>
-        {files.map((file: any) => {
+        {files? files.map((file: any) => {
           return <FileListItem key={file.nome} file={file} />;
-        })}
+        }) : null}
       </List>
     </Box>
   );

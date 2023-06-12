@@ -12,7 +12,7 @@ const StyledDiv = styled.div`
   & .filtro-wrapper {
     flex-basis: 100%;
     position: relative;
-    background-color: #1b1b3d;
+    background-color: var(--midnight-green);
 
     & h4 {
       height: 40px;
@@ -33,6 +33,7 @@ const StyledDiv = styled.div`
       column-gap: 10px;
       padding: 10px 5px;
       align-items: start;
+      justify-content: center;
 
       li {
         padding: 2px 6px;

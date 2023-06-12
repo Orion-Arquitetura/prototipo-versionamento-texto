@@ -1,28 +1,47 @@
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import { useState, MouseEvent } from 'react';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import { useState, MouseEvent } from "react";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import AddUserToProjectModal from "./AddUserToProjectModal";
 
-export default function UserListItemOptionsMenu() {
+export default function UserListItemOptionsMenu({ userId, userName, userProjects }:any) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+  const handleClickMenu = (event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = () => {
+  const handleCloseMenu = () => {
     setAnchorEl(null);
   };
 
+  const [addUserToProjectModalState, setAddUserToProjectModalState] = useState(false);
+
+  function openAddUserToProjectModal() {
+    handleCloseMenu();
+    setAddUserToProjectModalState(true);
+  }
+
+  function closeAddUserToProjectModal() {
+    setAddUserToProjectModalState(false);
+  }
+
   return (
     <div>
+      <AddUserToProjectModal
+        isOpen={addUserToProjectModalState}
+        handleCloseModal={closeAddUserToProjectModal}
+        userId={userId}
+        userName={userName}
+        userProjects={userProjects}
+      />
       <Button
-        aria-controls={open ? 'basic-menu' : undefined}
+        aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={handleClick}
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClickMenu}
       >
         <MoreHorizIcon />
       </Button>
@@ -30,14 +49,11 @@ export default function UserListItemOptionsMenu() {
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
+        onClose={handleCloseMenu}
       >
-        <MenuItem onClick={handleClose}>Adicionar a um projeto</MenuItem>
-        <MenuItem onClick={handleClose}>Modificar permissoes</MenuItem>
-        <MenuItem onClick={handleClose}>Excluir</MenuItem>
+        <MenuItem onClick={openAddUserToProjectModal}>Adicionar a um projeto</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>Modificar permissoes</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>Excluir</MenuItem>
       </Menu>
     </div>
   );

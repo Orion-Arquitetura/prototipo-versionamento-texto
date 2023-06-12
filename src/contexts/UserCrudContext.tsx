@@ -1,25 +1,49 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { createContext } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useEffect, useState } from "react";
 
 type UserCRUDContextType = {
-  createUser: ({nome, email, tipo}:{nome: string, email: string, tipo: string}) => Promise<boolean>;
+  usuarios: UserType[];
+  createUser: ({
+    nome,
+    email,
+    tipo,
+  }: {
+    nome: string;
+    email: string;
+    tipo: string;
+  }) => Promise<boolean>;
   deleteUser: (UserID: string) => Promise<boolean>;
-  getAllUsers: () => Promise<UserType[]>
+  getAllUsers: () => Promise<UserType[]>;
+  addUserToProject: (UserID: string, projectID: string) => void;
+  removeUserFromProject: (UserID: string, projectID: string) => void;
 };
 
 type UserType = {
-    arquivos: string[];
-    dataCriacao: string;
-    funcionariosPermitidos: string[];
-    nome: string;
-    __v: number;
-    _id: string;
-  };
+  nome: string;
+  email: string;
+  tipo: "Funcionário" | "Administrador" | "Cliente";
+  permissoes: { projetos: string[]; arquivos: string[] };
+  _id: string;
+};
 
 export const UserCRUDContext = createContext({} as UserCRUDContextType);
 
 export default function UserCRUDContextProvider({ children }: any) {
   const queryClient = useQueryClient();
+
+  const [usuarios, setUsuarios] = useState<UserType[]>([]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["get-all-users"],
+    queryFn: getAllUsers,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      setUsuarios(data as UserType[]);
+    }
+  }, [isLoading, data]);
 
   function invalidadeQuery(queryName: string) {
     queryClient.invalidateQueries([queryName]);
@@ -30,15 +54,23 @@ export default function UserCRUDContextProvider({ children }: any) {
     return data;
   }
 
-  async function createUser({nome, email, tipo}:{nome: string, email: string, tipo: string}) {
+  async function createUser({
+    nome,
+    email,
+    tipo,
+  }: {
+    nome: string;
+    email: string;
+    tipo: string;
+  }) {
     try {
       const newUserData = await fetch("/api/user/createUser", {
         method: "POST",
         body: JSON.stringify({ nome, email, tipo }),
       }).then((res) => res.json());
-      console.log(newUserData)
-      invalidadeQuery("get-all-users-query");
-      
+      console.log(newUserData);
+      invalidadeQuery("get-all-users");
+
       return true;
     } catch (e) {
       window.alert(e);
@@ -49,7 +81,7 @@ export default function UserCRUDContextProvider({ children }: any) {
   async function deleteUser(UserID: string) {
     try {
       await fetch("api/Users/deleteUser", { method: "POST", body: UserID });
-      invalidadeQuery("get-all-users-query");
+      invalidadeQuery("get-all-users");
       return true;
     } catch (e) {
       window.alert(e);
@@ -57,8 +89,21 @@ export default function UserCRUDContextProvider({ children }: any) {
     }
   }
 
+  async function addUserToProject(UserID: string, projectID: string) {}
+
+  async function removeUserFromProject(UserID: string, projectID: string) {}
+
   return (
-    <UserCRUDContext.Provider value={{ createUser, deleteUser, getAllUsers }}>
+    <UserCRUDContext.Provider
+      value={{
+        usuarios,
+        createUser,
+        deleteUser,
+        getAllUsers,
+        addUserToProject,
+        removeUserFromProject,
+      }}
+    >
       {children}
     </UserCRUDContext.Provider>
   );

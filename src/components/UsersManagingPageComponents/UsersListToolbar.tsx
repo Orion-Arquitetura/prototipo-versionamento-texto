@@ -1,7 +1,6 @@
 import styled from "@emotion/styled";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { useState } from "react";
-import AddFileButton from "../FilesPageComponents/AddFileButton";
 import PageTitle from "../PageTitle";
 import AddUserModal from "./AddUserModal";
 
@@ -15,8 +14,9 @@ const StyledDiv = styled.div`
 
 export default function UsersListToolbar() {
   const [addUserModalState, setAddUserModalState] = useState(false);
+  
 
-  function openAddFileModal() {
+  function openAddUserModal() {
     setAddUserModalState(true);
   }
 
@@ -24,12 +24,19 @@ export default function UsersListToolbar() {
     setAddUserModalState(false);
   }
 
+
+
   return (
     <StyledDiv>
       <PageTitle title={"Controle de usuários"} />
 
       <Box sx={{ display: "flex", columnGap: 2 }}>
-        <AddFileButton handleOpen={openAddFileModal} />
+        <Button
+          variant="contained"
+          onClick={openAddUserModal}
+        >
+          Add user
+        </Button>
         <AddUserModal
           isOpen={addUserModalState}
           handleClose={closeAddUserModal}

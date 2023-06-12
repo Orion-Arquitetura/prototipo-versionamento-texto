@@ -6,9 +6,11 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import UserListItem from "./UserListItem";
+import { useContext } from "react";
+import { UserCRUDContext } from "@/contexts/UserCrudContext";
 
-export default function UsersList({ list, filters }: any) {
-  
+export default function UsersList({ filters }: any) {
+  const { usuarios } = useContext(UserCRUDContext);
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -21,18 +23,22 @@ export default function UsersList({ list, filters }: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list
-            ? list.map(
-                (item: {
+          {usuarios.length > 0
+            ? usuarios.map(
+                (user: {
                   nome: string;
+                  email: string;
                   tipo: "Funcionário" | "Administrador" | "Cliente";
-                  dados: any;
+                  permissoes: { projetos: string[]; arquivos: string[] };
+                  _id: string;
                 }) => (
                   <UserListItem
-                    key={item.nome}
-                    nome={item.nome}
-                    tipo={item.tipo}
-                    dados={item.dados}
+                    key={user.nome}
+                    nome={user.nome}
+                    email={user.email}
+                    tipo={user.tipo}
+                    permissoes={user.permissoes}
+                    id={user._id}
                   />
                 )
               )
@@ -42,4 +48,3 @@ export default function UsersList({ list, filters }: any) {
     </TableContainer>
   );
 }
-

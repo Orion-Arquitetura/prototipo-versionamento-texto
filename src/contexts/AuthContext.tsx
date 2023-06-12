@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
-import Router, { useRouter } from "next/router";
+import Router from "next/router";
 
 type signInData = {
   email: string;
@@ -36,6 +36,7 @@ export default function AuthContextProvider({ children }: any) {
       })
         .then((res) => res.json())
         .then((dados) => {
+          console.log(dados)
           setCookie(undefined, "orion-token", dados.token, {
             maxAge: 60 * 60 * 24,
           });
@@ -45,7 +46,7 @@ export default function AuthContextProvider({ children }: any) {
           setCookie(undefined, "user-id", dados.usuario.id, {
             maxAge: 60 * 60 * 24,
           });
-          setCookie(undefined, "user-level", dados.usuario.nivel)
+          setCookie(undefined, "user-tipo", dados.usuario.tipo)
 
           setUserData(dados.usuario);
         });
@@ -62,7 +63,7 @@ export default function AuthContextProvider({ children }: any) {
     destroyCookie(undefined, "orion-token");
     destroyCookie(undefined, "user-email");
     destroyCookie(undefined, "user-id");
-    destroyCookie(undefined, "user-level");
+    destroyCookie(undefined, "user-tipo");
     setIsLoadingUserData(false);
     setUserData(null);
     Router.push("/");

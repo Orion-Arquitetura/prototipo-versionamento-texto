@@ -5,19 +5,15 @@ import AddProject from "@/components/AddProject";
 import { useQuery } from "@tanstack/react-query";
 import { useContext } from "react";
 import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
+import { GetServerSidePropsContext } from "next";
+import { parseCookies } from "nookies";
 
 export default function Projetos() {
-  const { getProjectsMetadata } = useContext(ProjectCRUDContext);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["Projects-metadata"],
-    queryFn: getProjectsMetadata,
-    refetchOnWindowFocus: false,
-  });
+  const { projetos } = useContext(ProjectCRUDContext);
 
   return (
     <>
-      {isLoading ? (
+      {projetos.length === 0 ? (
         <>
           <PageTitle title="Projetos" />
 
@@ -29,8 +25,8 @@ export default function Projetos() {
         <>
           <PageTitle title="Projetos" />
           <WidgetBox direction="row">
-            {data
-              ? data.map((projeto: any) => {
+            {projetos
+              ? projetos.map((projeto: any) => {
                   return (
                     <Widget
                       key={projeto.nome}
@@ -46,4 +42,19 @@ export default function Projetos() {
       )}
     </>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
+
+  if (token && tipo) {
+    return { props: {} };
+  }
+
+  return {
+    redirect: {
+      permanent: false,
+      destination: "/",
+    },
+  };
 }

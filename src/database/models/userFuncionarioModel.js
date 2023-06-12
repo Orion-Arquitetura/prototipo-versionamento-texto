@@ -20,10 +20,12 @@ export const userFuncionarioSchema = mongoose.Schema({
   },
   tipo: {
     type: String,
-    default: "funcionario"
+    default: "funcionario",
   },
   permissoes: {
-    projetos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
+    projetos: [
+      { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } },
+    ],
     arquivos: [
       {
         id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },

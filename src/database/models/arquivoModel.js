@@ -11,13 +11,16 @@ const arquivoSchema = mongoose.Schema({
     default: Date.now,
   },
   projeto: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Projeto",
-    required: true,
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Projeto",
+      required: true,
+    },
+    nome: String
   },
   tipo: {
     type: String,
-    enum: ["","MED", "CAD", "ORC", "CRO", "SIN", "ANA", "LSD", "LSM", "LSP", "COT"],
+    enum: ["", "MED", "CAD", "ORC", "CRO", "SIN", "ANA", "LSD", "LSM", "LSP", "COT"],
   },
   disciplina: {
     type: String,
@@ -87,9 +90,15 @@ const arquivoSchema = mongoose.Schema({
     ],
   },
   projeto: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Projeto",
-    required: true,
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Projeto",
+      required: true,
+    },
+    nome: {
+      type: String,
+      required: true,
+    }
   },
   criadoPor: {
     userName: {
@@ -103,8 +112,8 @@ const arquivoSchema = mongoose.Schema({
     },
   },
   comentario: {
-    type: String
-  }
+    type: String,
+  },
 });
 
 const Arquivo =

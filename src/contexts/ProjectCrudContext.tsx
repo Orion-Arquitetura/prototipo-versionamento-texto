@@ -1,32 +1,49 @@
-import { useQueryClient } from "@tanstack/react-query";
-import { createContext } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { createContext, useEffect, useState } from "react";
 
 type ProjectCRUDContextType = {
+  projetos: ProjectType[];
   createProject: (name: string) => Promise<boolean>;
   deleteProject: (projectID: string) => Promise<boolean>;
-  getProjectsMetadata: () => Promise<ProjectType[]>
+  getProjectsMetadata: () => Promise<ProjectType[]>;
 };
 
 type ProjectType = {
-    arquivos: string[];
-    dataCriacao: string;
-    funcionariosPermitidos: string[];
-    nome: string;
-    __v: number;
-    _id: string;
-  };
+  arquivos: string[];
+  dataCriacao: string;
+  funcionariosPermitidos: string[];
+  nome: string;
+  __v: number;
+  _id: string;
+};
 
 export const ProjectCRUDContext = createContext({} as ProjectCRUDContextType);
 
 export default function ProjectCRUDContextProvider({ children }: any) {
   const queryClient = useQueryClient();
+  const [projetos, setProjetos] = useState<ProjectType[]>([]);
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["Projects-metadata"],
+    queryFn: getProjectsMetadata,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      setProjetos(data as ProjectType[])
+    }
+
+  }, [isLoading, data])
 
   function invalidadeQuery(queryName: string) {
     queryClient.invalidateQueries([queryName]);
   }
 
   async function getProjectsMetadata() {
-    const data = await fetch("/api/projects/getAllProjects").then((res) => res.json()) as ProjectType[];
+    const data = (await fetch("/api/projects/getAllProjects").then((res) =>
+      res.json()
+    )) as ProjectType[];
     return data;
   }
 
@@ -56,7 +73,9 @@ export default function ProjectCRUDContextProvider({ children }: any) {
   }
 
   return (
-    <ProjectCRUDContext.Provider value={{ createProject, deleteProject, getProjectsMetadata }}>
+    <ProjectCRUDContext.Provider
+      value={{ projetos, createProject, deleteProject, getProjectsMetadata }}
+    >
       {children}
     </ProjectCRUDContext.Provider>
   );

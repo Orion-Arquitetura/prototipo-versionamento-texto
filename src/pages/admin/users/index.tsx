@@ -4,6 +4,8 @@ import UsersListToolbar from "@/components/UsersManagingPageComponents/UsersList
 import { UserCRUDContext } from "@/contexts/UserCrudContext";
 import styled from "@emotion/styled";
 import { useQuery } from "@tanstack/react-query";
+import { GetServerSidePropsContext } from "next";
+import { parseCookies } from "nookies";
 import { useState, useContext } from "react";
 
 const StyledDiv = styled.div`
@@ -16,14 +18,8 @@ export default function UsersControlPage() {
   const [filters, setFilters] = useState({
     tipo: "",
   });
-  const { getAllUsers } = useContext(UserCRUDContext);
-  const { data } = useQuery({
-    queryKey: ["get-all-users-query"],
-    queryFn: getAllUsers,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMount: false,
-  });
+
+  
 
   function setFilterState(newFilter: string) {
     setFilters({
@@ -37,10 +33,24 @@ export default function UsersControlPage() {
       <StyledDiv>
         <UsersListFilter setFilterState={setFilterState} />
         <UsersList
-          list={data}
           filters={filters}
         />
       </StyledDiv>
     </>
   );
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
+
+  if (token && tipo === "administrador") {
+    return { props: {} };
+  }
+
+  return {
+    redirect: {
+      permanent: false,
+      destination: "/",
+    },
+  };
 }

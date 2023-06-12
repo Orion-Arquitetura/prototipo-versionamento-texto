@@ -39,11 +39,11 @@ export default function AddUserModal({ isOpen, handleClose }: any) {
 
   const { createUser } = useContext(UserCRUDContext);
 
-  async function submit(data:any) {
+  async function submit(data: any) {
     const isUserCreated = await createUser(data);
 
     if (isUserCreated) {
-        handleClose()
+      handleClose();
     }
   }
 
@@ -58,17 +58,20 @@ export default function AddUserModal({ isOpen, handleClose }: any) {
             label="Nome"
             variant="outlined"
             type="text"
+            required
             {...register("nome")}
           />
           <TextField
             label="Email"
             variant="outlined"
             type="email"
+            required
             {...register("email")}
           />
           <FormControl fullWidth>
             <InputLabel>Tipo de usuário</InputLabel>
             <Select
+              required
               defaultValue={"funcionario"}
               label="Tipo de usuário"
               {...register("tipo")}

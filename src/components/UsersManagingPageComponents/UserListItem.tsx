@@ -7,21 +7,30 @@ import {
   Typography,
   Table,
   TableBody,
+  TableHead,
 } from "@mui/material";
 import { useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import UserListItemOptionsMenu from "./UserListItemOptionsMenu";
+import AddUserToProjectModal from "./AddUserToProjectModal";
 
 type UserListItemType = {
   nome: string;
   tipo: "Funcionário" | "Administrador" | "Cliente";
-  dados: { projetos: string[]; arquivos: string[] };
+  permissoes: { projetos: string[]; arquivos: string[] };
+  email: string;
+  id: string;
 };
 
-export default function UserListItem({ nome, tipo, dados }: UserListItemType) {
+export default function UserListItem({
+  nome,
+  tipo,
+  permissoes,
+  email,
+  id,
+}: UserListItemType) {
   const [open, setOpen] = useState(false);
-
   return (
     <>
       <TableRow sx={{ "& > *": { borderBottom: "0 !important" } }}>
@@ -53,7 +62,11 @@ export default function UserListItem({ nome, tipo, dados }: UserListItemType) {
           scope="row"
           sx={{ display: "flex", justifyContent: "flex-end" }}
         >
-          <UserListItemOptionsMenu />
+          <UserListItemOptionsMenu
+            userId={id}
+            userName={nome}
+            userProjects={permissoes}
+          />
         </TableCell>
       </TableRow>
 
@@ -68,36 +81,23 @@ export default function UserListItem({ nome, tipo, dados }: UserListItemType) {
             unmountOnExit
           >
             <Box>
-              <Typography
-                variant="h6"
-                component="div"
-              >
-                Dados
-              </Typography>
               <Table
                 size="small"
-                aria-label="purchases"
+                aria-label="User data"
               >
-                {/* 
-                  AQUI É O CABEÇALHO DA SUB-TABELA
-                  <TableHead>
-                    <TableRow>
-                      <TableCell align="right">Total price ($)</TableCell>
-                    </TableRow>
-                  </TableHead> */}
                 <TableBody>
-                  {/* 
-                    AQUI É O CORPO DA SUB-TABELA
-                    {row.dados.projetos.map((projetoId) => (
-                      <TableRow key={projetoId}>
-                        <TableCell
-                          component="th"
-                          scope="row"
-                        >
-                          {projetoId}
-                        </TableCell>
-                      </TableRow>
-                    ))} */}
+                  {/* {permissoes
+                    ? permissoes.projetos.map((projetoId) => (
+                        <TableRow key={projetoId}>
+                          <TableCell
+                            component="th"
+                            scope="row"
+                          >
+                            {projetoId}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    : null} */}
                 </TableBody>
               </Table>
             </Box>

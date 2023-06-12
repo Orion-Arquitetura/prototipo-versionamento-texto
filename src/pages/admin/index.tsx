@@ -1,24 +1,33 @@
 import styled from "@emotion/styled";
-import { Button, List, ListItem, ListItemButton } from "@mui/material";
-import { useContext, useState } from "react";
-import Link from "next/link";
+import PanelMenu from "@/components/AdminPanelComponents/PanelMenu";
+import PageTitle from "@/components/PageTitle";
+import { GetServerSidePropsContext } from "next";
+import { parseCookies } from "nookies";
 
 const StyledDiv = styled.div`
-  height: 100vh;
-  padding-top: 100px;
-  border: solid 1px red;
 `;
 
 export default function Index() {
   return (
     <StyledDiv>
-      <List>
-        <ListItem>
-          <ListItemButton>
-            <Link href={"/admin/users"}>Ver usuários</Link>
-          </ListItemButton>
-        </ListItem>
-      </List>
+      <PageTitle title="Painel do administrador" />
+      <PanelMenu />
     </StyledDiv>
   );
 }
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
+
+  if (token && (tipo === "administrador")) {
+    return { props: {} };
+  }
+
+  return {
+    redirect: {
+      permanent: false,
+      destination: "/",
+    },
+  };
+}
+

@@ -16,8 +16,8 @@ const queryClient = new QueryClient();
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <FilesFiltersContextProvider>
-        <AuthContextProvider>
+      <AuthContextProvider>
+        <FilesFiltersContextProvider>
           <UserCRUDContextProvider>
             <ProjectCRUDContextProvider>
               <Layout>
@@ -25,8 +25,8 @@ export default function App({ Component, pageProps }: AppProps) {
               </Layout>
             </ProjectCRUDContextProvider>
           </UserCRUDContextProvider>
-        </AuthContextProvider>
-      </FilesFiltersContextProvider>
+        </FilesFiltersContextProvider>
+      </AuthContextProvider>
     </QueryClientProvider>
   );
 }

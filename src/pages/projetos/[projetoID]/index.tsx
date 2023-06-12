@@ -1,6 +1,5 @@
 import FilesList from "@/components/FilesPageComponents/FilesList";
 import styled from "@emotion/styled";
-import Projeto from "@/database/models/projectModel";
 import FilesToolbar from "@/components/FilesPageComponents/FilesToolbar";
 import { GetServerSidePropsContext } from "next";
 import { useQuery } from "@tanstack/react-query";
@@ -10,7 +9,7 @@ const StyledDiv = styled.div`
   flex-direction: column;
 `;
 
-export default function FilesPage({ projeto }: any) {
+export default function FilesPage({ projetoID }: any) {
   const { data, isLoading } = useQuery({
     queryKey: ["Arquivos-do-projeto"],
     queryFn: getProjectFiles,
@@ -18,13 +17,32 @@ export default function FilesPage({ projeto }: any) {
   });
 
   async function getProjectFiles() {
-    const data = await fetch("/api/files/getAllFilesFromProject", {method: "POST", body: projeto.id}).then(res => res.json())
+    const data = await fetch("/api/files/getAllFilesFromProject", {method: "POST", body: projetoID}).then(res => res.json())
     return data
+  }
+
+  if (data === undefined) {
+    return (
+      <StyledDiv>
+        <FilesToolbar projectId={projetoID} projectName={"Carregando..."} />
+          <div>Carregando</div>
+      </StyledDiv>
+    );
+  }
+
+  if (data.projectName) {//se retornar apenas o nome do projeto é porque não tem arquivos daquele projeto ainda
+    
+    return (
+      <StyledDiv>
+        <FilesToolbar projectId={projetoID} projectName={data.projectName} />
+          <div>Não existem arquivos nesse projeto ainda.</div>
+      </StyledDiv>
+    );
   }
 
   return (
     <StyledDiv>
-      <FilesToolbar projectId={projeto.id} projectName={projeto.nome}/>
+      <FilesToolbar projectId={projetoID} projectName={data[0].projeto.nome}/>
         {isLoading ? null : <FilesList files={data} />}
     </StyledDiv>
   );
@@ -33,16 +51,9 @@ export default function FilesPage({ projeto }: any) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { query } = context;
 
-  const projectData = await Projeto.findOne({ _id: query.projeto })
-    .exec()
-    .then((res) => res);
-
   return {
     props: {
-      projeto: {
-        nome: projectData.nome,
-        id: JSON.stringify(projectData._id).replace(/"/g, ""),
-      },
+      projetoID: query.projetoID,
     },
   };
 }

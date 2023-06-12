@@ -6,7 +6,7 @@ import { UserAdministrador } from "@/database/models/userAdministradorModel"
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   // console.log(mongoose.modelNames());
   // const nome = req.query.q as string | RegExp
-  // mongoose.deleteModel(nome)
+  mongoose.deleteModel("Arquivo")
   console.log(mongoose.modelNames());
   // console.log("oks")
 

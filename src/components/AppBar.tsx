@@ -12,6 +12,7 @@ import { AuthContext } from "@/contexts/AuthContext";
 import PersonIcon from "@mui/icons-material/Person";
 import styled from "@emotion/styled";
 import Image from "next/image";
+import Link from "next/link";
 
 const settings = ["Perfil", "Sair"];
 
@@ -40,7 +41,10 @@ function ResponsiveAppBar() {
         backgroundColor: "#fdfdfd",
       }}
     >
-      <Toolbar disableGutters sx={{justifyContent: "space-between"}}>
+      <Toolbar
+        disableGutters
+        sx={{ justifyContent: "space-between" }}
+      >
         <Image
           src="/orion-arq-marca-final.png"
           alt="Orion Arquitetura"
@@ -52,7 +56,7 @@ function ResponsiveAppBar() {
           <Tooltip title="Menu do usuário">
             <IconButton
               onClick={handleOpenUserMenu}
-              sx={{border: "solid 1px rgba(0,0,0,0.3)"}}
+              sx={{ border: "solid 1px rgba(0,0,0,0.3)" }}
             >
               <PersonIcon />
             </IconButton>
@@ -73,18 +77,24 @@ function ResponsiveAppBar() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem
-                key={setting}
-                onClick={setting === "Sair" ? logOff : handleCloseUserMenu}
-              >
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
+            <MenuItem>
+              <Link href={"/admin"}>
+                <Typography textAlign={"center"}>Painel</Typography>
+              </Link>
+            </MenuItem>
+
+            <MenuItem>
+              <Typography textAlign="center">Perfil</Typography>
+            </MenuItem>
+
+            <MenuItem onClick={logOff}>
+              <Typography textAlign="center">Sair</Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </Toolbar>
     </AppBar>
   );
 }
+
 export default ResponsiveAppBar;

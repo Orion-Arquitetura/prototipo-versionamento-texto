@@ -11,7 +11,7 @@ import {
 
 const StyledPaper = styled(Paper)`
   flex-basis: 20%;
-  min-height: 20%;
+  height: 20%;
   padding: 10px;
   padding-top: 0;
 
