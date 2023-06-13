@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Divider from "@mui/material/Divider";
 import { useContext } from "react";
-import { FilesFiltersContext } from "@/contexts/FilesFiltersContext";
+import { FilesFiltersContext } from "../../contexts/FilesFiltersContext";
 import { disciplina, etapa, tipo } from "@/utils/documentos";
 
 const StyledDiv = styled.div`
