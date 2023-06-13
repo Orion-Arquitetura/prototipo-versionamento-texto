@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { parseCookies } from "nookies";
 import { createContext, useEffect, useState } from "react";
 
 type UserCRUDContextType = {
@@ -50,8 +51,12 @@ export default function UserCRUDContextProvider({ children }: any) {
   }
 
   async function getAllUsers() {
-    const data = await fetch("/api/user/getAllUsers").then((res) => res.json());
-    return data;
+    const token = parseCookies()["orion-token"];
+    if (token) {
+      const data = await fetch("/api/user/getAllUsers").then((res) => res.json());
+      return data;
+    }
+    return []
   }
 
   async function createUser({

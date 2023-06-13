@@ -1,4 +1,5 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { parseCookies } from "nookies";
 import { createContext, useEffect, useState } from "react";
 
 type ProjectCRUDContextType = {
@@ -31,20 +32,25 @@ export default function ProjectCRUDContextProvider({ children }: any) {
 
   useEffect(() => {
     if (!isLoading) {
-      setProjetos(data as ProjectType[])
+      setProjetos(data as ProjectType[]);
     }
-
-  }, [isLoading, data])
+  }, [isLoading, data]);
 
   function invalidadeQuery(queryName: string) {
     queryClient.invalidateQueries([queryName]);
   }
 
   async function getProjectsMetadata() {
-    const data = (await fetch("/api/projects/getAllProjects").then((res) =>
-      res.json()
-    )) as ProjectType[];
-    return data;
+    const token = parseCookies()["orion-token"];
+
+    if (token) {
+      const data = (await fetch("/api/projects/getAllProjects").then((res) =>
+        res.json()
+      )) as ProjectType[];
+      return data;
+    }
+
+    return []
   }
 
   async function createProject(name: string) {
