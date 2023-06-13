@@ -7,7 +7,6 @@ import {
   Box,
   SxProps,
 } from "@mui/material";
-import FileListItemOptions from "./FileListItemOptions";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import { useState } from "react";
 
