@@ -10,6 +10,7 @@ import AuthContextProvider from "@/contexts/AuthContext";
 import Layout from "./layout";
 import ProjectCRUDContextProvider from "@/contexts/ProjectCrudContext";
 import UserCRUDContextProvider from "@/contexts/UserCrudContext";
+import FileCRUDContextProvider from "@/contexts/FileCrudContext";
 
 const queryClient = new QueryClient();
 
@@ -20,9 +21,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <FilesFiltersContextProvider>
           <UserCRUDContextProvider>
             <ProjectCRUDContextProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
+              <FileCRUDContextProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </FileCRUDContextProvider>
             </ProjectCRUDContextProvider>
           </UserCRUDContextProvider>
         </FilesFiltersContextProvider>

@@ -34,13 +34,20 @@ export default function AddUserToProjectModal({
   userName,
   userProjects,
 }: any) {
-  const { projetos } = useContext(ProjectCRUDContext);
+  const { getProjectsMetadata } = useContext(ProjectCRUDContext);
+  
+  const { data: projetos } = useQuery({
+    queryKey: ["Projects-metadata"],
+    queryFn: getProjectsMetadata,
+    refetchOnWindowFocus: false,
+  });
+
   const [projetosSelecionados, setProjetosSelecionados] = useState<
     { id: string; nome: string }[]
   >([]);
 
   async function enviarModificacoes() {
-    const resposta = await fetch("/api/user/addUserToProject", {
+    await fetch("/api/user/addUserToProject", {
       method: "POST",
       body: JSON.stringify({ userID: userId, projects: projetosSelecionados }),
     });
@@ -78,7 +85,7 @@ export default function AddUserToProjectModal({
           }
         >
           <FormLabel>Adicionar {userName} a projetos: </FormLabel>
-          {projetos.map((projeto) => {
+          {projetos?.map((projeto) => {
             return (
               <FormControlLabel
                 key={projeto.nome}

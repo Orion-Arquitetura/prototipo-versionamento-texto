@@ -1,9 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 
 type ProjectCRUDContextType = {
-  projetos: ProjectType[];
   createProject: (name: string) => Promise<boolean>;
   deleteProject: (projectID: string) => Promise<boolean>;
   getProjectsMetadata: () => Promise<ProjectType[]>;
@@ -21,26 +20,10 @@ type ProjectType = {
 export const ProjectCRUDContext = createContext({} as ProjectCRUDContextType);
 
 export default function ProjectCRUDContextProvider({ children }: any) {
-  const queryClient = useQueryClient();
-  const [projetos, setProjetos] = useState<ProjectType[]>([]);
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["Projects-metadata"],
-    queryFn: getProjectsMetadata,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    if (!isLoading) {
-      setProjetos(data as ProjectType[]);
-    }
-  }, [isLoading, data]);
-
-  function invalidadeQuery(queryName: string) {
-    queryClient.invalidateQueries([queryName]);
-  }
 
   async function getProjectsMetadata() {
+    //essa funcao precisa ser atualizada para puxar somente os projetos que o usuário está permitido ver
     const token = parseCookies()["orion-token"];
 
     if (token) {
@@ -50,7 +33,7 @@ export default function ProjectCRUDContextProvider({ children }: any) {
       return data;
     }
 
-    return []
+    return [];
   }
 
   async function createProject(name: string) {
@@ -80,7 +63,7 @@ export default function ProjectCRUDContextProvider({ children }: any) {
 
   return (
     <ProjectCRUDContext.Provider
-      value={{ projetos, createProject, deleteProject, getProjectsMetadata }}
+      value={{ createProject, deleteProject, getProjectsMetadata }}
     >
       {children}
     </ProjectCRUDContext.Provider>

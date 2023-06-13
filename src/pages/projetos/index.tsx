@@ -3,17 +3,23 @@ import Widget from "@/components/Widget";
 import WidgetBox from "@/components/WidgetBox";
 import AddProject from "@/components/AddProject";
 import { useQuery } from "@tanstack/react-query";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
 
 export default function Projetos() {
-  const { projetos } = useContext(ProjectCRUDContext);
+  const { getProjectsMetadata } = useContext(ProjectCRUDContext);
+
+  const { data: projetos } = useQuery({
+    queryKey: ["Projects-metadata"],
+    queryFn: getProjectsMetadata,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <>
-      {projetos.length === 0 ? (
+      {projetos?.length === 0 ? (
         <>
           <PageTitle title="Projetos" />
 

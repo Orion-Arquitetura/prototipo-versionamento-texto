@@ -10,12 +10,9 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { AuthContext } from "@/contexts/AuthContext";
 import PersonIcon from "@mui/icons-material/Person";
-import styled from "@emotion/styled";
 import Image from "next/image";
 import Link from "next/link";
 import { parseCookies } from "nookies";
-
-const settings = ["Perfil", "Sair"];
 
 function ResponsiveAppBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
@@ -80,7 +77,7 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               <MenuItem >
-                <Link href={"/admin"}>
+                <Link href={"/admin"} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center" width={"100%"}>Painel</Typography>
                 </Link>
               </MenuItem>

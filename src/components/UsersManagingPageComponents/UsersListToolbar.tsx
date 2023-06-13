@@ -3,6 +3,7 @@ import { Box, Button } from "@mui/material";
 import { useState } from "react";
 import PageTitle from "../PageTitle";
 import AddUserModal from "./AddUserModal";
+import Add from "@mui/icons-material/Add";
 
 const StyledDiv = styled.div`
   margin-bottom: 10px;
@@ -35,7 +36,7 @@ export default function UsersListToolbar() {
           variant="contained"
           onClick={openAddUserModal}
         >
-          Add user
+          <Add />
         </Button>
         <AddUserModal
           isOpen={addUserModalState}

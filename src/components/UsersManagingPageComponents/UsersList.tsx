@@ -8,9 +8,15 @@ import Paper from "@mui/material/Paper";
 import UserListItem from "./UserListItem";
 import { useContext } from "react";
 import { UserCRUDContext } from "@/contexts/UserCrudContext";
+import { useQuery } from "@tanstack/react-query";
 
 export default function UsersList({ filters }: any) {
-  const { usuarios } = useContext(UserCRUDContext);
+  const { getAllUsers } = useContext(UserCRUDContext);
+  const { data: usuarios } = useQuery({
+    queryKey: ["get-all-users"],
+    queryFn: getAllUsers,
+    refetchOnWindowFocus: false,
+  });
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">
@@ -23,7 +29,7 @@ export default function UsersList({ filters }: any) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {usuarios.length > 0
+          {usuarios
             ? usuarios.map(
                 (user: {
                   nome: string;

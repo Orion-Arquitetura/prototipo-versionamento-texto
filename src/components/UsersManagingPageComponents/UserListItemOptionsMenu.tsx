@@ -5,7 +5,7 @@ import { useState, MouseEvent } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AddUserToProjectModal from "./AddUserToProjectModal";
 
-export default function UserListItemOptionsMenu({ userId, userName, userProjects }:any) {
+export default function UserListItemOptionsMenu({ userId, userName, userProjects }: any) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -30,13 +30,15 @@ export default function UserListItemOptionsMenu({ userId, userName, userProjects
 
   return (
     <div>
-      <AddUserToProjectModal
-        isOpen={addUserToProjectModalState}
-        handleCloseModal={closeAddUserToProjectModal}
-        userId={userId}
-        userName={userName}
-        userProjects={userProjects}
-      />
+      {addUserToProjectModalState && (
+        <AddUserToProjectModal
+          isOpen={addUserToProjectModalState}
+          handleCloseModal={closeAddUserToProjectModal}
+          userId={userId}
+          userName={userName}
+          userProjects={userProjects}
+        />
+      )}
       <Button
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"

@@ -13,7 +13,6 @@ import { useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import UserListItemOptionsMenu from "./UserListItemOptionsMenu";
-import AddUserToProjectModal from "./AddUserToProjectModal";
 
 type UserListItemType = {
   nome: string;
@@ -98,6 +97,11 @@ export default function UserListItem({
                         </TableRow>
                       ))
                     : null} */}
+                    <TableRow>
+                      <TableCell>
+                        {email}
+                      </TableCell>
+                    </TableRow>
                 </TableBody>
               </Table>
             </Box>

@@ -3,7 +3,6 @@ import { parseCookies } from "nookies";
 import { createContext, useEffect, useState } from "react";
 
 type UserCRUDContextType = {
-  usuarios: UserType[];
   createUser: ({
     nome,
     email,
@@ -31,20 +30,6 @@ export const UserCRUDContext = createContext({} as UserCRUDContextType);
 
 export default function UserCRUDContextProvider({ children }: any) {
   const queryClient = useQueryClient();
-
-  const [usuarios, setUsuarios] = useState<UserType[]>([]);
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["get-all-users"],
-    queryFn: getAllUsers,
-    refetchOnWindowFocus: false,
-  });
-
-  useEffect(() => {
-    if (!isLoading) {
-      setUsuarios(data as UserType[]);
-    }
-  }, [isLoading, data]);
 
   function invalidadeQuery(queryName: string) {
     queryClient.invalidateQueries([queryName]);
@@ -101,7 +86,6 @@ export default function UserCRUDContextProvider({ children }: any) {
   return (
     <UserCRUDContext.Provider
       value={{
-        usuarios,
         createUser,
         deleteUser,
         getAllUsers,
