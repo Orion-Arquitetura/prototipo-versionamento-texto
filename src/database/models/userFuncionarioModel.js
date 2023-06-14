@@ -36,6 +36,10 @@ export const userFuncionarioSchema = mongoose.Schema({
       },
     ],
   },
+  dataCriacao: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 export const UserFuncionario =

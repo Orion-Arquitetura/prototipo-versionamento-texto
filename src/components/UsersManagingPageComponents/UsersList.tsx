@@ -17,6 +17,7 @@ export default function UsersList({ filters }: any) {
     queryFn: getAllUsers,
     refetchOnWindowFocus: false,
   });
+  
   return (
     <TableContainer component={Paper}>
       <Table aria-label="collapsible table">

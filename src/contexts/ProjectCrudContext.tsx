@@ -20,7 +20,7 @@ type ProjectType = {
 export const ProjectCRUDContext = createContext({} as ProjectCRUDContextType);
 
 export default function ProjectCRUDContextProvider({ children }: any) {
-
+  const queryClient = useQueryClient();
 
   async function getProjectsMetadata() {
     //essa funcao precisa ser atualizada para puxar somente os projetos que o usuário está permitido ver
@@ -42,7 +42,7 @@ export default function ProjectCRUDContextProvider({ children }: any) {
         method: "POST",
         body: JSON.stringify({ nome: name }),
       }).then((res) => res.json());
-      invalidadeQuery("Projects-metadata");
+      queryClient.invalidateQueries(["Projects-metadata"]);
       return true;
     } catch (e) {
       window.alert(e);

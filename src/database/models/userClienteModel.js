@@ -20,7 +20,7 @@ export const userClienteSchema = mongoose.Schema({
   },
   tipo: {
     type: String,
-    default: "cliente"
+    default: "cliente",
   },
   permissoes: {
     projetos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
@@ -33,6 +33,10 @@ export const userClienteSchema = mongoose.Schema({
         },
       },
     ],
+  },
+  dataCriacao: {
+    type: Date,
+    default: Date.now,
   },
 });
 

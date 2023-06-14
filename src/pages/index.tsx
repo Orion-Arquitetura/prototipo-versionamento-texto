@@ -7,17 +7,17 @@ export default function Home() {
   return <LoginForm />;
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const cookies = parseCookies(context)["orion-token"];
+// export async function getServerSideProps(context: GetServerSidePropsContext) {
+//   const cookies = parseCookies(context)["orion-token"];
 
-  if (cookies) {
-    return {
-      redirect: {
-        destination: "/projetos",
-        permanent: false,
-      },
-    };
-  }
+//   if (cookies) {
+//     return {
+//       redirect: {
+//         destination: "/projetos",
+//         permanent: false,
+//       },
+//     };
+//   }
 
-  return { props: {} };
-}
+//   return { props: {} };
+// }

@@ -7,14 +7,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const parsedBody = JSON.parse(req.body);
 
   if (!parsedBody.nome) {
-    return res.status(400).json({ status: "Erro", message: "Nome inválido." });
+    return res.status(401).json({ status: "Erro", message: "Nome inválido." });
   }
 
   await connectToDatabase("App");
 
   const newProject: Document = new Projeto({
-    nome: parsedBody.nome,
+    nome: `${new Date().getFullYear()}.${parsedBody.nome}`,
   });
+
 
   await newProject
     .save()

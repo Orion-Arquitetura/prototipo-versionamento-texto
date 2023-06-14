@@ -20,7 +20,11 @@ export const userAdministradorSchema = mongoose.Schema({
   },
   tipo: {
     type: String,
-    default: "administrador"
+    default: "administrador",
+  },
+  dataCriacao: {
+    type: Date,
+    default: Date.now,
   },
 });
 

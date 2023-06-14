@@ -10,7 +10,7 @@ const projectSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  funcionariosPermitidos: {
+  usuarios: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     required: true,
     default: [],

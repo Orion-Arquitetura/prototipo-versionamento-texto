@@ -67,18 +67,8 @@ export default function Widget({ title, link }: WidgetData) {
       <div className="widget-project-data-div">
         <Link href={link}>{title}</Link>
         <div className="project-data-icons">
-          <Link
-            href="#"
-            title="Arquivos"
-          >
-            <FolderIcon fontSize="small" />
-          </Link>
-          <Link
-            href="#"
-            title="Usuários"
-          >
-            <GroupIcon fontSize="small" />
-          </Link>
+          <FolderIcon fontSize="small" />
+          <GroupIcon fontSize="small" />
         </div>
       </div>
     </StyledLi>

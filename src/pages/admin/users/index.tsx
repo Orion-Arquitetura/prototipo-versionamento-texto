@@ -12,6 +12,7 @@ const StyledDiv = styled.div`
   margin-top: 20px;
   display: flex;
   column-gap: 20px;
+  padding-bottom: 100px;
 `;
 
 export default function UsersControlPage() {

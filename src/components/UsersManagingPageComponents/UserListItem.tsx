@@ -97,11 +97,9 @@ export default function UserListItem({
                         </TableRow>
                       ))
                     : null} */}
-                    <TableRow>
-                      <TableCell>
-                        {email}
-                      </TableCell>
-                    </TableRow>
+                  <TableRow>
+                    <TableCell sx={{ borderBottom: 0 }}>{email}</TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>

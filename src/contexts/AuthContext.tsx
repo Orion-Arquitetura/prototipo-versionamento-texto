@@ -36,7 +36,7 @@ export default function AuthContextProvider({ children }: any) {
       })
         .then((res) => res.json())
         .then((dados) => {
-          console.log(dados)
+          console.log(dados);
           setCookie(undefined, "orion-token", dados.token, {
             maxAge: 60 * 60 * 24,
           });
@@ -46,27 +46,30 @@ export default function AuthContextProvider({ children }: any) {
           setCookie(undefined, "user-id", dados.usuario.id, {
             maxAge: 60 * 60 * 24,
           });
-          setCookie(undefined, "user-tipo", dados.usuario.tipo)
+          setCookie(undefined, "user-tipo", dados.usuario.tipo);
 
           setUserData(dados.usuario);
         });
 
       return true;
     } catch (e) {
-      console.log(e);
       setIsLoadingUserData(false);
       return false;
     }
   }
 
   async function signOff() {
-    destroyCookie(undefined, "orion-token");
-    destroyCookie(undefined, "user-email");
-    destroyCookie(undefined, "user-id");
-    destroyCookie(undefined, "user-tipo");
-    setIsLoadingUserData(false);
-    setUserData(null);
-    Router.push("/");
+    try {
+      destroyCookie(undefined, "orion-token");
+      destroyCookie(undefined, "user-email");
+      destroyCookie(undefined, "user-id");
+      destroyCookie(undefined, "user-tipo");
+      console.log("ok");
+      setIsLoadingUserData(false);
+      setUserData(null);
+    } finally {
+      Router.push("/");
+    }
   }
 
   useEffect(() => {
