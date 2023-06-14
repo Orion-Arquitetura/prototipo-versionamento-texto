@@ -9,6 +9,7 @@ type ProjectCRUDContextType = {
 };
 
 type ProjectType = {
+  usuarios: any;
   arquivos: string[];
   dataCriacao: string;
   funcionariosPermitidos: string[];
@@ -53,7 +54,6 @@ export default function ProjectCRUDContextProvider({ children }: any) {
   async function deleteProject(projectID: string) {
     try {
       await fetch("api/projects/deleteProject", { method: "POST", body: projectID });
-      invalidadeQuery("Projects-metadata");
       return true;
     } catch (e) {
       window.alert(e);
