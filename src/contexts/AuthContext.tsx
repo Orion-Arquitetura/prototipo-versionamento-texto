@@ -31,7 +31,7 @@ export default function AuthContextProvider({ children }: any) {
     try {
       setIsLoadingUserData(true);
 
-      const userFetchedData = await fetch("/api/user/auth", {
+      await fetch("/api/user/auth", {
         method: "POST",
         body: JSON.stringify({ email, senha }),
       })
