@@ -10,11 +10,10 @@ const StyledDiv = styled.div`
   align-items: center;
 `;
 
-export default function PageTitle({ title = "titulo" }: { title: string }) {
-  const {asPath} = useRouter()
+export default function PageTitle({ title = "titulo", backButton }: { title: string, backButton: boolean }) {
   return (
     <StyledDiv>
-      {asPath === "/projetos" ? null : <BackButton />}
+      {backButton ? <BackButton /> : null}
       <div>
         <h2>{title}</h2>
       </div>
