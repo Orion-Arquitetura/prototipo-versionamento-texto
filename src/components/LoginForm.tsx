@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import Router from "next/router";
 import { useContext } from "react";
 import { useForm } from "react-hook-form";
+import PuffLoader from "react-spinners/PuffLoader";
 
 const StyledForm = styled.form`
   width: clamp(200px, 40vw, 500px);
@@ -75,6 +76,7 @@ export default function LoginForm() {
   async function handleSignIn({ email, senha }: any) {
     await signIn({ email, senha }).then((res) => {
       if (res) {
+        console.log("ok");
         Router.push("/projetos");
       } else {
         window.alert("Erro");
@@ -82,9 +84,25 @@ export default function LoginForm() {
     });
   }
 
+  if (isLoadingUserData) {
+    return (
+      <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", rowGap: 10, height: "100vh" }}>
+        <img
+          src="./orion-arq-marca-final.png"
+          alt="Orion logo"
+          width="200"
+          
+        ></img>
+        <Box >
+          <PuffLoader color="#36d7b7" />
+        </Box>
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ display: "grid", placeItems: "center", height: "100vh" }}>
-     <StyledForm onSubmit={handleSubmit(handleSignIn)}>
+      <StyledForm onSubmit={handleSubmit(handleSignIn)}>
         <fieldset>
           <legend>
             <img
@@ -92,28 +110,28 @@ export default function LoginForm() {
               alt="Orion logo"
             ></img>
           </legend>
-              <div className="padding-div">
-                <label>
-                  E-mail:
-                  <input
-                    {...register("email")}
-                    type={"email"}
-                    name="email"
-                    required
-                    disabled={isLoadingUserData ? true : false}
-                  />
-                </label>
-                <label>
-                  Senha:
-                  <input
-                    {...register("senha")}
-                    type={"password"}
-                    name="senha"
-                    required
-                    disabled={isLoadingUserData ? true : false}
-                  />
-                </label>
-              </div>
+          <div className="padding-div">
+            <label>
+              E-mail:
+              <input
+                {...register("email")}
+                type={"email"}
+                name="email"
+                required
+                disabled={isLoadingUserData ? true : false}
+              />
+            </label>
+            <label>
+              Senha:
+              <input
+                {...register("senha")}
+                type={"password"}
+                name="senha"
+                required
+                disabled={isLoadingUserData ? true : false}
+              />
+            </label>
+          </div>
         </fieldset>
 
         {isLoadingUserData ? null : (
@@ -124,7 +142,7 @@ export default function LoginForm() {
             Entrar
           </Button>
         )}
-      </StyledForm> 
+      </StyledForm>
     </Box>
   );
 }
