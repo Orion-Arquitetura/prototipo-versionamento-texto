@@ -1,15 +1,20 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import connectToDatabase from "@/database/mongodbConnection";
 import mongoose from "mongoose";
+import { ObjectId } from "mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase("App");
 
   try {
+    const filter = new ObjectId(req.body);
     const usersCollection = mongoose.connection.collection("Users");
-    const userData = (await usersCollection
-      .findOne(new mongoose.Types.ObjectId(req.body))
-      .then((res) => res)) as { nome: string; email: string; tipo: string; _id: string };
+    const userData = (await usersCollection.findOne(filter).then((res) => res)) as {
+      nome: string;
+      email: string;
+      tipo: string;
+      _id: ObjectId;
+    };
 
     res.status(200).json({
       usuario: {
