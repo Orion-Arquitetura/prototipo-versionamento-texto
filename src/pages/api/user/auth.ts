@@ -17,12 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       })
       .then((result: any) => {
         res.status(200).json({
-          usuario: {
-            nome: result.nome,
-            email: result.email,
-            tipo: result.tipo.toLowerCase(),
-            id: result._id,
-          },
+          nome: result.nome,
+          email: result.email,
+          tipo: result.tipo.toLowerCase(),
+          id: result._id,
           token: uuid(),
         });
       });

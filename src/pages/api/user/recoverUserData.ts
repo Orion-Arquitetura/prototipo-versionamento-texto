@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const filter = new ObjectId(req.body);
     const usersCollection = mongoose.connection.collection("Users");
-    const userData = (await usersCollection.findOne(filter).then((res) => res)) as {
+    const userData = (await usersCollection.findOne({_id: filter}).then((res) => res)) as {
       nome: string;
       email: string;
       tipo: string;

@@ -74,14 +74,7 @@ export default function LoginForm() {
   const { register, handleSubmit } = useForm();
 
   async function handleSignIn({ email, senha }: any) {
-    await signIn({ email, senha }).then((res) => {
-      if (res) {
-        console.log("ok");
-        Router.push("/projetos");
-      } else {
-        window.alert("Erro");
-      }
-    });
+    await signIn({ email, senha })
   }
 
   if (isLoadingUserData) {
