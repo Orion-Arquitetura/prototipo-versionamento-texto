@@ -29,7 +29,7 @@ export default function UsersListToolbar() {
 
   return (
     <StyledDiv>
-      <PageTitle title={"Controle de usuários"} />
+      <PageTitle title={"Controle de usuários"} backButton/>
 
       <Box sx={{ display: "flex", columnGap: 2 }}>
         <Button
