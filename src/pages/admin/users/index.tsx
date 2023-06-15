@@ -44,7 +44,7 @@ export default function UsersControlPage() {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
 
-  if (token && tipo === "administrador") {
+  if (token && (tipo === "administrador")) {
     return { props: {} };
   }
 
