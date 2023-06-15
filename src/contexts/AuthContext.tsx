@@ -10,6 +10,7 @@ type signInData = {
 type userData = {
   email: string;
   nome: string;
+  tipo: "administrador" | "cliente" | "funcionario";
   id: string;
 };
 
@@ -30,27 +31,32 @@ export default function AuthContextProvider({ children }: any) {
     try {
       setIsLoadingUserData(true);
 
-      await fetch("/api/user/auth", {
+      const userFetchedData = await fetch("/api/user/auth", {
         method: "POST",
         body: JSON.stringify({ email, senha }),
       })
         .then((res) => res.json())
-        .then((dados) => {
-          console.log(dados);
-          setCookie(undefined, "orion-token", dados.token, {
+        .then((usuario) => {
+          console.log(usuario);
+          setCookie(undefined, "user-nome", usuario.token, {
             maxAge: 60 * 60 * 24,
           });
-          setCookie(undefined, "user-email", dados.usuario.email, {
+          setCookie(undefined, "orion-token", usuario.token, {
             maxAge: 60 * 60 * 24,
           });
-          setCookie(undefined, "user-id", dados.usuario.id, {
+          setCookie(undefined, "user-email", usuario.email, {
             maxAge: 60 * 60 * 24,
           });
-          setCookie(undefined, "user-tipo", dados.usuario.tipo);
+          setCookie(undefined, "user-id", usuario.id, {
+            maxAge: 60 * 60 * 24,
+          });
+          setCookie(undefined, "user-tipo", usuario.tipo);
 
-          setUserData(dados.usuario);
+          setUserData(usuario);
+          return usuario;
         });
 
+      Router.replace("/projetos");
       return true;
     } catch (e) {
       setIsLoadingUserData(false);
@@ -62,9 +68,9 @@ export default function AuthContextProvider({ children }: any) {
     try {
       destroyCookie(undefined, "orion-token");
       destroyCookie(undefined, "user-email");
+      destroyCookie(undefined, "user-nome");
       destroyCookie(undefined, "user-id");
       destroyCookie(undefined, "user-tipo");
-      console.log("ok");
       setIsLoadingUserData(false);
       setUserData(null);
     } finally {
@@ -73,24 +79,21 @@ export default function AuthContextProvider({ children }: any) {
   }
 
   useEffect(() => {
-    if (userData) {
-      return;
-    } else {
-      const { "user-id": id } = parseCookies();
+    const {
+      "orion-token": token,
+      "user-email": email,
+      "user-nome": nome,
+      "user-id": id,
+      "user-tipo": tipo,
+    } = parseCookies();
 
-      if (id && userData === null) {
-        setIsLoadingUserData(true);
-
-        (async () => {
-          let userData = await fetch("/api/user/recoverUserData", {
-            method: "POST",
-            body: id,
-          }).then((res) => res.json());
-          setUserData(userData);
-
-          Router.pathname === "/" ? Router.push("/projetos") : () => {};
-        })();
-      }
+    if (token && userData === null) {
+      setUserData({
+        nome,
+        email,
+        tipo: tipo as "administrador" | "cliente" | "funcionario",
+        id,
+      });
     }
   }, [userData]);
 
