@@ -65,7 +65,9 @@ export default function Widget({ title, link }: WidgetData) {
   return (
     <StyledLi>
       <div className="widget-project-data-div">
-        <Link href={link}>{title}</Link>
+        <Link href={{
+          pathname: link
+        }} >{title}</Link>
         <div className="project-data-icons">
           <FolderIcon fontSize="small" />
           <GroupIcon fontSize="small" />
