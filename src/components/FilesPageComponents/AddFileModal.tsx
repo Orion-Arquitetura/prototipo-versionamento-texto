@@ -3,11 +3,12 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import FileUploader from "./FileUploadInput";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import SelectInput from "../SelectInput";
 import { disciplina, etapa, tipo, conteudo } from "@/utils/documentos";
 import { useQueryClient } from "@tanstack/react-query";
+import { FileCRUDContext } from "@/contexts/FileCrudContext";
 
 const StyledForm = styled.form`
   display: flex;
@@ -43,9 +44,14 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
   //arquivos que tem "disciplina" nao podem ter "tipo" e vice-versa
   //"disciplina" também é chamada de "natureza do projeto" - Seção 2[C] da nomenclatura
   //"disciplina" é para arquivos de projeto, enquanto "tipo" é para arquivos de documentação
-  const [fileFilters, setFileFilters] = useState({ tipo: "", disciplina: "", etapa: "", conteudo: "" });
+  const [fileFilters, setFileFilters] = useState({
+    tipo: "",
+    disciplina: "",
+    etapa: "",
+    conteudo: "",
+  });
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone();
-  const queryClient = useQueryClient();
+  const { createNewFile } = useContext(FileCRUDContext);
 
   function setTipo(tipo: string) {
     setFileFilters((prevState) => {
@@ -83,22 +89,8 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     });
   }
 
-  function refetchProjectFiles() {
-    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
-  }
-
   async function submitNewFileData() {
-    const bodyData = {
-      projectId: projectId.replace(/"/g, ""),
-      filtros: fileFilters,
-    };
-
-    await fetch("/api/files/createFile", {
-      method: "POST",
-      body: JSON.stringify(bodyData),
-    });
-
-    refetchProjectFiles();
+    await createNewFile(fileFilters, projectId)
     handleClose();
   }
 

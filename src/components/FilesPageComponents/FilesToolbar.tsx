@@ -43,7 +43,7 @@ export default function FilesToolbar({
 
   return (
     <StyledDiv>
-      <PageTitle title={projectName} />
+      <PageTitle title={projectName} backButton/>
 
       <Box sx={{display: "flex", columnGap: 2}}>
         <AddFileButton handleOpen={openAddFileModal} />
