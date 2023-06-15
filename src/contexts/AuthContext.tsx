@@ -74,7 +74,7 @@ export default function AuthContextProvider({ children }: any) {
       setIsLoadingUserData(false);
       setUserData(null);
     } finally {
-      Router.push("/");
+      Router.replace("/");
     }
   }
 
