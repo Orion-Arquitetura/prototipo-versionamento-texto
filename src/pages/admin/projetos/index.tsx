@@ -8,7 +8,7 @@ const StyledBox = styled(Box)``;
 export default function Projetos() {
   return (
     <>
-    <PageTitle title="Gerenciar projetos" />
+    <PageTitle title="Gerenciar projetos" backButton/>
       <StyledBox mt={2}>
         <ProjectsList />
       </StyledBox>

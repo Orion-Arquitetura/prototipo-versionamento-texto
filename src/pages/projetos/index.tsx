@@ -21,7 +21,10 @@ export default function Projetos() {
     <>
       {projetos?.length === 0 ? (
         <>
-          <PageTitle title="Projetos" />
+          <PageTitle
+            title="Projetos"
+            backButton={false}
+          />
 
           <WidgetBox direction="row">
             <AddProject />
@@ -29,7 +32,10 @@ export default function Projetos() {
         </>
       ) : (
         <>
-          <PageTitle title="Projetos" />
+          <PageTitle
+            title="Projetos"
+            backButton={false}
+          />
           <WidgetBox direction="row">
             {projetos
               ? projetos.map((projeto: any) => {
