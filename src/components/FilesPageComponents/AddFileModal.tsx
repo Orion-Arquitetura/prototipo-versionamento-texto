@@ -9,6 +9,7 @@ import SelectInput from "../SelectInput";
 import { disciplina, etapa, tipo, conteudo } from "@/utils/documentos";
 import { useQueryClient } from "@tanstack/react-query";
 import { FileCRUDContext } from "@/contexts/FileCrudContext";
+import normalizar from "../../utils/normalize";
 
 const StyledForm = styled.form`
   display: flex;
@@ -50,6 +51,8 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     etapa: "",
     conteudo: "",
   });
+
+  const [formType, setFormType] = useState("disciplina");
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone();
   const { createNewFile } = useContext(FileCRUDContext);
 
@@ -89,8 +92,12 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     });
   }
 
+  function setDocumentType(value: string) {
+    setFormType(normalizar(value));
+  }
+
   async function submitNewFileData() {
-    await createNewFile(fileFilters, projectId)
+    await createNewFile(fileFilters, projectId);
     handleClose();
   }
 
@@ -112,14 +119,19 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
             >
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <SelectInput
-                  filterName="Tipo de documento"
-                  list={tipo}
-                  setFileFilters={setTipo}
+                  filterName="Tipo de arquivo"
+                  list={[
+                    { sigla: "Documentação", nome: "documentacao" },
+                    { sigla: "Projeto", nome: "projeto" },
+                  ]}
+                  setFileFilters={setDocumentType}
                 />
                 <SelectInput
-                  filterName="Disciplina"
-                  list={disciplina}
-                  setFileFilters={setDisciplina}
+                  filterName={
+                    formType === "projeto" ? "Disciplina" : "Tipo de conteúdo"
+                  }
+                  list={formType === "disciplina" ? disciplina : tipo}
+                  setFileFilters={formType === "disciplina" ? setDisciplina : setTipo}
                 />
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
@@ -159,4 +171,70 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
       </StyledBox>
     </Modal>
   );
+
+  // return (
+  //   <Modal
+  //     open={isOpen}
+  //     onClose={handleClose}
+  //   >
+  //     <StyledBox>
+  //       <StyledForm>
+  //         <legend>
+  //           <h3>Adicionar novo arquivo</h3>
+  //         </legend>
+  //         <fieldset>
+  //           <Box
+  //             display="flex"
+  //             flexDirection={"column"}
+  //             rowGap={"20px"}
+  //           >
+  //             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+  //               <SelectInput
+  //                 filterName="Tipo de documento"
+  //                 list={tipo}
+  //                 setFileFilters={setTipo}
+  //               />
+  //               <SelectInput
+  //                 filterName="Disciplina"
+  //                 list={disciplina}
+  //                 setFileFilters={setDisciplina}
+  //               />
+  //             </Box>
+  //             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+  //               <SelectInput
+  //                 filterName="Etapa do projeto"
+  //                 list={etapa}
+  //                 setFileFilters={setEtapa}
+  //               />
+  //               <SelectInput
+  //                 filterName="Conteúdo do arquivo"
+  //                 list={conteudo}
+  //                 setFileFilters={setConteudo}
+  //               />
+  //             </Box>
+  //           </Box>
+  //           <FileUploader
+  //             getRootProps={getRootProps}
+  //             getInputProps={getInputProps}
+  //             isDragActive={isDragActive}
+  //           />
+
+  //           <div>
+  //             {acceptedFiles.map((el) => (
+  //               <p key={el.name}>
+  //                 Arquivo selecionado: <strong>{el.name}</strong>
+  //               </p>
+  //             ))}
+  //           </div>
+  //         </fieldset>
+  //         <Button
+  //           variant="contained"
+  //           onClick={submitNewFileData}
+  //         >
+  //           Enviar
+  //         </Button>
+  //       </StyledForm>
+  //     </StyledBox>
+  //   </Modal>
+  // );
 }
