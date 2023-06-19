@@ -1,46 +1,15 @@
 import styled from "@emotion/styled";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import FileUploader from "./FileUploadInput";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import SelectInput from "../SelectInput";
 import { disciplina, etapa, tipo, conteudo } from "@/utils/documentos";
-import { useQueryClient } from "@tanstack/react-query";
 import { FileCRUDContext } from "@/contexts/FileCrudContext";
 import normalizar from "../../utils/normalize";
+import { Grid } from "@mui/material";
 
-const StyledForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-
-  & > legend {
-    text-align: center;
-  }
-
-  & > fieldset {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
-  }
-`;
-
-const StyledBox = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: #f5f5f5;
-  height: 350px;
-  box-shadow: 0px 0px 24px rgba(0, 0, 0, 0.5);
-  padding: 16px;
-  min-width: 50%;
-  height: fit-content;
-`;
 export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
   //arquivos que tem "disciplina" nao podem ter "tipo" e vice-versa
   //"disciplina" também é chamada de "natureza do projeto" - Seção 2[C] da nomenclatura
@@ -60,6 +29,7 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     setFileFilters((prevState) => {
       return {
         ...prevState,
+        disciplina: "",
         tipo,
       };
     });
@@ -69,6 +39,7 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     setFileFilters((prevState) => {
       return {
         ...prevState,
+        tipo: "",
         disciplina,
       };
     });
@@ -101,140 +72,148 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
     handleClose();
   }
 
+  function cancelSubmit() {
+    setFileFilters({
+      tipo: "",
+      disciplina: "",
+      etapa: "",
+      conteudo: "",
+    });
+
+    handleClose();
+  }
+
   return (
     <Modal
       open={isOpen}
-      onClose={handleClose}
+      onClose={cancelSubmit}
     >
-      <StyledBox>
-        <StyledForm>
+      <Grid
+        container
+        bgcolor="white"
+        width={"50%"}
+        flexDirection={"column"}
+        position="absolute"
+        left={"25%"}
+        top={"10%"}
+        padding={5}
+        paddingTop={1}
+        rowSpacing={2}
+      >
+        <Grid
+          item
+          xs={12}
+        >
           <legend>
             <h3>Adicionar novo arquivo</h3>
           </legend>
-          <fieldset>
-            <Box
-              display="flex"
-              flexDirection={"column"}
-              rowGap={"20px"}
-            >
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <SelectInput
-                  filterName="Tipo de arquivo"
-                  list={[
-                    { sigla: "Documentação", nome: "documentacao" },
-                    { sigla: "Projeto", nome: "projeto" },
-                  ]}
-                  setFileFilters={setDocumentType}
-                />
-                <SelectInput
-                  filterName={
-                    formType === "projeto" ? "Disciplina" : "Tipo de conteúdo"
-                  }
-                  list={formType === "disciplina" ? disciplina : tipo}
-                  setFileFilters={formType === "disciplina" ? setDisciplina : setTipo}
-                />
-              </Box>
-              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-                <SelectInput
-                  filterName="Etapa do projeto"
-                  list={etapa}
-                  setFileFilters={setEtapa}
-                />
-                <SelectInput
-                  filterName="Conteúdo do arquivo"
-                  list={conteudo}
-                  setFileFilters={setConteudo}
-                />
-              </Box>
-            </Box>
-            <FileUploader
-              getRootProps={getRootProps}
-              getInputProps={getInputProps}
-              isDragActive={isDragActive}
-            />
+        </Grid>
 
-            <div>
-              {acceptedFiles.map((el) => (
-                <p key={el.name}>
-                  Arquivo selecionado: <strong>{el.name}</strong>
-                </p>
-              ))}
-            </div>
-          </fieldset>
+        <Grid
+          item
+          container
+          columnSpacing={1}
+        >
+          <Grid
+            item
+            xs={6}
+          >
+            <SelectInput
+              filterName="Tipo de arquivo"
+              list={[
+                { sigla: "Documentação", nome: "documentacao" },
+                { sigla: "Projeto", nome: "projeto" },
+              ]}
+              setFileFilters={setDocumentType}
+            />
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+          >
+            {formType === "projeto" ? (
+              <SelectInput
+                filterName={"Disciplina"}
+                list={disciplina}
+                setFileFilters={setDisciplina}
+              />
+            ) : (
+              <SelectInput
+                filterName={"Tipo de conteúdo"}
+                list={tipo}
+                setFileFilters={setTipo}
+              />
+            )}
+          </Grid>
+        </Grid>
+
+        <Grid
+          item
+          container
+          columnSpacing={1}
+        >
+          <Grid
+            item
+            xs={6}
+          >
+            <SelectInput
+              filterName="Etapa do projeto"
+              list={etapa}
+              setFileFilters={setEtapa}
+            />
+          </Grid>
+
+          <Grid
+            item
+            xs={6}
+          >
+            <SelectInput
+              filterName="Conteúdo do arquivo"
+              list={conteudo}
+              setFileFilters={setConteudo}
+            />
+          </Grid>
+        </Grid>
+
+        <Grid item>
+          <FileUploader
+            getRootProps={getRootProps}
+            getInputProps={getInputProps}
+            isDragActive={isDragActive}
+          />
+        </Grid>
+
+        <Grid item>
+          <div>
+            {acceptedFiles.map((el) => (
+              <p key={el.name}>
+                Arquivo selecionado: <strong>{el.name}</strong>
+              </p>
+            ))}
+          </div>
+        </Grid>
+
+        <Grid
+          item
+          display="flex"
+          justifyContent={"space-between"}
+        >
+          <Button
+            variant="contained"
+            onClick={cancelSubmit}
+            color="error"
+          >
+            Cancelar
+          </Button>
           <Button
             variant="contained"
             onClick={submitNewFileData}
           >
             Enviar
           </Button>
-        </StyledForm>
-      </StyledBox>
+        </Grid>
+      </Grid>
     </Modal>
   );
-
-  // return (
-  //   <Modal
-  //     open={isOpen}
-  //     onClose={handleClose}
-  //   >
-  //     <StyledBox>
-  //       <StyledForm>
-  //         <legend>
-  //           <h3>Adicionar novo arquivo</h3>
-  //         </legend>
-  //         <fieldset>
-  //           <Box
-  //             display="flex"
-  //             flexDirection={"column"}
-  //             rowGap={"20px"}
-  //           >
-  //             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-  //               <SelectInput
-  //                 filterName="Tipo de documento"
-  //                 list={tipo}
-  //                 setFileFilters={setTipo}
-  //               />
-  //               <SelectInput
-  //                 filterName="Disciplina"
-  //                 list={disciplina}
-  //                 setFileFilters={setDisciplina}
-  //               />
-  //             </Box>
-  //             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-  //               <SelectInput
-  //                 filterName="Etapa do projeto"
-  //                 list={etapa}
-  //                 setFileFilters={setEtapa}
-  //               />
-  //               <SelectInput
-  //                 filterName="Conteúdo do arquivo"
-  //                 list={conteudo}
-  //                 setFileFilters={setConteudo}
-  //               />
-  //             </Box>
-  //           </Box>
-  //           <FileUploader
-  //             getRootProps={getRootProps}
-  //             getInputProps={getInputProps}
-  //             isDragActive={isDragActive}
-  //           />
-
-  //           <div>
-  //             {acceptedFiles.map((el) => (
-  //               <p key={el.name}>
-  //                 Arquivo selecionado: <strong>{el.name}</strong>
-  //               </p>
-  //             ))}
-  //           </div>
-  //         </fieldset>
-  //         <Button
-  //           variant="contained"
-  //           onClick={submitNewFileData}
-  //         >
-  //           Enviar
-  //         </Button>
-  //       </StyledForm>
-  //     </StyledBox>
-  //   </Modal>
-  // );
 }
