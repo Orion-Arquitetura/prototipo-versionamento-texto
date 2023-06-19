@@ -7,6 +7,8 @@ import { useContext, useEffect } from "react";
 import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
+import { AuthContext } from "@/contexts/AuthContext";
+import { Paper } from "@mui/material";
 
 export default function Projetos() {
   const { getProjectsMetadata } = useContext(ProjectCRUDContext);
@@ -26,8 +28,8 @@ export default function Projetos() {
             backButton={false}
           />
 
-          <WidgetBox direction="row">
-            <AddProject />
+          <WidgetBox>
+            <Paper>Não há projetos</Paper>
           </WidgetBox>
         </>
       ) : (
@@ -36,37 +38,25 @@ export default function Projetos() {
             title="Projetos"
             backButton={false}
           />
-          <WidgetBox direction="row">
+          <WidgetBox>
             {projetos
               ? projetos.map((projeto: any) => {
                   return (
                     <Widget
                       key={projeto.nome}
                       title={projeto.nome}
+                      projectData={{
+                        usuarios: projeto.usuarios,
+                        arquivos: projeto.arquivos,
+                      }}
                       link={`/projetos/${projeto._id}`}
                     />
                   );
                 })
               : null}
-            <AddProject />
           </WidgetBox>
         </>
       )}
     </>
   );
-}
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
-
-  if (token && tipo) {
-    return { props: {} };
-  }
-
-  return {
-    redirect: {
-      permanent: false,
-      destination: "/",
-    },
-  };
 }
