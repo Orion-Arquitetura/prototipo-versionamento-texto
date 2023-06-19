@@ -4,13 +4,15 @@ import PageTitle from "@/components/PageTitle";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
 
-const StyledDiv = styled.div`
-`;
+const StyledDiv = styled.div``;
 
 export default function Index() {
   return (
     <StyledDiv>
-      <PageTitle title="Painel do administrador" />
+      <PageTitle
+        title="Painel do administrador"
+        backButton
+      />
       <PanelMenu />
     </StyledDiv>
   );
@@ -19,15 +21,16 @@ export default function Index() {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
 
-  if (token && (tipo === "administrador")) {
+  if (token && tipo === "administrador") {
     return { props: {} };
   }
 
-  return {
-    redirect: {
-      permanent: false,
-      destination: "/",
-    },
-  };
+  if (token && tipo !== "administrador") {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/projetos",
+      },
+    };
+  }
 }
-
