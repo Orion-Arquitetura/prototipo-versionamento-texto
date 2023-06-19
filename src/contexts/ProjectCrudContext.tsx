@@ -1,6 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
-import { createContext, useCallback, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { AuthContext } from "./AuthContext";
 
 type ProjectCRUDContextType = {
   createProject: (name: string) => Promise<boolean>;
@@ -22,19 +23,29 @@ export const ProjectCRUDContext = createContext({} as ProjectCRUDContextType);
 
 export default function ProjectCRUDContextProvider({ children }: any) {
   const queryClient = useQueryClient();
+  const { userData } = useContext(AuthContext);
 
   async function getProjectsMetadata() {
-    //essa funcao precisa ser atualizada para puxar somente os projetos que o usuário está permitido ver
-    const token = parseCookies()["orion-token"];
+    const tipo = parseCookies()["user-tipo"];
 
-    if (token) {
-      const data = (await fetch("/api/projects/getAllProjects").then((res) =>
+    if (tipo === "administrador") {
+      const data = (await fetch(`/api/projects/getAllProjects`).then((res) =>
         res.json()
       )) as ProjectType[];
       return data;
-    }
+    } else {
+      const projetosPermitidos = userData?.permissoes.projetos;
+      const queryString = projetosPermitidos
+        ?.map(({ id }, index: number) => {
+          return `id=${id}${index === projetosPermitidos.length - 1 ? "" : "&"}`;
+        })
+        .join("");
 
-    return [];
+      const data = (await fetch(`/api/projects/getAllProjects?${queryString}`).then(
+        (res) => res.json()
+      )) as ProjectType[];
+      return data;
+    }
   }
 
   async function createProject(name: string) {

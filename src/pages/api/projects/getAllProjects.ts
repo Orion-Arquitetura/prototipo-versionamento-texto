@@ -5,7 +5,17 @@ import connectToDatabase from "@/database/mongodbConnection";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await connectToDatabase("App");
 
-  const data = await Projeto.find().exec().then(res => res)
+  if (req.query.id) {
+    const ids = req.query.id;
+    const data = await Projeto.find({ _id: { $in: ids } })
+      .exec()
+      .then((res) => res);
+    res.status(200).json(data);
+  } else {
+    const data = await Projeto.find()
+      .exec()
+      .then((res) => res);
 
-  res.status(200).json(data);
+    res.status(200).json(data);
+  }
 }
