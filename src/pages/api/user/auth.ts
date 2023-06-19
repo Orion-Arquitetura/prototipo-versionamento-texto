@@ -10,25 +10,30 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const usersCollection = mongoose.connection.collection("Users");
-    await usersCollection
+    const user = await usersCollection
       .findOne({
         email: email,
         senha: senha,
       })
-      .then((result: any) => {
-        res.status(200).json({
-          nome: result.nome,
-          email: result.email,
-          tipo: result.tipo.toLowerCase(),
-          id: result._id,
-          token: uuid(),
-        });
+      .then((result: any) => result);
+
+    if (user === null) {
+      throw new Error("Usuário não existe")
+    } else {
+      console.log(user)
+      res.status(200).json({
+        nome: user.nome,
+        email: user.email,
+        tipo: user.tipo.toLowerCase(),
+        id: user._id,
+        token: uuid(),
+        permissoes: user.permissoes
       });
+    }
 
     return;
   } catch (e) {
-    console.log(e);
-    res.status(401).json({ Erro: "Dados incorretos." });
+    res.status(401).json(e);
     return;
   }
 }
