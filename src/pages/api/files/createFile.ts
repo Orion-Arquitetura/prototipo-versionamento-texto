@@ -13,35 +13,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const projectData = await Projeto.findById(reqData.projectId).then((res) => res);
     const fileName = `${projectData.nome}.${reqData.filtros.conteudo}.${
       reqData.filtros.disciplina ? reqData.filtros.disciplina : reqData.filtros.tipo
-    }.${reqData.filtros.etapa}`
-
-    console.log(reqData.projectId)
+    }.${reqData.filtros.etapa}`;
 
     const newFile = new Arquivo({
       nome: fileName,
       projeto: {
         id: reqData.projectId,
-        nome: projectData.nome
+        nome: projectData.nome,
       },
       tipo: reqData.filtros.tipo,
       disciplina: reqData.filtros.disciplina,
       etapa: reqData.filtros.etapa,
       conteudo: reqData.filtros.conteudo,
       criadoPor: {
-        userName: cookies['user-email'],
-        userId: cookies['user-id']
-      }
+        userName: cookies["user-email"],
+        userId: cookies["user-id"],
+      },
     });
 
-    const newFileData = await newFile.save();
+    console.log(reqData.projectId);
+    projectData.arquivos.push(newFile._id);
+    
+    await projectData.save()
+    await newFile.save();
+    res.status(201).end();
 
-    res.status(200).json({
-      data: newFileData,
-    });
     return;
   } catch (e) {
     console.log(e);
-    res.status(500).json({ Erro: e });
+    res.status(400).json({ Erro: e });
     return;
   }
 }
