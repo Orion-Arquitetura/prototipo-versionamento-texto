@@ -12,6 +12,8 @@ type userData = {
   nome: string;
   tipo: "administrador" | "cliente" | "funcionario";
   id: string;
+  token: string;
+  permissoes: { arquivos: string[]; projetos: {nome:string, id:string}[] };
 };
 
 type AuthContextType = {
@@ -37,29 +39,37 @@ export default function AuthContextProvider({ children }: any) {
       })
         .then((res) => res.json())
         .then((usuario) => {
-          console.log(usuario);
-          setCookie(undefined, "user-nome", usuario.token, {
-            maxAge: 60 * 60 * 24,
-          });
-          setCookie(undefined, "orion-token", usuario.token, {
-            maxAge: 60 * 60 * 24,
-          });
-          setCookie(undefined, "user-email", usuario.email, {
-            maxAge: 60 * 60 * 24,
-          });
-          setCookie(undefined, "user-id", usuario.id, {
-            maxAge: 60 * 60 * 24,
-          });
-          setCookie(undefined, "user-tipo", usuario.tipo);
-
-          setUserData(usuario);
-          return usuario;
+          if (usuario.token) {
+            setCookie(undefined, "user-nome", usuario.nome, {
+              maxAge: 60 * 60 * 24,
+            });
+            setCookie(undefined, "orion-token", usuario.token, {
+              maxAge: 60 * 60 * 24,
+            });
+            setCookie(undefined, "user-email", usuario.email, {
+              maxAge: 60 * 60 * 24,
+            });
+            setCookie(undefined, "user-id", usuario.id, {
+              maxAge: 60 * 60 * 24,
+            });
+            setCookie(undefined, "user-tipo", usuario.tipo, {
+              maxAge: 60 * 60 * 24,
+            });
+            setCookie(undefined, "user-permissoes", JSON.stringify(usuario.permissoes), {
+              maxAge: 60 * 60 * 24,
+            });
+            setUserData(usuario);
+            return usuario;
+          } else {
+            throw new Error("Usuário não existe");
+          }
         });
 
       Router.replace("/projetos");
       return true;
     } catch (e) {
       setIsLoadingUserData(false);
+      window.alert(e);
       return false;
     }
   }
@@ -71,6 +81,7 @@ export default function AuthContextProvider({ children }: any) {
       destroyCookie(undefined, "user-nome");
       destroyCookie(undefined, "user-id");
       destroyCookie(undefined, "user-tipo");
+      destroyCookie(undefined, "user-permissoes");
       setIsLoadingUserData(false);
       setUserData(null);
     } finally {
@@ -85,6 +96,7 @@ export default function AuthContextProvider({ children }: any) {
       "user-nome": nome,
       "user-id": id,
       "user-tipo": tipo,
+      "user-permissoes": permissoes
     } = parseCookies();
 
     if (token && userData === null) {
@@ -93,6 +105,8 @@ export default function AuthContextProvider({ children }: any) {
         email,
         tipo: tipo as "administrador" | "cliente" | "funcionario",
         id,
+        token,
+        permissoes: JSON.parse(permissoes)
       });
     }
   }, [userData]);
