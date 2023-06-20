@@ -13,7 +13,7 @@ type userData = {
   tipo: "administrador" | "cliente" | "funcionario";
   id: string;
   token: string;
-  permissoes: { arquivos: string[]; projetos: {nome:string, id:string}[] };
+  permissoes: { arquivos: string[]; projetos: { nome: string; id: string }[] };
 };
 
 type AuthContextType = {

@@ -51,7 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     redirect: {
       permanent: false,
-      destination: "/",
+      destination: "/projetos",
     },
   };
 }
