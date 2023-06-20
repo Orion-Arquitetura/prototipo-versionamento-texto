@@ -10,7 +10,7 @@ const StyledDiv = styled.div`
   align-items: center;
 `;
 
-export default function PageTitle({ title = "titulo", backButton }: { title: string, backButton: boolean }) {
+export default function PageTitle({ title = "titulo", backButton = false }: { title: string, backButton?: boolean }) {
   return (
     <StyledDiv>
       {backButton ? <BackButton /> : null}

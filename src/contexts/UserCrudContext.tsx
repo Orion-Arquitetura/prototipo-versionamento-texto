@@ -21,7 +21,7 @@ type UserCRUDContextType = {
 type UserType = {
   nome: string;
   email: string;
-  tipo: "Funcionário" | "Administrador" | "Cliente";
+  tipo: "funcionario" | "administrador" | "cliente";
   permissoes: { projetos: string[]; arquivos: string[] };
   _id: string;
 };

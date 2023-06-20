@@ -6,6 +6,7 @@ import AddFileModal from "./AddFileModal";
 import FilterListModal from "./FilterListModal";
 import PageTitle from "../PageTitle";
 import Box from "@mui/material/Box";
+import ProjectConfigsButton from "./ProjectConfigsButton";
 
 const StyledDiv = styled.div`
   margin-bottom: 10px;
@@ -57,6 +58,7 @@ export default function FilesToolbar({
           isOpen={filesFiltersModalState}
           handleClose={closeFilesFiltersModal}
         />
+        <ProjectConfigsButton projectId={projectId} projectName={projectName} />
       </Box>
     </StyledDiv>
   );

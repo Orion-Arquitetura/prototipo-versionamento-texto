@@ -11,13 +11,18 @@ const projectSchema = mongoose.Schema({
     default: Date.now,
   },
   usuarios: {
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    type: [
+      {
+        nome: String,
+        id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      },
+    ],
     required: true,
     default: [],
   },
   arquivos: {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" }],
-    default: []
+    default: [],
   },
 });
 
