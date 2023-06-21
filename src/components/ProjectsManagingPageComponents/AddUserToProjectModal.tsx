@@ -13,8 +13,8 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 import { UserCRUDContext } from "@/contexts/UserCrudContext";
+import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 
 const StyledPaper = styled(Paper)`
   position: absolute;
@@ -37,29 +37,24 @@ export default function AddUserToProjectModal({
     { id: string; nome: string }[]
   >([]);
   const { getAllUsers } = useContext(UserCRUDContext);
+  const { addUsersToProject } = useContext(ProjectCRUDContext);
   const { data: users } = useQuery({
     queryKey: ["users"],
     queryFn: getAllUsers,
     refetchOnWindowFocus: false,
   });
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   async function refetch() {
-    await queryClient.invalidateQueries(["users"])
+    await queryClient.invalidateQueries(["users"]);
   }
 
-  async function addUsersToProject() {
-    const requestBody = {
-      usersData: usuariosSelecionados,
-      projectData: { nome: projectData.nome, id: projectData._id },
-    };
-    await fetch("/api/projects/addUserToProject", {
-      method: "POST",
-      body: JSON.stringify(requestBody),
-    });
+  function handleAddUsersToProject() {
+    addUsersToProject(usuariosSelecionados, projectData);
+    setUsuariosSelecionados([])
     handleCloseModal();
-    refetch()
+    refetch();
   }
 
   function cancelSubmit() {
@@ -193,7 +188,6 @@ export default function AddUserToProjectModal({
                         usuario.nome === user.nome
                     )
                   ) {
-                    console.log(projectData);
                     return null;
                   }
 
@@ -215,7 +209,7 @@ export default function AddUserToProjectModal({
 
           <Button
             sx={{ mt: 2 }}
-            onClick={addUsersToProject}
+            onClick={handleAddUsersToProject}
           >
             Confirmar
           </Button>

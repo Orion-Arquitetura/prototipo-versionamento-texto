@@ -106,7 +106,7 @@ export default function AuthContextProvider({ children }: any) {
         tipo: tipo as "administrador" | "cliente" | "funcionario",
         id,
         token,
-        permissoes: JSON.parse(permissoes)
+        permissoes: permissoes === "undefined" ? "" : JSON.parse(permissoes) 
       });
     }
   }, [userData]);

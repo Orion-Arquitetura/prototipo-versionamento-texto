@@ -7,6 +7,9 @@ type ProjectCRUDContextType = {
   createProject: (name: string) => Promise<boolean>;
   deleteProject: (projectID: string) => Promise<boolean>;
   getProjectsMetadata: () => Promise<ProjectType[]>;
+  addUsersToProject: (usuariosSelecionados: any, projectData: any) => void;
+  getOneProjectData: (id: string) => void;
+  removeUserFromProject: (projectId:string, userId:string) => void;
 };
 
 type ProjectType = {
@@ -48,6 +51,38 @@ export default function ProjectCRUDContextProvider({ children }: any) {
     }
   }
 
+  async function addUsersToProject(usuariosSelecionados: any, projectData: any) {
+    const requestBody = JSON.stringify({
+      usersData: usuariosSelecionados,
+      projectData: { nome: projectData.nome, id: projectData._id },
+    });
+    await fetch("/api/projects/addUserToProject", {
+      method: "POST",
+      body: requestBody
+    });
+    queryClient.invalidateQueries(["project-data"])
+  }
+
+  async function removeUserFromProject(projectId:string, userId:string) {
+    console.log(projectId, userId)
+    const requestBody = JSON.stringify({
+      projectId,
+      userId
+    })
+
+    await fetch("/api/projects/removeUserFromProject", {method: "POST", body: requestBody})
+    queryClient.invalidateQueries(["project-data"])
+
+  }
+
+  async function getOneProjectData(id: string) {
+    const projectData = await fetch(`/api/projects/getOneProject?id=${id}`).then(
+      (result) => result.json()
+    );
+    console.log(projectData);
+    return projectData;
+  }
+
   async function createProject(name: string) {
     try {
       await fetch("/api/projects/createProject", {
@@ -74,7 +109,14 @@ export default function ProjectCRUDContextProvider({ children }: any) {
 
   return (
     <ProjectCRUDContext.Provider
-      value={{ createProject, deleteProject, getProjectsMetadata }}
+      value={{
+        createProject,
+        deleteProject,
+        getProjectsMetadata,
+        getOneProjectData,
+        addUsersToProject,
+        removeUserFromProject,
+      }}
     >
       {children}
     </ProjectCRUDContext.Provider>
