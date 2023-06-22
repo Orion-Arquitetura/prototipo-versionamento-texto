@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,23 +12,24 @@ import PersonIcon from "@mui/icons-material/Person";
 import Image from "next/image";
 import Link from "next/link";
 import { parseCookies } from "nookies";
+import { useContext, useState, MouseEvent } from "react";
 
 function ResponsiveAppBar() {
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const { signOff } = React.useContext(AuthContext);
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const { signOff } = useContext(AuthContext);
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setAnchorElUser(null);
   };
 
   function logOff() {
     signOff();
     handleCloseUserMenu();
   }
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   if (parseCookies()["user-tipo"] === "administrador") {
     return (
