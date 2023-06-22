@@ -18,11 +18,11 @@ type UserCRUDContextType = {
   removeUserFromProject: (UserID: string, projectID: string) => void;
 };
 
-type UserType = {
+export type UserType = {
   nome: string;
   email: string;
   tipo: "funcionario" | "administrador" | "cliente";
-  permissoes: { projetos: string[]; arquivos: string[] };
+  permissoes: { projetos: { id: string; nome: string }[]; arquivos: string[] };
   _id: string;
 };
 

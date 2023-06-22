@@ -7,8 +7,12 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import UserListItem from "./UserListItem";
 import { useContext } from "react";
-import { UserCRUDContext } from "@/contexts/UserCrudContext";
+import { UserCRUDContext, UserType } from "@/contexts/UserCrudContext";
 import { useQuery } from "@tanstack/react-query";
+
+const HeaderCellStyles = {
+  border: 0
+}
 
 export default function UsersList({ filters }: any) {
   const { getAllUsers } = useContext(UserCRUDContext);
@@ -19,33 +23,25 @@ export default function UsersList({ filters }: any) {
   });
   
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell width={10} />
-            <TableCell>Nome</TableCell>
-            <TableCell>Tipo</TableCell>
-            <TableCell width={10} />
+    <TableContainer component={Paper} elevation={7}>
+      <Table aria-label="collapsible table" sx={{ display: "flex", flexDirection: "column", width: "100%"}}>
+        <TableHead sx={{ display: "flex", borderBottom: "solid 1px rgb(224, 224, 224)"}}>
+          <TableRow sx={{ display: "flex", width: "100%", justifyContent:"space-around"}}>
+            <TableCell sx={HeaderCellStyles}>Nome</TableCell>
+            <TableCell sx={HeaderCellStyles}>Tipo</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody sx={{ display: "flex", flexDirection: "column"}}>
           {usuarios
             ? usuarios.map(
-                (user: {
-                  nome: string;
-                  email: string;
-                  tipo: "Funcionário" | "Administrador" | "Cliente";
-                  permissoes: { projetos: string[]; arquivos: string[] };
-                  _id: string;
-                }) => (
+                (user:UserType) => (
                   <UserListItem
                     key={user.nome}
                     nome={user.nome}
                     email={user.email}
                     tipo={user.tipo}
                     permissoes={user.permissoes}
-                    id={user._id}
+                    _id={user._id}
                   />
                 )
               )
