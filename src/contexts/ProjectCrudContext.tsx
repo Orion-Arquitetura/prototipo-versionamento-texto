@@ -1,6 +1,6 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 import { AuthContext } from "./AuthContext";
 
 type ProjectCRUDContextType = {
@@ -99,7 +99,8 @@ export default function ProjectCRUDContextProvider({ children }: any) {
 
   async function deleteProject(projectID: string) {
     try {
-      await fetch("api/projects/deleteProject", { method: "POST", body: projectID });
+      await fetch("/api/projects/deleteProject", { method: "POST", body: projectID });
+      queryClient.invalidateQueries(["Projects-metadata"]);
       return true;
     } catch (e) {
       window.alert(e);

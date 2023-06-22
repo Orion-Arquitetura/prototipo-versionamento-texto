@@ -2,6 +2,7 @@
 
 import PageTitle from "@/components/PageTitle";
 import AddUserToProjectModal from "@/components/ProjectsManagingPageComponents/AddUserToProjectModal";
+import DeleteProjectModal from "@/components/ProjectsManagingPageComponents/DeleteProjectModal";
 import ProjectUsersList from "@/components/ProjectsManagingPageComponents/ProjectUsersList";
 import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 import styled from "@emotion/styled";
@@ -22,15 +23,26 @@ interface ProjectData {
 
 export default function Configs({ id }: { id: string }) {
   const [addUserToProjectModalState, setAddUserToProjectModalState] = useState(false);
-  const { getOneProjectData } = useContext(ProjectCRUDContext);
-
+  
   function openAddUserToProjectModal() {
     setAddUserToProjectModalState(true);
   }
-
+  
   function closeAddUserToProjectModal() {
     setAddUserToProjectModalState(false);
   }
+
+  const [deleteProjectModalState, setDeleteProjectModalState] = useState(false);
+  
+  function openDeleteProjectModal() {
+    setDeleteProjectModalState(true);
+  }
+  
+  function closeDeleteProjectModal() {
+    setDeleteProjectModalState(false);
+  }
+
+  const { getOneProjectData } = useContext(ProjectCRUDContext);
 
   const { data: projectData, isLoading }:UseQueryResult<ProjectData, unknown> = useQuery({
     queryKey: ["project-data"],
@@ -49,6 +61,7 @@ export default function Configs({ id }: { id: string }) {
         isOpen={addUserToProjectModalState}
         projectData={projectData}
       />
+      <DeleteProjectModal close={closeDeleteProjectModal} isOpen={deleteProjectModalState} projectId={id} />
       <PageTitle
         title="Configurações de projeto"
         backButton
@@ -72,6 +85,7 @@ export default function Configs({ id }: { id: string }) {
             Adicionar usuário
           </Button>
         </Paper>
+        <Button onClick={openDeleteProjectModal} sx={{mt:2}} variant="contained" color="error">Excluir projeto</Button>
       </Paper>
     </StyledDiv>
   );
