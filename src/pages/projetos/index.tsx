@@ -28,9 +28,7 @@ export default function Projetos() {
             backButton={false}
           />
 
-          <WidgetBox>
-            <Paper>Não há projetos</Paper>
-          </WidgetBox>
+          <Paper sx={{mt:2, p:2}} elevation={7}>Não há projetos</Paper>
         </>
       ) : (
         <>
@@ -63,10 +61,9 @@ export default function Projetos() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
-  console.log(token, tipo)
+  console.log(token, tipo);
 
-  if (token && (tipo === "administrador")) {
+  if (token && tipo === "administrador") {
     return { props: {} };
   }
-
 }
