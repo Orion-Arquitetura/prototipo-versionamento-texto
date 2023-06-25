@@ -13,7 +13,7 @@ import { Paper } from "@mui/material";
 export default function Projetos() {
   const { getProjectsMetadata } = useContext(ProjectCRUDContext);
 
-  const { data: projetos } = useQuery({
+  const { data: projetos, isLoading } = useQuery({
     queryKey: ["Projects-metadata"],
     queryFn: getProjectsMetadata,
     refetchOnWindowFocus: false,
@@ -36,6 +36,9 @@ export default function Projetos() {
             title="Projetos"
             backButton={false}
           />
+          {
+            isLoading && <div>Carregando...</div>
+          }
           <WidgetBox>
             {projetos
               ? projetos.map((projeto: any) => {
