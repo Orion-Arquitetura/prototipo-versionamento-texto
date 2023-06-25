@@ -11,7 +11,9 @@ import { UserCRUDContext, UserType } from "@/contexts/UserCrudContext";
 import { useQuery } from "@tanstack/react-query";
 
 const HeaderCellStyles = {
-  border: 0
+  border: 0,
+  width: "100%",
+  textAlign: "center"
 }
 
 export default function UsersList({ filters }: any) {
@@ -29,6 +31,7 @@ export default function UsersList({ filters }: any) {
           <TableRow sx={{ display: "flex", width: "100%", justifyContent:"space-around"}}>
             <TableCell sx={HeaderCellStyles}>Nome</TableCell>
             <TableCell sx={HeaderCellStyles}>Tipo</TableCell>
+            <TableCell sx={{paddingRight: 5, border: 0}}></TableCell>
           </TableRow>
         </TableHead>
         <TableBody sx={{ display: "flex", flexDirection: "column"}}>

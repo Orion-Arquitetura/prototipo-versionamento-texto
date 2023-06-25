@@ -1,12 +1,18 @@
-import { TableRow, TableCell, IconButton } from "@mui/material";
-import { useState } from "react";
+import { TableRow, TableCell, IconButton, Button } from "@mui/material";
+import { useContext, useState } from "react";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import UserListItemCollapsable from "./UserListItemCollapsable";
-import { UserType } from "@/contexts/UserCrudContext";
+import { UserCRUDContext, UserType } from "@/contexts/UserCrudContext";
+import { Delete } from "@mui/icons-material";
 
 export default function UserListItem({ nome, tipo, permissoes, email, _id }: UserType) {
   const [open, setOpen] = useState(false);
+  const { deleteUser } = useContext(UserCRUDContext);
+
+  function handleDeleteUser() {
+    deleteUser(_id);
+  }
   return (
     <>
       <TableRow
@@ -16,6 +22,7 @@ export default function UserListItem({ nome, tipo, permissoes, email, _id }: Use
           display: "flex",
           justifyContent: "space-around",
           alignContent: "center",
+          "& button": {visibility: "hidden"}, "&:hover": {"& button": {visibility: "visible"}}
         }}
       >
         {/* <TableCell>
@@ -28,20 +35,16 @@ export default function UserListItem({ nome, tipo, permissoes, email, _id }: Use
           </IconButton> 
         </TableCell> */}
 
-        <TableCell
-          component="th"
-          scope="row"
-          sx={{ width: "100%", textAlign: "center" }}
-        >
-          {nome}
+        <TableCell sx={{ width: "100%", textAlign: "center" }}>{nome}</TableCell>
+
+        <TableCell sx={{ width: "100%", textAlign: "center" }}>
+          {tipo.charAt(0).toUpperCase() + tipo.substring(1)}
         </TableCell>
 
-        <TableCell
-          component="th"
-          scope="row"
-          sx={{ width: "100%", textAlign: "center" }}
-        >
-          {tipo.charAt(0).toUpperCase() + tipo.substring(1)}
+        <TableCell>
+          <Button onClick={handleDeleteUser} sx={{padding: 0, minWidth: "auto"}}>
+            <Delete />
+          </Button>
         </TableCell>
       </TableRow>
 
