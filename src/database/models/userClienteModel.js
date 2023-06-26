@@ -23,7 +23,7 @@ export const userClienteSchema = mongoose.Schema({
     default: "cliente",
   },
   permissoes: {
-    projetos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }],
+    projetos: [{ nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } }],
     arquivos: [
       {
         id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
