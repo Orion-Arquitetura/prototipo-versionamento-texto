@@ -7,6 +7,7 @@ import FilterListModal from "./FilterListModal";
 import PageTitle from "../PageTitle";
 import Box from "@mui/material/Box";
 import ProjectConfigsButton from "./ProjectConfigsButton";
+import { parseCookies } from "nookies";
 
 const StyledDiv = styled.div`
   margin-bottom: 10px;
@@ -25,7 +26,7 @@ export default function FilesToolbar({
 }) {
   const [addFileModalState, setAddFileModalState] = useState(false);
   const [filesFiltersModalState, setFilesFiltersModalState] = useState(false);
-
+  const isAdmin = parseCookies()["user-tipo"] === "administrador";
   function openAddFileModal() {
     setAddFileModalState(true);
   }
@@ -44,21 +45,33 @@ export default function FilesToolbar({
 
   return (
     <StyledDiv>
-      <PageTitle title={projectName} backButton/>
+      <PageTitle
+        title={projectName}
+        backButton
+      />
 
-      <Box sx={{display: "flex", columnGap: 2}}>
-        <AddFileButton handleOpen={openAddFileModal} />
-        <AddFileModal
-          projectId={projectId}
-          isOpen={addFileModalState}
-          handleClose={closeAddFileModal}
-        />
+      <Box sx={{ display: "flex", columnGap: 2 }}>
+        {isAdmin && (
+          <>
+            <AddFileButton handleOpen={openAddFileModal} />
+            <AddFileModal
+              projectId={projectId}
+              isOpen={addFileModalState}
+              handleClose={closeAddFileModal}
+            />
+          </>
+        )}
         <FilterListButton handleOpen={openFilesFiltersModal} />
         <FilterListModal
           isOpen={filesFiltersModalState}
           handleClose={closeFilesFiltersModal}
         />
-        <ProjectConfigsButton projectId={projectId} projectName={projectName} />
+        {isAdmin && (
+          <ProjectConfigsButton
+            projectId={projectId}
+            projectName={projectName}
+          />
+        )}
       </Box>
     </StyledDiv>
   );
