@@ -61,12 +61,3 @@ export default function Projetos() {
     </>
   );
 }
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
-  console.log(token, tipo);
-
-  if (token && tipo === "administrador") {
-    return { props: {} };
-  }
-}
