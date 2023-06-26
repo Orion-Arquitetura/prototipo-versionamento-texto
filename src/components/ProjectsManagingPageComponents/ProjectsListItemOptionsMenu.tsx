@@ -1,20 +1,37 @@
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useContext } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Router from "next/router";
+import Link from "next/link";
+import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
 
-export default function ProjectsListItemOptionsMenu({ userId, userName, userProjects }: any) {
+export default function ProjectsListItemOptionsMenu({
+  id,
+  nome,
+}: {
+  id: string;
+  nome: string;
+}) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const handleClickMenu = (event: MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+  const { deleteProject } = useContext(ProjectCRUDContext);
 
-  const handleCloseMenu = () => {
+  async function hadleDeleteProject() {
+    console.log(id)
+    handleCloseMenu()
+    await deleteProject(id);
+  }
+
+  function handleClickMenu(event: MouseEvent<HTMLButtonElement>) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleCloseMenu() {
     setAnchorEl(null);
-  };
+  }
 
   // const [addUserToProjectModalState, setAddUserToProjectModalState] = useState(false);
 
@@ -51,9 +68,17 @@ export default function ProjectsListItemOptionsMenu({ userId, userName, userProj
         open={open}
         onClose={handleCloseMenu}
       >
-        <MenuItem onClick={handleCloseMenu}>Renomear</MenuItem>
-        <MenuItem onClick={handleCloseMenu}>Modificar usuarios</MenuItem>
-        <MenuItem onClick={handleCloseMenu}>Excluir</MenuItem>
+        <MenuItem onClick={handleCloseMenu}>
+          <Link
+            href={{
+              pathname: "/admin/projetos/configs",
+              query: { id, nome },
+            }}
+          >
+            Configurações
+          </Link>
+        </MenuItem>
+        <MenuItem onClick={hadleDeleteProject}>Excluir</MenuItem>
       </Menu>
     </div>
   );

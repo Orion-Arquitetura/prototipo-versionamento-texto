@@ -1,10 +1,9 @@
-import connectToDatabase from "@/database/mongodbConnection";
 import mongoose from "mongoose";
 import Projeto from "@/database/models/projectModel";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await connectToDatabase();
+  //esta função adiciona multiplos usuários a apenas um projeto
 
   try {
     const { usersData, projectData } = JSON.parse(req.body);

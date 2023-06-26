@@ -14,7 +14,7 @@ type UserCRUDContextType = {
   }) => Promise<boolean>;
   deleteUser: (UserID: string) => Promise<boolean>;
   getAllUsers: () => Promise<UserType[]>;
-  addUserToProject: (UserID: string, projectID: string) => void;
+  addUserToProjects: (userData: {nome:string, id:string}, projects: {nome:string, id: string}[]) => void;
   removeUserFromProject: (UserID: string, projectID: string) => void;
 };
 
@@ -70,7 +70,7 @@ export default function UserCRUDContextProvider({ children }: any) {
 
   async function deleteUser(UserID: string) {
     try {
-      await fetch("api/Users/deleteUser", { method: "POST", body: UserID });
+      await fetch("/api/user/deleteUser", { method: "POST", body: UserID });
       invalidadeQuery("get-all-users");
       return true;
     } catch (e) {
@@ -79,7 +79,10 @@ export default function UserCRUDContextProvider({ children }: any) {
     }
   }
 
-  async function addUserToProject(UserID: string, projectID: string) {}
+  async function addUserToProjects(userData:{nome:string, id: string}, projects: {nome:string, id: string}[]) {
+    await fetch("/api/user/addUserToProjects", {method: "POST", body: JSON.stringify({userData, projects})})
+    invalidadeQuery("Project-metadata")
+  }
 
   async function removeUserFromProject(UserID: string, projectID: string) {}
 
@@ -89,7 +92,7 @@ export default function UserCRUDContextProvider({ children }: any) {
         createUser,
         deleteUser,
         getAllUsers,
-        addUserToProject,
+        addUserToProjects,
         removeUserFromProject,
       }}
     >

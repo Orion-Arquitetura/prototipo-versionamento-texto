@@ -48,7 +48,7 @@ export default function ProjectsListItem({
           scope="row"
           align="right"
         >
-          <ProjectsListItemOptionsMenu />
+          <ProjectsListItemOptionsMenu id={id} nome={nome}/>
         </TableCell>
       </TableRow>
     </>

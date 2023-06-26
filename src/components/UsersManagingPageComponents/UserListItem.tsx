@@ -5,14 +5,11 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import UserListItemCollapsable from "./UserListItemCollapsable";
 import { UserCRUDContext, UserType } from "@/contexts/UserCrudContext";
 import { Delete } from "@mui/icons-material";
+import UserListItemOptionsMenu from "./UserListItemOptionsMenu";
 
 export default function UserListItem({ nome, tipo, permissoes, email, _id }: UserType) {
   const [open, setOpen] = useState(false);
-  const { deleteUser } = useContext(UserCRUDContext);
 
-  function handleDeleteUser() {
-    deleteUser(_id);
-  }
   return (
     <>
       <TableRow
@@ -42,9 +39,7 @@ export default function UserListItem({ nome, tipo, permissoes, email, _id }: Use
         </TableCell>
 
         <TableCell>
-          <Button onClick={handleDeleteUser} sx={{padding: 0, minWidth: "auto"}}>
-            <Delete />
-          </Button>
+          <UserListItemOptionsMenu userData={{nome, id: _id, permissoes}} />
         </TableCell>
       </TableRow>
 

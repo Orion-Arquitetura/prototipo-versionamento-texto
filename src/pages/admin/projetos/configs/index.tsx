@@ -1,7 +1,7 @@
 "use client";
 
 import PageTitle from "@/components/PageTitle";
-import AddUserToProjectModal from "@/components/ProjectsManagingPageComponents/AddUserToProjectModal";
+import AddUsersToProjectModal from "@/components/ProjectsManagingPageComponents/AddUsersToProjectModal";
 import DeleteProjectModal from "@/components/ProjectsManagingPageComponents/DeleteProjectModal";
 import ProjectUsersList from "@/components/ProjectsManagingPageComponents/ProjectUsersList";
 import { ProjectCRUDContext } from "@/contexts/ProjectCrudContext";
@@ -56,14 +56,14 @@ export default function Configs({ id }: { id: string }) {
 
   return (
     <StyledDiv>
-      <AddUserToProjectModal
+      <AddUsersToProjectModal
         handleCloseModal={closeAddUserToProjectModal}
         isOpen={addUserToProjectModalState}
         projectData={projectData}
       />
       <DeleteProjectModal close={closeDeleteProjectModal} isOpen={deleteProjectModalState} projectId={id} />
       <PageTitle
-        title="Configurações de projeto"
+        title="Configurações do projeto"
         backButton
       />
       <Paper
