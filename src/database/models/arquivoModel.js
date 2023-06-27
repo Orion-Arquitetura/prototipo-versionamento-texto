@@ -3,20 +3,10 @@ const mongoose = require("mongoose");
 const arquivoSchema = mongoose.Schema({
   nome: {
     type: String,
-    required: true,
-    unique: true,
   },
   dataCriacao: {
     type: Date,
     default: Date.now,
-  },
-  projeto: {
-    id: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Projeto",
-      required: true,
-    },
-    nome: String
   },
   tipo: {
     type: String,
@@ -98,7 +88,15 @@ const arquivoSchema = mongoose.Schema({
     nome: {
       type: String,
       required: true,
-    }
+    },
+  },
+  versao: {
+    type: String,
+    match: /^R\d{2}$/,
+    default: "R00"
+  },
+  ultimaVersao: {
+    type: Boolean
   },
   criadoPor: {
     userName: {
