@@ -129,6 +129,10 @@ export default function AddUserToProjectModal({
                     return null;
                   }
 
+                  if (user.tipo === "administrador") {
+                    return null;
+                  }
+
                   if (
                     projectData.usuarios.some(
                       (usuario: { nome: string; id: string }) =>
@@ -174,7 +178,7 @@ export default function AddUserToProjectModal({
                 </Typography>
 
                 {users?.map((user) => {
-                  if (user.nome === "Admin") {
+                  if (user.tipo === "administrador") {
                     return null;
                   }
 
