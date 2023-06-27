@@ -56,7 +56,7 @@ export default function ProjectCRUDContextProvider({ children }: any) {
       usersData: usuariosSelecionados,
       projectData: { nome: projectData.nome, id: projectData._id },
     });
-    await fetch("/api/projects/addUserToProject", {
+    await fetch("/api/projects/addUsersToProject", {
       method: "POST",
       body: requestBody
     });
