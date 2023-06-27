@@ -4,6 +4,7 @@ import { createContext, useState } from "react";
 type FileCRUDContextType = {
   getProjectFiles: (projetoID: string) => Promise<any>;
   createNewFile: (filtros: any, projectId: any) => Promise<any>;
+  deleteFile: (id:string, projectId: string) => void
 };
 
 export const FileCRUDContext = createContext({} as FileCRUDContextType);
@@ -33,8 +34,13 @@ export default function FileCRUDContextProvider({ children }: any) {
     queryClient.invalidateQueries(["Arquivos-do-projeto"])
   }
 
+  async function deleteFile(fileId:string, projectId: string) {
+    await fetch("/api/files/deleteFile", {method: "POST", body: JSON.stringify({fileId, projectId})})
+    queryClient.invalidateQueries(["Arquivos-do-projeto"])
+  }
+
   return (
-    <FileCRUDContext.Provider value={{ getProjectFiles, createNewFile }}>
+    <FileCRUDContext.Provider value={{ getProjectFiles, createNewFile, deleteFile }}>
       {children}
     </FileCRUDContext.Provider>
   );
