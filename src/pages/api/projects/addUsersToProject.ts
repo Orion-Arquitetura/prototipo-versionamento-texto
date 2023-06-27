@@ -21,7 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     await usersCollection.bulkWrite(updateUserOperations);
 
     //e entao adicionar o id do(s) usuário(s) no projeto
-
     const updateProjectOperations = usersData.map((user: any) => {
       return ({
         updateOne: {
