@@ -17,6 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
           conteudo: document.conteudo,
           versao: document.versao - 1,
           ultimaVersao: false,
+          "projeto.id": document.projeto.id,
+          "projeto.nome": document.projeto.nome,
         },
         { ultimaVersao: true }
       );

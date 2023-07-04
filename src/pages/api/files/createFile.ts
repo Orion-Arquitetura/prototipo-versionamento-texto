@@ -52,6 +52,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         conteudo: reqData.filtros.conteudo,
         versao: count - 1,
         ultimaVersao: true,
+        "projeto.id": reqData.projectId,
+        "projeto.nome": projectData.nome
       },
       { ultimaVersao: false }
     );
