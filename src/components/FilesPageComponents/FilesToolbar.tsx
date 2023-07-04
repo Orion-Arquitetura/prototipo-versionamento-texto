@@ -1,13 +1,14 @@
 import styled from "@emotion/styled";
 import FilterListButton from "./FilterListButton";
 import AddFileButton from "./AddFileButton";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import AddFileModal from "./AddFileModal";
 import FilterListModal from "./FilterListModal";
 import PageTitle from "../PageTitle";
 import Box from "@mui/material/Box";
 import ProjectConfigsButton from "./ProjectConfigsButton";
 import { parseCookies } from "nookies";
+import { AuthContext } from "@/contexts/AuthContext";
 
 const StyledDiv = styled.div`
   margin-bottom: 10px;
@@ -26,7 +27,10 @@ export default function FilesToolbar({
 }) {
   const [addFileModalState, setAddFileModalState] = useState(false);
   const [filesFiltersModalState, setFilesFiltersModalState] = useState(false);
-  const isAdmin = parseCookies()["user-tipo"] === "administrador";
+  const {userData} = useContext(AuthContext)
+
+  const isAdmin = userData?.tipo === "administrador";
+
   function openAddFileModal() {
     setAddFileModalState(true);
   }
@@ -59,19 +63,19 @@ export default function FilesToolbar({
               isOpen={addFileModalState}
               handleClose={closeAddFileModal}
             />
+
+            <ProjectConfigsButton
+              projectId={projectId}
+              projectName={projectName}
+            />
           </>
         )}
+
         <FilterListButton handleOpen={openFilesFiltersModal} />
         <FilterListModal
           isOpen={filesFiltersModalState}
           handleClose={closeFilesFiltersModal}
         />
-        {isAdmin && (
-          <ProjectConfigsButton
-            projectId={projectId}
-            projectName={projectName}
-          />
-        )}
       </Box>
     </StyledDiv>
   );

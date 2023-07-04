@@ -8,8 +8,9 @@ export default function FilterListButton({ handleOpen }: { handleOpen: () => voi
     <Button
       variant="contained"
       onClick={handleOpen}
-      title={"Filtrar lista"}
       sx={{backgroundColor: "var(--gray5)", ":hover": {backgroundColor: "var(--gray1)"}}}
+      title="Filtrar"
+
     >
       <FilterAltIcon />
     </Button>
