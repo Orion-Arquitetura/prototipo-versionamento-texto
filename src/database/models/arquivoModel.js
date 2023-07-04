@@ -91,12 +91,12 @@ const arquivoSchema = mongoose.Schema({
     },
   },
   versao: {
-    type: String,
-    match: /^R\d{2}$/,
-    default: "R00"
+    type: Number,
+    required: true
   },
   ultimaVersao: {
-    type: Boolean
+    type: Boolean,
+    default: true
   },
   criadoPor: {
     userName: {

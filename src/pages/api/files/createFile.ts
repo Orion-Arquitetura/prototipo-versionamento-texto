@@ -4,7 +4,6 @@ import Projeto from "@/database/models/projectModel";
 import { parseCookies } from "nookies";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-
   const cookies = parseCookies({ req });
 
   try {
@@ -17,14 +16,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       tipo: reqData.filtros.tipo,
       conteudo: reqData.filtros.conteudo,
       disciplina: reqData.filtros.disciplina,
-      etapa: reqData.filtros.etapa
-    }
+      etapa: reqData.filtros.etapa,
+    };
 
-    const count = await Arquivo.count(filterObject).exec()
+    const count = await Arquivo.count(filterObject).exec();
+
+    const versao = `${count <= 9 ? `R0${count}` : `R${count}`}`;
 
     const fileName = `${projectData.nome}.${reqData.filtros.conteudo}.${
       reqData.filtros.disciplina ? reqData.filtros.disciplina : reqData.filtros.tipo
-    }.${reqData.filtros.etapa}-${count <= 9 ? `R0${count}` : `R${count}`}`;
+    }.${reqData.filtros.etapa}-${versao}`;
 
     const newFile = new Arquivo({
       nome: fileName,
@@ -36,16 +37,28 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       disciplina: reqData.filtros.disciplina,
       etapa: reqData.filtros.etapa,
       conteudo: reqData.filtros.conteudo,
-      versao: `${count <= 9 ? `R0${count}` : `R${count}`}`,
+      versao: count,
       criadoPor: {
-        userName: cookies["user-email"],
+        userName: cookies["user-nome"],
         userId: cookies["user-id"],
       },
     });
 
+    await Arquivo.updateOne(
+      {
+        tipo: reqData.filtros.tipo,
+        disciplina: reqData.filtros.disciplina,
+        etapa: reqData.filtros.etapa,
+        conteudo: reqData.filtros.conteudo,
+        versao: count - 1,
+        ultimaVersao: true,
+      },
+      { ultimaVersao: false }
+    );
+
     projectData.arquivos.push(newFile._id);
-    
-    await projectData.save()
+
+    await projectData.save();
     await newFile.save();
     res.status(201).end();
 

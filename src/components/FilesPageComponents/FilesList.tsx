@@ -9,6 +9,7 @@ const ListBoxStyles = {
 
 const ListStyles = {
   padding: 0,
+  marginBottom: "150px",
   borderRadius: "8px",
   overflow: "hidden",
 };
