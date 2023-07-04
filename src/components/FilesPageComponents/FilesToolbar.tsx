@@ -27,7 +27,7 @@ export default function FilesToolbar({
 }) {
   const [addFileModalState, setAddFileModalState] = useState(false);
   const [filesFiltersModalState, setFilesFiltersModalState] = useState(false);
-  const {userData} = useContext(AuthContext)
+  const { userData } = useContext(AuthContext);
 
   const isAdmin = userData?.tipo === "administrador";
 
@@ -55,6 +55,12 @@ export default function FilesToolbar({
       />
 
       <Box sx={{ display: "flex", columnGap: 2 }}>
+        <FilterListButton handleOpen={openFilesFiltersModal} />
+        <FilterListModal
+          isOpen={filesFiltersModalState}
+          handleClose={closeFilesFiltersModal}
+        />
+        
         {isAdmin && (
           <>
             <AddFileButton handleOpen={openAddFileModal} />
@@ -70,12 +76,6 @@ export default function FilesToolbar({
             />
           </>
         )}
-
-        <FilterListButton handleOpen={openFilesFiltersModal} />
-        <FilterListModal
-          isOpen={filesFiltersModalState}
-          handleClose={closeFilesFiltersModal}
-        />
       </Box>
     </StyledDiv>
   );
