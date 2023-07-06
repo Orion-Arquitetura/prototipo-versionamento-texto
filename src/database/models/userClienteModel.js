@@ -34,6 +34,19 @@ export const userClienteSchema = mongoose.Schema({
       },
     ],
   },
+  tarefas: {
+    revisao: [
+      {
+        projeto: {
+          nome: String,
+          id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+        },
+        arquivos: [
+          { id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" }, prazo: Date },
+        ],
+      },
+    ],
+  },
   dataCriacao: {
     type: Date,
     default: Date.now,

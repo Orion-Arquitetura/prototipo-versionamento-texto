@@ -14,6 +14,8 @@ import { useContext, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { FileCRUDContext } from "@/contexts/FileCrudContext";
 import DeleteFileModal from "./DeleteFileModal";
+import RevisaoModal from "./RevisaoModal";
+import NovaVersaoModal from "./NovaVersaoModal";
 
 const ListItemButtonStyles: SxProps = {
   bgcolor: "var(--midnight-green)",
@@ -36,8 +38,27 @@ const ListItemMoreBoxStyles: SxProps = {
 export default function FileListItem({ file }: any) {
   const [open, setOpen] = useState(false);
   const [deleteFileModalState, setDeleteFileModalState] = useState(false);
+  const [revisaoModalState, setRevisaoModalState] = useState(false);
+  const [novaVersaoModalState, setNovaVersaoModalState] = useState(false);
+
   const { userData } = useContext(AuthContext);
   const { deleteFile } = useContext(FileCRUDContext);
+
+  function handleOpenNovaVersaoModal() {
+    setNovaVersaoModalState(true);
+  }
+
+  function handleCloseNovaVersaoModal() {
+    setNovaVersaoModalState(false);
+  }
+
+  function handleOpenRevisaoModal() {
+    setRevisaoModalState(true);
+  }
+
+  function handleCloseRevisaoModal() {
+    setRevisaoModalState(false);
+  }
 
   function handleCloseDeleteFileModal() {
     setDeleteFileModalState(false);
@@ -62,6 +83,20 @@ export default function FileListItem({ file }: any) {
           close={handleCloseDeleteFileModal}
           isOpen={deleteFileModalState}
           handleDeleteFile={handleDeleteFile}
+        />
+      )}
+      {revisaoModalState && (
+        <RevisaoModal
+          close={handleCloseRevisaoModal}
+          isOpen={revisaoModalState}
+          file={file}
+        />
+      )}
+      {novaVersaoModalState && (
+        <NovaVersaoModal
+          close={handleCloseNovaVersaoModal}
+          isOpen={novaVersaoModalState}
+          file={file}
         />
       )}
       <ListItemButton
@@ -107,19 +142,25 @@ export default function FileListItem({ file }: any) {
               <>
                 <Button
                   variant="contained"
-                  color="primary"
+                  color={file.novaVersaoSolicitada ? "error" : "primary"}
                   sx={{ ml: 1 }}
+                  onClick={handleOpenNovaVersaoModal}
                 >
-                  Solicitar nova versão
+                  {file.novaVersaoSolicitada
+                    ? "Cancelar nova versão"
+                    : "Solicitar nova versão"}
                 </Button>
 
-                <Button
-                  variant="contained"
-                  color="primary"
-                  sx={{ ml: 1 }}
-                >
-                  Solicitar revisão
-                </Button>
+                {!file.novaVersaoSolicitada && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ ml: 1 }}
+                    onClick={handleOpenRevisaoModal}
+                  >
+                    Solicitar revisão
+                  </Button>
+                )}
 
                 <Button
                   variant="contained"

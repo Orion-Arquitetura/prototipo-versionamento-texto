@@ -92,12 +92,18 @@ const arquivoSchema = mongoose.Schema({
   },
   versao: {
     type: Number,
-    required: true
+    required: true,
   },
   ultimaVersao: {
     type: Boolean,
-    default: true
+    default: true,
   },
+  novaVersaoSolicitada: Boolean,
+  responsavelNovaVersao: {
+    nome: String,
+    id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  },
+  prazoNovaVersao: Date,
   criadoPor: {
     userName: {
       type: String,
