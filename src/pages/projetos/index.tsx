@@ -17,6 +17,8 @@ export default function Projetos() {
     queryKey: ["Projects-metadata"],
     queryFn: getProjectsMetadata,
     refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    
   });
 
   return (
