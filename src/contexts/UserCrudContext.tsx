@@ -1,6 +1,7 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { parseCookies } from "nookies";
-import { createContext, useEffect, useState } from "react";
+import { createContext } from "react";
+import { User } from "@/utils/interfaces";
 
 type UserCRUDContextType = {
   createUser: ({
@@ -13,18 +14,11 @@ type UserCRUDContextType = {
     tipo: string;
   }) => Promise<boolean>;
   deleteUser: (UserID: string) => Promise<boolean>;
-  getAllUsers: () => Promise<UserType[]>;
+  getAllUsers: () => Promise<User[]>;
   addUserToProjects: (userData: {nome:string, id:string}, projects: {nome:string, id: string}[]) => void;
   removeUserFromProject: (UserID: string, projectID: string) => void;
 };
 
-export type UserType = {
-  nome: string;
-  email: string;
-  tipo: "funcionario" | "administrador" | "cliente";
-  permissoes: { projetos: { id: string; nome: string }[]; arquivos: string[] };
-  _id: string;
-};
 
 export const UserCRUDContext = createContext({} as UserCRUDContextType);
 

@@ -1,32 +1,19 @@
 import { createContext, useState, useEffect } from "react";
 import { setCookie, parseCookies, destroyCookie } from "nookies";
 import Router from "next/router";
+import { signInData, AuthContextUserData } from "@/utils/interfaces";
 
-type signInData = {
-  email: string;
-  senha: string;
-};
-
-type userData = {
-  email: string;
-  nome: string;
-  tipo: "administrador" | "cliente" | "funcionario";
-  id: string;
-  token: string;
-  permissoes: { arquivos: string[]; projetos: { nome: string; id: string }[] };
-};
-
-type AuthContextType = {
+interface AuthContextType {
   signIn: ({ email, senha }: signInData) => Promise<boolean>;
   signOff: () => void;
-  userData: userData | null;
+  userData: AuthContextUserData | null;
   isLoadingUserData: boolean;
 };
 
 export const AuthContext = createContext({} as AuthContextType);
 
 export default function AuthContextProvider({ children }: any) {
-  const [userData, setUserData] = useState<userData | null>(null);
+  const [userData, setUserData] = useState<AuthContextUserData | null>(null);
   const [isLoadingUserData, setIsLoadingUserData] = useState(false);
 
   async function signIn({ email, senha }: signInData) {
