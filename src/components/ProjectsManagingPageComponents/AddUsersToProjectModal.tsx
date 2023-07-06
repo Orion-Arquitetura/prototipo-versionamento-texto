@@ -214,6 +214,7 @@ export default function AddUserToProjectModal({
           <Button
             sx={{ mt: 2 }}
             onClick={handleAddUsersToProject}
+            disabled={usuariosSelecionados.length === 0 ? true : false}
           >
             Confirmar
           </Button>

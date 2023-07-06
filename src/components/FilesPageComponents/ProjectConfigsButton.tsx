@@ -21,6 +21,7 @@ export default function ProjectConfigsButton({ projectId, projectName }: { proje
           ":hover": { backgroundColor: "var(--gray1)" },
         }}
         variant="contained"
+        title="Configurações"
       >
         <SettingsIcon />
       </StyledButton>

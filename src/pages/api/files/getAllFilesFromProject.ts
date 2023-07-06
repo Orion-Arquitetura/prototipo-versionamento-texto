@@ -8,6 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const arquivos = await Arquivo.find({ "projeto.id": req.body }).exec();
+    
     if (arquivos.length === 0) {
       await Projeto.findById(req.body)
         .exec()
