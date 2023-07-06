@@ -21,11 +21,11 @@ export default function Index() {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { "orion-token": token, "user-tipo": tipo } = parseCookies(context);
 
-  if (token && tipo === "administrador") {
+  if (token && (tipo === "administrador")) {
     return { props: {} };
   }
 
-  if (token && tipo !== "administrador") {
+  if (token && (tipo !== "administrador")) {
     return {
       redirect: {
         permanent: false,
