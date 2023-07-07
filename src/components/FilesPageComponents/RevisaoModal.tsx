@@ -15,6 +15,7 @@ import { UserCRUDContext } from "@/contexts/UserCrudContext";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { FileCRUDContext } from "@/contexts/FileCrudContext";
+import { Arquivo, User } from "@/utils/interfaces";
 
 const StyledPaper = styled(Paper)`
   width: 50%;
@@ -33,21 +34,35 @@ const StyledPaper = styled(Paper)`
   }
 `;
 
-export default function RevisaoModal({ close, isOpen, file }) {
+export default function RevisaoModal({
+  close,
+  isOpen,
+  file,
+}: {
+  close: () => void;
+  isOpen: boolean;
+  file: Arquivo;
+}) {
   const { getAllUsers } = useContext(UserCRUDContext);
   const { requestFileRevision } = useContext(FileCRUDContext);
-  const [usuarioSelecionado, setUsuarioSelecionado] = useState("");
+  const [usuarioSelecionado, setUsuarioSelecionado] = useState<User | null>(null);
+  const [prazo, setPrazo] = useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
-    setUsuarioSelecionado(event.target.value as string);
+    const user = users?.find((user) => user._id === event.target.value) as User;
+    setUsuarioSelecionado(user);
   };
-  const { data: users, isLoading } = useQuery({
+
+  const { data: users } = useQuery({
     queryKey: ["get-all-users"],
     queryFn: getAllUsers,
     refetchOnWindowFocus: false,
   });
 
-  function handleRequestFileRevision() {}
+  function handleRequestFileRevision() {
+    requestFileRevision(file, usuarioSelecionado as User, prazo);
+    close()
+  }
 
   return (
     <Modal
@@ -61,7 +76,7 @@ export default function RevisaoModal({ close, isOpen, file }) {
           <FormControl sx={{ width: "50%" }}>
             <InputLabel>Usuário</InputLabel>
             <Select
-              value={usuarioSelecionado}
+              value={usuarioSelecionado ? usuarioSelecionado._id : ""}
               label="Usuário"
               onChange={handleChange}
             >
@@ -77,7 +92,11 @@ export default function RevisaoModal({ close, isOpen, file }) {
               })}
             </Select>
           </FormControl>
-          <input type="date" />
+          <input
+            type="date"
+            onChange={(ev) => setPrazo(ev.target.value)}
+            min={new Date().toISOString().split("T")[0]}
+          />
         </Box>
         <Box
           sx={{
@@ -91,6 +110,8 @@ export default function RevisaoModal({ close, isOpen, file }) {
           <Button
             variant="contained"
             color="success"
+            onClick={handleRequestFileRevision}
+            disabled={usuarioSelecionado === null ? true : false}
           >
             Confirmar
           </Button>

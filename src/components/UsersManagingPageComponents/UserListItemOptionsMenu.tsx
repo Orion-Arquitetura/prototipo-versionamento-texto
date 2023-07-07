@@ -5,11 +5,16 @@ import { useState, MouseEvent, useContext } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { UserCRUDContext } from "@/contexts/UserCrudContext";
 import AddUserToProjectsModal from "./AddUserToProjectsModal";
+import Link from "next/link";
 
 export default function UserListItemOptionsMenu({
-  userData
+  userData,
 }: {
-  userData: {nome:string, id:string, permissoes: { projetos: { nome: string; id: string }[] }};
+  userData: {
+    nome: string;
+    id: string;
+    permissoes: { projetos: { nome: string; id: string }[] };
+  };
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -67,6 +72,9 @@ export default function UserListItemOptionsMenu({
         anchorOrigin={{ vertical: "center", horizontal: "center" }}
       >
         <MenuItem onClick={openAddUserToProjectsModal}>Adicionar a projetos</MenuItem>
+        <MenuItem>
+          <Link href={`./users/${userData.id}`} >Detalhes</Link>
+        </MenuItem>
         <MenuItem onClick={handleDeleteUser}>Excluir</MenuItem>
       </Menu>
     </>

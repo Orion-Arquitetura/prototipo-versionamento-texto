@@ -115,6 +115,9 @@ const arquivoSchema = mongoose.Schema({
       required: true,
     },
   },
+  emRevisao: Boolean,
+  responsavelRevisao: { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "User" } },
+  prazoRevisao: Date,
   comentario: {
     type: String,
   },

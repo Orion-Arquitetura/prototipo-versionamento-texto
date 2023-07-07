@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { createContext, useState } from "react";
-import { Arquivo, User } from "@/utils/interfaces";
+import { Arquivo, AuthContextUserData, User } from "@/utils/interfaces";
 
 interface FileCRUDContextType {
   getProjectFiles: (projetoID: string) => Promise<any>;
@@ -8,6 +8,8 @@ interface FileCRUDContextType {
   deleteFile: (id: string, projectId: string) => void;
   requestFileRevision: (file: Arquivo, user: User, prazo: string) => void;
   requestNewFileVersion: (file: Arquivo, user: User, prazo: string) => void;
+  cancelNewFileVersionRequest: (file: Arquivo) => void;
+  cancelFileRevisionRequest: (file: Arquivo) => void;
 }
 
 export const FileCRUDContext = createContext({} as FileCRUDContextType);
@@ -46,7 +48,12 @@ export default function FileCRUDContextProvider({ children }: any) {
   }
 
   async function requestFileRevision(file: Arquivo, user: User, prazo: string) {
-    await fetch("/api/files/requestFileRevision");
+    await fetch("/api/files/requestFileRevision", {
+      method: "POST",
+      body: JSON.stringify({ file, user, prazo }),
+    });
+
+    queryClient.invalidateQueries(["Arquivos-do-projeto"])
   }
 
   async function requestNewFileVersion(file: Arquivo, user: User, prazo: string) {
@@ -58,19 +65,19 @@ export default function FileCRUDContextProvider({ children }: any) {
     queryClient.invalidateQueries(["Arquivos-do-projeto"])
   }
 
-  async function cancelFileReviewRequest(file: Arquivo, user: User) {
-    await fetch("/api/files/requestNewFileVersion", {
+  async function cancelFileRevisionRequest(file: Arquivo) {
+    await fetch("/api/files/cancelFileRevisionRequest", {
       method: "POST",
-      body: JSON.stringify({ file, user }),
+      body: JSON.stringify({ file }),
     });
 
     queryClient.invalidateQueries(["Arquivos-do-projeto"])
   }
 
-  async function cancelNewFileVersionRequest(file: Arquivo, user: User) {
-    await fetch("/api/files/requestNewFileVersion", {
+  async function cancelNewFileVersionRequest(file: Arquivo) {
+    await fetch("/api/files/cancelNewFileVersionRequest", {
       method: "POST",
-      body: JSON.stringify({ file, user }),
+      body: JSON.stringify({ file }),
     });
 
     queryClient.invalidateQueries(["Arquivos-do-projeto"])
@@ -84,6 +91,8 @@ export default function FileCRUDContextProvider({ children }: any) {
         deleteFile,
         requestFileRevision,
         requestNewFileVersion,
+        cancelNewFileVersionRequest,
+        cancelFileRevisionRequest
       }}
     >
       {children}

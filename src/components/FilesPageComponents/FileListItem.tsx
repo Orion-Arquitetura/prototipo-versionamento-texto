@@ -16,6 +16,7 @@ import { FileCRUDContext } from "@/contexts/FileCrudContext";
 import DeleteFileModal from "./DeleteFileModal";
 import RevisaoModal from "./RevisaoModal";
 import NovaVersaoModal from "./NovaVersaoModal";
+import { AuthContextUserData } from "@/utils/interfaces";
 
 const ListItemButtonStyles: SxProps = {
   bgcolor: "var(--midnight-green)",
@@ -42,7 +43,8 @@ export default function FileListItem({ file }: any) {
   const [novaVersaoModalState, setNovaVersaoModalState] = useState(false);
 
   const { userData } = useContext(AuthContext);
-  const { deleteFile } = useContext(FileCRUDContext);
+  const { deleteFile, cancelNewFileVersionRequest, cancelFileRevisionRequest } =
+    useContext(FileCRUDContext);
 
   function handleOpenNovaVersaoModal() {
     setNovaVersaoModalState(true);
@@ -66,6 +68,14 @@ export default function FileListItem({ file }: any) {
 
   function handleOpenDeleteFileModal() {
     setDeleteFileModalState(true);
+  }
+
+  function handleCancelNovaVersao() {
+    cancelNewFileVersionRequest(file);
+  }
+
+  function handleCancelRevision() {
+    cancelFileRevisionRequest(file);
   }
 
   function handleClick() {
@@ -138,40 +148,44 @@ export default function FileListItem({ file }: any) {
             >
               Visualizar
             </Button>
-            {userData?.tipo === "administrador" && file.ultimaVersao && (
-              <>
+            {userData?.tipo === "administrador" &&
+              file.ultimaVersao &&
+              !file.emRevisao && (
                 <Button
                   variant="contained"
                   color={file.novaVersaoSolicitada ? "error" : "primary"}
                   sx={{ ml: 1 }}
-                  onClick={handleOpenNovaVersaoModal}
+                  onClick={
+                    file.novaVersaoSolicitada
+                      ? handleCancelNovaVersao
+                      : handleOpenNovaVersaoModal
+                  }
                 >
                   {file.novaVersaoSolicitada
                     ? "Cancelar nova versão"
                     : "Solicitar nova versão"}
                 </Button>
+              )}
 
-                {!file.novaVersaoSolicitada && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ ml: 1 }}
-                    onClick={handleOpenRevisaoModal}
-                  >
-                    Solicitar revisão
-                  </Button>
-                )}
-
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleOpenDeleteFileModal}
-                  sx={{ float: "right" }}
-                >
-                  Excluir
-                </Button>
-              </>
+            {!file.novaVersaoSolicitada && userData?.tipo === "administrador" && (
+              <Button
+                variant="contained"
+                color={file.emRevisao ? "error" : "primary"}
+                sx={{ ml: 1 }}
+                onClick={file.emRevisao ? handleCancelRevision : handleOpenRevisaoModal}
+              >
+                {file.emRevisao ? "Cancelar revisao" : "Solicitar revisão"}
+              </Button>
             )}
+
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleOpenDeleteFileModal}
+              sx={{ float: "right" }}
+            >
+              Excluir
+            </Button>
           </Box>
         </Box>
       </Collapse>

@@ -39,13 +39,12 @@ export const userFuncionarioSchema = mongoose.Schema({
   tarefas: {
     revisao: [
       {
+        arquivoId: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
+        prazo: Date,
         projeto: {
           nome: String,
           id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
         },
-        arquivos: [
-          { id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" }, prazo: Date },
-        ],
       },
     ],
     novaVersao: [

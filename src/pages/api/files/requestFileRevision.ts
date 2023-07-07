@@ -1,26 +1,36 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import connectToDatabase from "@/database/mongodbConnection";
 import Arquivo from "@/database/models/arquivoModel";
-import Projeto from "@/database/models/projectModel";
+import mongoose from "mongoose";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { file, user, prazo } = JSON.parse(req.body);
+  
+  const usersCollection = mongoose.connection.collection("Users")
 
-  try {
-    const arquivos = await Arquivo.find({ "projeto.id": req.body }).exec();
-    
-    if (arquivos.length === 0) {
-      await Projeto.findById(req.body)
-        .exec()
-        .then((result) => {
-          res.status(200).json({ projectName: result.nome });
-        });
-    } else {
-      res.status(200).json(arquivos);
+  await usersCollection.updateOne(
+    { _id: user._id },
+    {
+      $push: {
+        "tarefas.revisao": {
+          arquivoId: file._id,
+          prazo,
+          projeto: {
+            nome: file.projeto.nome,
+            id: file.projeto.id,
+          },
+        },
+      },
     }
-    return;
-  } catch (e) {
-    console.log(e);
-    res.status(500).json({ Erro: e });
-    return;
-  }
+  );
+
+  await Arquivo.updateOne(
+    { _id: file._id },
+    {
+      emRevisao: true,
+      responsavelRevisao: { nome: user.nome, id: user._id },
+      prazoRevisao: prazo,
+    }
+  );
+
+  res.status(200).end();
 }
