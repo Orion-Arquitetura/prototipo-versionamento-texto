@@ -15,6 +15,7 @@ type UserCRUDContextType = {
   }) => Promise<boolean>;
   deleteUser: (UserID: string) => Promise<boolean>;
   getAllUsers: () => Promise<User[]>;
+  getOneUser: (id:string) => Promise<User>;
   addUserToProjects: (userData: {nome:string, id:string}, projects: {nome:string, id: string}[]) => void;
   removeUserFromProject: (UserID: string, projectID: string) => void;
 };
@@ -36,6 +37,11 @@ export default function UserCRUDContextProvider({ children }: any) {
       return data;
     }
     return []
+  }
+
+  async function getOneUser(id:string) {
+    const userFetchedData = await fetch(`/api/user/getOneUser?id=${id}`).then(res => res.json())
+    return userFetchedData
   }
 
   async function createUser({
@@ -88,6 +94,7 @@ export default function UserCRUDContextProvider({ children }: any) {
         getAllUsers,
         addUserToProjects,
         removeUserFromProject,
+        getOneUser
       }}
     >
       {children}
