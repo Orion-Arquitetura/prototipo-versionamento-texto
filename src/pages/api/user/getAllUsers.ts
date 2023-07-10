@@ -9,8 +9,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const usersCollection = mongoose.connection.collection("Users");
     const data: any = await usersCollection.find({}).toArray().then(result => {
       return result.map(
-        ({  _id, nome, email, tipo, permissoes, dataCriacao }: any) => {
-          return { _id, nome, email, tipo, permissoes, dataCriacao };
+        ({  _id, nome, email, tipo, projetos, dataCriacao }: any) => {
+          return { _id, nome, email, tipo, projetos, dataCriacao };
         }
       );
     })

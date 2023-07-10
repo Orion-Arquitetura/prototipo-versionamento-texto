@@ -7,8 +7,9 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import UserListItem from "./UserListItem";
 import { useContext } from "react";
-import { UserCRUDContext, UserType } from "@/contexts/UserCrudContext";
+import { UserCRUDContext } from "@/contexts/UserCrudContext";
 import { useQuery } from "@tanstack/react-query";
+import { User } from "@/utils/interfaces";
 
 const HeaderCellStyles = {
   border: 0,
@@ -18,6 +19,7 @@ const HeaderCellStyles = {
 
 export default function UsersList({ filters }: any) {
   const { getAllUsers } = useContext(UserCRUDContext);
+
   const { data: usuarios } = useQuery({
     queryKey: ["get-all-users"],
     queryFn: getAllUsers,
@@ -37,13 +39,13 @@ export default function UsersList({ filters }: any) {
         <TableBody sx={{ display: "flex", flexDirection: "column"}}>
           {usuarios
             ? usuarios.map(
-                (user:UserType) => (
+                (user:User) => (
                   <UserListItem
                     key={user.nome}
                     nome={user.nome}
                     email={user.email}
                     tipo={user.tipo}
-                    permissoes={user.permissoes}
+                    projetos={user.projetos}
                     _id={user._id}
                   />
                 )

@@ -9,7 +9,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await usersCollection.findOneAndUpdate(
     { _id: new mongoose.Types.ObjectId(userId) },
-    { $pull: { "permissoes.projetos": { id: projectId } } }
+    { $pull: { projetos: { id: projectId } } }
   );
 
   await Projeto.findOneAndUpdate({_id: new mongoose.Types.ObjectId(projectId)}, {

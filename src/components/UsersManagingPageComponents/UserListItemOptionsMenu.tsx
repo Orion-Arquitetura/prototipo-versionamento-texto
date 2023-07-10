@@ -11,9 +11,9 @@ export default function UserListItemOptionsMenu({
   userData,
 }: {
   userData: {
-    nome: string;
-    id: string;
-    permissoes: { projetos: { nome: string; id: string }[] };
+    nome: string | undefined;
+    id: string | undefined;
+    projetos: { nome: string; id: string }[] | undefined;
   };
 }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -41,7 +41,7 @@ export default function UserListItemOptionsMenu({
   const { deleteUser } = useContext(UserCRUDContext);
 
   function handleDeleteUser() {
-    deleteUser(userData.id);
+    deleteUser((userData.id as string));
     handleCloseMenu();
   }
 
@@ -52,7 +52,7 @@ export default function UserListItemOptionsMenu({
           isOpen={addUserToProjectsModalState}
           close={closeAddUserToProjectsModal}
           userData={userData}
-          projetos={userData.permissoes.projetos}
+          projetos={userData.projetos}
         />
       )}
       <Button

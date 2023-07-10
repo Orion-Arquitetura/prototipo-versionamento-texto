@@ -22,18 +22,9 @@ export const userClienteSchema = mongoose.Schema({
     type: String,
     default: "cliente",
   },
-  permissoes: {
-    projetos: [{ nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } }],
-    arquivos: [
-      {
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
-        operacoes: {
-          type: [String],
-          enum: ["create", "read", "update", "delete"],
-        },
-      },
-    ],
-  },
+  projetos: [
+    { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } },
+  ],
   tarefas: {
     revisao: [
       {

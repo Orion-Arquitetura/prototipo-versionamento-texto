@@ -73,8 +73,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       default:
         break;
     }
-
-    return;
   } catch (e) {
     console.log(e);
     res.status(401).json({ Erro: "Dados incorretos." });

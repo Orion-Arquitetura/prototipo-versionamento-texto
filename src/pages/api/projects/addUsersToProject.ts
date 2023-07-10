@@ -14,7 +14,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const updateUserOperations = usersData.map((user: any) => ({
       updateOne: {
         filter: { _id: new mongoose.Types.ObjectId(user.id) },
-        update: { $push: { "permissoes.projetos": projectData } },
+        update: { $push: { projetos: projectData } },
       },
     }));
 

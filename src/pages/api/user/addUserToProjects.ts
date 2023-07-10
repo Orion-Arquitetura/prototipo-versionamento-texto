@@ -13,7 +13,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return {
       updateOne: {
         filter: { _id: new mongoose.Types.ObjectId(userData.id) },
-        update: { $push: { "permissoes.projetos": project } },
+        update: { $push: { projetos: project } },
       },
     };
   });

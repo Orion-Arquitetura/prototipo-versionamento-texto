@@ -22,41 +22,74 @@ export const userFuncionarioSchema = mongoose.Schema({
     type: String,
     default: "funcionario",
   },
-  permissoes: {
-    projetos: [
-      { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } },
-    ],
-    arquivos: [
-      {
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
-        operacoes: {
-          type: [String],
-          enum: ["create", "read", "update", "delete"],
-        },
-      },
-    ],
-  },
+  projetos: [
+    { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } },
+  ],
   tarefas: {
-    revisao: [
-      {
-        arquivoId: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
-        prazo: Date,
-        projeto: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+    concluidas: {
+      revisao: [
+        {
+          arquivo: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
+          },
+          prazo: Date,
+          dataConclusao: {
+            type: Date,
+            default: Date.now
+          },
+          projeto: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+          },
         },
-      },
-    ],
-    novaVersao: [
-      {
-        arquivoId: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
-        prazo: Date,
-        projeto: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+      ],
+      novaVersao: [
+        {
+          arquivo: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
+          },
+          dataConclusao: {
+            type: Date,
+            default: Date.now
+          },
+          prazo: Date,
+          projeto: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+          },
         },
-      },
-    ],
+      ],
+    },
+    emAndamento: {
+      revisao: [
+        {
+          arquivo: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
+          },
+          prazo: Date,
+          projeto: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+          },
+        },
+      ],
+      novaVersao: [
+        {
+          arquivo: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
+          },
+          prazo: Date,
+          projeto: {
+            nome: String,
+            id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+          },
+        },
+      ],
+    },
   },
   dataCriacao: {
     type: Date,
