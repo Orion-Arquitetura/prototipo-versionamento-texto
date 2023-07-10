@@ -10,6 +10,7 @@ const StyledMain = styled.main`
   min-height: calc(100vh - 84px);
   margin-top: 84px;
   padding-top: 20px;
+  padding-bottom: 100px;
   padding-inline: clamp(12px, 10%, 50px);
   background-image: url("/background.png");
   background-size: 90%;
