@@ -9,8 +9,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     { _id: user._id },
     {
       $push: {
-        "tarefas.novaVersao": {
-          arquivoId: file._id,
+        "tarefas.emAndamento.novaVersao": {
+          arquivo: {
+            nome: file.nome,
+            id: file._id
+          },
           prazo,
           projeto: {
             nome: file.projeto.nome,

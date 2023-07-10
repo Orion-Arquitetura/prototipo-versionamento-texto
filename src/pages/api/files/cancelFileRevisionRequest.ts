@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await usersCollection.updateOne(
     { _id: fileData.responsavelRevisao.id },
     {
-      $pull: { "tarefas.revisao": { arquivoId: file._id } },
+      $pull: { "tarefas.emAndamento.revisao": { arquivoId: file._id } },
     }
   );
 

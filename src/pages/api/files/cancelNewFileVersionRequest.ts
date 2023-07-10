@@ -3,7 +3,7 @@ import { UserFuncionario } from "@/database/models/userFuncionarioModel";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { file, user } = JSON.parse(req.body);
+  const { file } = JSON.parse(req.body);
 
   const fileData = await Arquivo.findOneAndUpdate(
     { _id: file._id },
@@ -19,7 +19,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await UserFuncionario.updateOne(
     { _id: fileData.responsavelNovaVersao.id },
     {
-      $pull: { "tarefas.novaVersao": { arquivoId: file._id } },
+      $pull: { "tarefas.emAndamento.novaVersao": { "arquivo.id": file._id } },
     }
   );
 

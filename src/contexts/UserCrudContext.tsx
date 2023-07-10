@@ -20,7 +20,6 @@ type UserCRUDContextType = {
   removeUserFromProject: (UserID: string, projectID: string) => void;
 };
 
-
 export const UserCRUDContext = createContext({} as UserCRUDContextType);
 
 export default function UserCRUDContextProvider({ children }: any) {
