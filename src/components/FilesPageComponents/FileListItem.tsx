@@ -8,6 +8,7 @@ import {
   SxProps,
   Paper,
   Button,
+  Typography,
 } from "@mui/material";
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import { useContext, useState } from "react";
@@ -16,7 +17,9 @@ import { FileCRUDContext } from "@/contexts/FileCrudContext";
 import DeleteFileModal from "./DeleteFileModal";
 import RevisaoModal from "./RevisaoModal";
 import NovaVersaoModal from "./NovaVersaoModal";
-import { AuthContextUserData } from "@/utils/interfaces";
+import { Arquivo } from "@/utils/interfaces";
+import SendFileRevisionModal from "./SendFileRevisionModal";
+import SendNewVersionModal from "./SendNewVersionModal";
 
 const ListItemButtonStyles: SxProps = {
   bgcolor: "var(--midnight-green)",
@@ -36,11 +39,13 @@ const ListItemMoreBoxStyles: SxProps = {
   ".teste": {},
 };
 
-export default function FileListItem({ file }: any) {
+export default function FileListItem({ file }: { file: Arquivo }) {
   const [open, setOpen] = useState(false);
   const [deleteFileModalState, setDeleteFileModalState] = useState(false);
   const [revisaoModalState, setRevisaoModalState] = useState(false);
   const [novaVersaoModalState, setNovaVersaoModalState] = useState(false);
+  const [sendFileRevisionModalState, setSendFileRevisionModalState] = useState(false);
+  const [sendNewVersionModalState, setSendNewVersionModalState] = useState(false);
 
   const { userData } = useContext(AuthContext);
   const { deleteFile, cancelNewFileVersionRequest, cancelFileRevisionRequest } =
@@ -60,6 +65,23 @@ export default function FileListItem({ file }: any) {
 
   function handleCloseRevisaoModal() {
     setRevisaoModalState(false);
+  }
+
+  function handleOpenSendFileRevisionModal() {
+    console.log("oi");
+    setSendFileRevisionModalState(true);
+  }
+
+  function handleCloseSendFileRevisionModal() {
+    setSendFileRevisionModalState(false);
+  }
+
+  function handleOpenSendNewVersionModal() {
+    setSendNewVersionModalState(true);
+  }
+
+  function handleCloseSendNewVersionModal() {
+    setSendNewVersionModalState(false);
   }
 
   function handleCloseDeleteFileModal() {
@@ -86,6 +108,20 @@ export default function FileListItem({ file }: any) {
     deleteFile(file._id, file.projeto.id);
   }
 
+  const prazoRevisao =
+    file.prazoRevisao === null
+      ? "Sem prazo definido."
+      : new Date(file.prazoRevisao as string).toLocaleDateString("pt-BR", {
+          timeZone: "UTC",
+        });
+
+  const prazoNovaVersao =
+    file.prazoNovaVersao === null
+      ? "Sem prazo definido."
+      : new Date(file.prazoNovaVersao as string).toLocaleDateString("pt-BR", {
+          timeZone: "UTC",
+        });
+
   return (
     <>
       {deleteFileModalState && (
@@ -109,6 +145,20 @@ export default function FileListItem({ file }: any) {
           file={file}
         />
       )}
+      {sendFileRevisionModalState && (
+        <SendFileRevisionModal
+          close={handleCloseSendFileRevisionModal}
+          file={file}
+          isOpen={sendFileRevisionModalState}
+        />
+      )}
+      {sendNewVersionModalState && (
+        <SendNewVersionModal
+          close={handleCloseSendNewVersionModal}
+          file={file}
+          isOpen={sendNewVersionModalState}
+        />
+      )}
       <ListItemButton
         sx={ListItemButtonStyles}
         onClick={handleClick}
@@ -116,7 +166,11 @@ export default function FileListItem({ file }: any) {
         <ListItemIcon>
           <PictureAsPdfOutlinedIcon sx={{ marginRight: 4, color: "white" }} />
         </ListItemIcon>
-        <ListItemText primary={file.nome} />
+        <ListItemText
+          primary={`${file.nome}${file.emRevisao ? " - Em revisão" : ""}${
+            file.novaVersaoSolicitada ? " - Aguardando nova versão" : ""
+          }`}
+        />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <Collapse
@@ -130,16 +184,32 @@ export default function FileListItem({ file }: any) {
             <h4 style={{ marginBottom: 10 }}>
               {file.disciplina ? "Arquivo de projeto" : "Arquivo de documentação"}
             </h4>
-            <p>
+            <Typography>
               Data de criação: {new Date(file.dataCriacao).toLocaleDateString("pt-BR")}
-            </p>
+            </Typography>
             {file.disciplina ? (
-              <p>Disciplina: {file.disciplina}</p>
+              <Typography>Disciplina: {file.disciplina}</Typography>
             ) : (
-              <p>Tipo de documento: {file.tipo}</p>
+              <Typography>Tipo de documento: {file.tipo}</Typography>
             )}
-            <p>Conteudo do documento: {file.conteudo}</p>
-            <p>Etapa do projeto: {file.etapa}</p>
+            <Typography>Conteudo do documento: {file.conteudo}</Typography>
+            <Typography>Etapa do projeto: {file.etapa}</Typography>
+            {file.emRevisao && (
+              <>
+                <Typography>Prazo para revisão: {prazoRevisao}</Typography>
+                <Typography>
+                  Responsável pela revisão: {file.responsavelRevisao?.nome}
+                </Typography>
+              </>
+            )}
+            {file.novaVersaoSolicitada && (
+              <>
+                <Typography>Prazo para nova versão: {prazoNovaVersao}</Typography>
+                <Typography>
+                  Responsável pela nova versão: {file.responsavelNovaVersao?.nome}
+                </Typography>
+              </>
+            )}
           </Paper>
           <Box>
             <Button
@@ -167,7 +237,7 @@ export default function FileListItem({ file }: any) {
                 </Button>
               )}
 
-            {!file.novaVersaoSolicitada && userData?.tipo === "administrador" && (
+            {!file.novaVersaoSolicitada && userData?.tipo === "administrador" && file.ultimaVersao && (
               <Button
                 variant="contained"
                 color={file.emRevisao ? "error" : "primary"}
@@ -178,14 +248,44 @@ export default function FileListItem({ file }: any) {
               </Button>
             )}
 
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleOpenDeleteFileModal}
-              sx={{ float: "right" }}
-            >
-              Excluir
-            </Button>
+            {userData?.tipo === "administrador" && (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleOpenDeleteFileModal}
+                sx={{ float: "right" }}
+              >
+                Excluir
+              </Button>
+            )}
+
+            {(userData?.tipo === "funcionario" || userData?.tipo === "cliente") &&
+              userData?.tarefas.emAndamento?.revisao.find(
+                (tarefa) => tarefa.arquivo.id === file._id
+              ) && (
+                <Button
+                  variant="contained"
+                  color={"primary"}
+                  sx={{ ml: 1 }}
+                  onClick={handleOpenSendFileRevisionModal}
+                >
+                  Enviar revisão
+                </Button>
+              )}
+
+            {(userData?.tipo === "funcionario" || userData?.tipo === "cliente") &&
+              userData?.tarefas.emAndamento?.novaVersao.find(
+                (tarefa) => tarefa.arquivo.id === file._id
+              ) && (
+                <Button
+                  variant="contained"
+                  color={"primary"}
+                  sx={{ ml: 1 }}
+                  onClick={handleOpenSendNewVersionModal}
+                >
+                  Enviar nova versão
+                </Button>
+              )}
           </Box>
         </Box>
       </Collapse>
