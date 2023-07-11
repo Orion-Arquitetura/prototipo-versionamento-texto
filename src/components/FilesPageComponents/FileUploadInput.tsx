@@ -7,7 +7,7 @@ const StyledDiv = styled.div`
   cursor: pointer;
 `;
 
-function FileUploader({ getRootProps, getInputProps, isDragActive }: any) {
+function FileUploadInput({ getRootProps, getInputProps, isDragActive }: any) {
   return (
     <StyledDiv
       {...getRootProps()}
@@ -23,4 +23,4 @@ function FileUploader({ getRootProps, getInputProps, isDragActive }: any) {
   );
 }
 
-export default FileUploader;
+export default FileUploadInput;

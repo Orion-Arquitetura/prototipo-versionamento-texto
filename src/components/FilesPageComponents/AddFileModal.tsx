@@ -1,7 +1,7 @@
 import styled from "@emotion/styled";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
-import FileUploader from "./FileUploadInput";
+import FileUploadInput from "./FileUploadInput";
 import { useContext, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import SelectInput from "../SelectInput";
@@ -177,7 +177,7 @@ export default function AddFileModal({ projectId, isOpen, handleClose }: any) {
         </Grid>
 
         <Grid item>
-          <FileUploader
+          <FileUploadInput
             getRootProps={getRootProps}
             getInputProps={getInputProps}
             isDragActive={isDragActive}
