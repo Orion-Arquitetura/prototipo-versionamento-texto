@@ -6,7 +6,6 @@ import {
   Switch,
   List,
   ListItem,
-  ListItemText,
   Card,
   CardContent,
 } from "@mui/material";
@@ -54,7 +53,7 @@ export default function DisplayUserTasks({ tarefas }: { tarefas: User["tarefas"]
                 sx={{ p: 0, width: "fit-content" }}
               >
                 <Card
-                  elevation={8} 
+                  elevation={8}
                   sx={{ backgroundColor: "var(--gray5)", color: "white" }}
                 >
                   <CardContent>
@@ -97,7 +96,16 @@ export default function DisplayUserTasks({ tarefas }: { tarefas: User["tarefas"]
                     <CardContent>
                       <Typography>Arquivo: {tarefa.arquivo.nome}</Typography>
                       <Typography>
-                        Prazo: {new Date(tarefa.prazo).toLocaleDateString("pt-BR")}
+                        Prazo:{" "}
+                        {new Date(tarefa.prazo).toLocaleDateString("pt-BR", {
+                          timeZone: "UTC",
+                        })}
+                      </Typography>
+                      <Typography>
+                        Data de conclusão:{" "}
+                        {new Date(tarefa.dataConclusao).toLocaleDateString("pt-BR", {
+                          timeZone: "UTC",
+                        })}
                       </Typography>
                     </CardContent>
                   </Card>
