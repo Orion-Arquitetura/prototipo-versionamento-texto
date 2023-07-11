@@ -20,10 +20,6 @@ export default function FilesPage({ projetoID }: any) {
     refetchOnWindowFocus: false,
   });
 
-  if (!isLoading) {
-    console.log(data)
-  }
-
   if (data === undefined) {
     return (
       <StyledDiv>
