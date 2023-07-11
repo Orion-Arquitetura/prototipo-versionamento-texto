@@ -42,7 +42,7 @@ export default function AuthContextProvider({ children }: any) {
             setCookie(undefined, "user-tipo", usuario.tipo, {
               maxAge: 60 * 60 * 24,
             });
-            setCookie(undefined, "user-permissoes", JSON.stringify(usuario.permissoes), {
+            setCookie(undefined, "user-projetos", JSON.stringify(usuario.projetos), {
               maxAge: 60 * 60 * 24,
             });
             setUserData(usuario);
@@ -68,7 +68,7 @@ export default function AuthContextProvider({ children }: any) {
       destroyCookie(undefined, "user-nome");
       destroyCookie(undefined, "user-id");
       destroyCookie(undefined, "user-tipo");
-      destroyCookie(undefined, "user-permissoes");
+      destroyCookie(undefined, "user-projetos");
       setIsLoadingUserData(false);
       setUserData(null);
     } finally {
@@ -83,7 +83,7 @@ export default function AuthContextProvider({ children }: any) {
       "user-nome": nome,
       "user-id": id,
       "user-tipo": tipo,
-      "user-permissoes": permissoes
+      "user-projetos": projetos,
     } = parseCookies();
 
     if (token && userData === null) {
@@ -93,7 +93,7 @@ export default function AuthContextProvider({ children }: any) {
         tipo: tipo as "administrador" | "cliente" | "funcionario",
         id,
         token,
-        permissoes: permissoes === "undefined" ? "" : JSON.parse(permissoes) 
+          projetos: projetos === "undefined" ? "" : JSON.parse(projetos),
       });
     }
   }, [userData]);
