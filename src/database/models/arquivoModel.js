@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const arquivoSchema = mongoose.Schema({
+
+const arquivoSchema = new mongoose.Schema({
   nome: {
     type: String,
   },
@@ -104,6 +105,15 @@ const arquivoSchema = mongoose.Schema({
     id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   prazoNovaVersao: Date,
+  emRevisao: Boolean,
+  responsavelRevisao: {
+    nome: String,
+    id: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  },
+  prazoRevisao: Date,
+  comentario: {
+    type: String,
+  },
   criadoPor: {
     userName: {
       type: String,
@@ -114,12 +124,6 @@ const arquivoSchema = mongoose.Schema({
       ref: "User",
       required: true,
     },
-  },
-  emRevisao: Boolean,
-  responsavelRevisao: { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "User" } },
-  prazoRevisao: Date,
-  comentario: {
-    type: String,
   },
 });
 
