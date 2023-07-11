@@ -17,9 +17,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   ).then((result) => result);
 
   await usersCollection.updateOne(
-    { _id: fileData.responsavelRevisao.id },
+    { _id: new mongoose.Types.ObjectId(fileData.responsavelRevisao.id) },
     {
-      $pull: { "tarefas.emAndamento.revisao": { arquivoId: file._id } },
+      $pull: { "tarefas.emAndamento.revisao": {"arquivo.id": new mongoose.Types.ObjectId(file._id)} },
     }
   );
 
