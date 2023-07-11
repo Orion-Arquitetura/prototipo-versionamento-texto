@@ -27,7 +27,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         tipo: user.tipo.toLowerCase(),
         id: user._id,
         token: uuid(),
-        permissoes: user.permissoes
+        projetos: user.projetos,
+        tarefas: user.tarefas
       });
     }
 
