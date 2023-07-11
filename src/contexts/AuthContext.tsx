@@ -8,7 +8,8 @@ interface AuthContextType {
   signOff: () => void;
   userData: AuthContextUserData | null;
   isLoadingUserData: boolean;
-};
+  setUserTasks: (tasks:any) => void
+}
 
 export const AuthContext = createContext({} as AuthContextType);
 
@@ -76,6 +77,11 @@ export default function AuthContextProvider({ children }: any) {
     }
   }
 
+  async function setUserTasks(tasks: any) {
+    setUserData({...userData, tarefas: tasks} as AuthContextUserData);
+  }
+  
+
   useEffect(() => {
     const {
       "orion-token": token,
@@ -87,19 +93,26 @@ export default function AuthContextProvider({ children }: any) {
     } = parseCookies();
 
     if (token && userData === null) {
-      setUserData({
-        nome,
-        email,
-        tipo: tipo as "administrador" | "cliente" | "funcionario",
-        id,
-        token,
+      (async (id: string) => {
+        const userTasks = await fetch(`/api/user/getUserTasks?id=${id}`).then((result) =>
+          result.json()
+        );
+
+        setUserData({
+          nome,
+          email,
+          tipo: tipo as "administrador" | "cliente" | "funcionario",
+          id,
+          token,
           projetos: projetos === "undefined" ? "" : JSON.parse(projetos),
-      });
+          tarefas: userTasks,
+        });
+      })(id);
     }
   }, [userData]);
 
   return (
-    <AuthContext.Provider value={{ signIn, userData, signOff, isLoadingUserData }}>
+    <AuthContext.Provider value={{ signIn, userData, signOff, isLoadingUserData, setUserTasks }}>
       {children}
     </AuthContext.Provider>
   );
