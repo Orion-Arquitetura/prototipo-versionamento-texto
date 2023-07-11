@@ -1,6 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { createContext, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import { Arquivo, AuthContextUserData, User } from "@/utils/interfaces";
+import { AuthContext } from "./AuthContext";
 
 interface FileCRUDContextType {
   getProjectFiles: (projetoID: string) => Promise<any>;
@@ -10,12 +11,14 @@ interface FileCRUDContextType {
   requestNewFileVersion: (file: Arquivo, user: User, prazo: string) => void;
   cancelNewFileVersionRequest: (file: Arquivo) => void;
   cancelFileRevisionRequest: (file: Arquivo) => void;
+  createNewFileVersion: (file: Arquivo, newVersionComment: string) => void;
 }
 
 export const FileCRUDContext = createContext({} as FileCRUDContextType);
 
 export default function FileCRUDContextProvider({ children }: any) {
   const queryClient = useQueryClient();
+  const { setUserTasks } = useContext(AuthContext);
 
   async function getProjectFiles(projetoID: string) {
     const data = await fetch("/api/files/getAllFilesFromProject", {
@@ -53,7 +56,7 @@ export default function FileCRUDContextProvider({ children }: any) {
       body: JSON.stringify({ file, user, prazo }),
     });
 
-    queryClient.invalidateQueries(["Arquivos-do-projeto"])
+    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
   }
 
   async function requestNewFileVersion(file: Arquivo, user: User, prazo: string) {
@@ -62,7 +65,7 @@ export default function FileCRUDContextProvider({ children }: any) {
       body: JSON.stringify({ file, user, prazo }),
     });
 
-    queryClient.invalidateQueries(["Arquivos-do-projeto"])
+    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
   }
 
   async function cancelFileRevisionRequest(file: Arquivo) {
@@ -71,7 +74,7 @@ export default function FileCRUDContextProvider({ children }: any) {
       body: JSON.stringify({ file }),
     });
 
-    queryClient.invalidateQueries(["Arquivos-do-projeto"])
+    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
   }
 
   async function cancelNewFileVersionRequest(file: Arquivo) {
@@ -80,7 +83,20 @@ export default function FileCRUDContextProvider({ children }: any) {
       body: JSON.stringify({ file }),
     });
 
-    queryClient.invalidateQueries(["Arquivos-do-projeto"])
+    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
+  }
+
+  async function createNewFileVersion(file: Arquivo, newVersionComment: string) {
+    await fetch("/api/files/createNewFileVersion", {
+      method: "POST",
+      body: JSON.stringify({ file, newVersionComment }),
+    }).then(async (res) => {
+      const result = await res.json();
+      console.log(result);
+      setUserTasks(result);
+    });
+
+    queryClient.invalidateQueries(["Arquivos-do-projeto"]);
   }
 
   return (
@@ -92,7 +108,8 @@ export default function FileCRUDContextProvider({ children }: any) {
         requestFileRevision,
         requestNewFileVersion,
         cancelNewFileVersionRequest,
-        cancelFileRevisionRequest
+        cancelFileRevisionRequest,
+        createNewFileVersion,
       }}
     >
       {children}
