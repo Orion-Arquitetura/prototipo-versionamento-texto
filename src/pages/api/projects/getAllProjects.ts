@@ -6,7 +6,7 @@ import connectToDatabase from "@/database/mongodbConnection";
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   connectToDatabase("App")
   
-  const { "user-permissoes": stringPermissoes, "user-tipo": tipo } = parseCookies({
+  const { "user-projetos": stringProjetos, "user-tipo": tipo } = parseCookies({
     req,
   });
 
@@ -19,11 +19,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  console.log(stringPermissoes, tipo)
+  const projetos = JSON.parse(stringProjetos);
   
-  const permissoes = JSON.parse(stringPermissoes);
-  
-  const projectsIds = permissoes.projetos.map((item:any) => item.id)
+  const projectsIds = projetos.map((item:any) => item.id)
   
   const data = await Projeto.find({ _id: { $in: projectsIds } })
     .exec()
