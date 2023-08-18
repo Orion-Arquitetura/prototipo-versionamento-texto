@@ -12,6 +12,20 @@ const getOneUser = async (id: string) => {
   return user;
 };
 
+const getClientes = async () => {
+  const clientes = await fetch("/api/user/getAllClientes").then((res) =>
+    res.json()
+  );
+  return clientes;
+};
+
+const getFuncionarios = async () => {
+  const funcionarios = await fetch("/api/user/getAllFuncionarios").then((res) =>
+    res.json()
+  );
+  return funcionarios;
+};
+
 const createUser = async (userData: any) => {
   return await fetch("/api/user/createUser", {
     method: "POST",
@@ -55,6 +69,22 @@ export const useGetOneUser = (id: string) => {
   return useQuery({
     queryKey: ["get-one-user"],
     queryFn: () => getOneUser(id),
+  });
+};
+
+export const useGetClientes = () => {
+  return useQuery({
+    queryKey: ["get-clientes"],
+    queryFn: getClientes,
+    refetchOnWindowFocus: false,
+  });
+};
+
+export const useGetFuncionarios = () => {
+  return useQuery({
+    queryKey: ["get-funcionarios"],
+    queryFn: getFuncionarios,
+    refetchOnWindowFocus: false,
   });
 };
 

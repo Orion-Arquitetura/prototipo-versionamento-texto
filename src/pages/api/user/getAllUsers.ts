@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await connectToDatabase();
+  await connectToDatabase("App");
 
   try {
     const usersCollection = mongoose.connection.collection("Users");

@@ -22,6 +22,14 @@ export default function FilesList({ discipline, projectID }: any) {
     discipline,
   });
 
+  if (discipline === "") {
+    return (
+      <Paper elevation={8} sx={{ p: 2, height: "fit-content", width: "100%" }}>
+        <Typography>Escolha uma disciplina.</Typography>
+      </Paper>
+    );
+  }
+
   if (!isLoading && files.length === 0) {
     return (
       <Paper elevation={8} sx={{ p: 2, height: "fit-content", width: "100%" }}>

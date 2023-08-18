@@ -73,9 +73,8 @@ export default function FileListItem({ file }: { file: any }) {
         <ListItemIcon>
           <PictureAsPdfOutlinedIcon sx={{ marginRight: 4, color: "white" }} />
         </ListItemIcon>
-        <ListItemText
-          primary={`${file.filename}${file.metadata.emRevisao ? " - Em revisão" : ""
-            }`}
+        <ListItemText color={theme.palette.primary.light} primary={`${file.filename}${file.metadata.emRevisao ? " - Em revisão" : ""
+          }`}
         />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>

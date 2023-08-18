@@ -81,7 +81,7 @@ export default async function handler(
 
     readStream.pipe(uploadStream);
 
-    res.status(201).end();
+    res.status(201).json({ok: "Ok"});
   } catch (e: any) {
     res.status(400).json({ Erro: e.message });
     return;

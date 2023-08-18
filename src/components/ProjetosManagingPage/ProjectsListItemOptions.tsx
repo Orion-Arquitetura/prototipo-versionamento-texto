@@ -4,6 +4,8 @@ import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
 import { Projeto } from "@/utils/types";
 import DeleteProjectModal from "./DeleteProjectModal";
+import { theme } from "@/theme/theme";
+import Router from "next/router";
 
 
 export default function ProjectsListItemOptions({ projeto }: { projeto: Projeto }) {
@@ -36,7 +38,7 @@ export default function ProjectsListItemOptions({ projeto }: { projeto: Projeto 
                 onClick={handleClickMenu}
                 sx={{ padding: 0 }}
             >
-                <MoreHorizIcon color="white" />
+                <MoreHorizIcon sx={{color: "white"}} />
             </Button>
             <Menu
                 anchorEl={anchorEl}
@@ -44,7 +46,7 @@ export default function ProjectsListItemOptions({ projeto }: { projeto: Projeto 
                 onClose={handleCloseMenu}
                 anchorOrigin={{ vertical: "center", horizontal: "center" }}
             >
-                <MenuItem onClick={() => { }}>Configurações</MenuItem>
+                <MenuItem onClick={() => Router.push(`/auth/admin/projetos/projeto?id=${projeto._id}`)}>Configurações</MenuItem>
                 <MenuItem onClick={openDeleteProjectModal}>Excluir</MenuItem>
             </Menu>
         </>

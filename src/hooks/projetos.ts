@@ -21,9 +21,9 @@ const createProject = async ({
   cliente,
 }: {
   nome: string;
-  lider?: { nome: string; id: string };
-  projetista?: { nome: string; id: string };
-  cliente?: { nome: string; id: string };
+  lider?: { nome: string; id: string } | null;
+  projetista?: { nome: string; id: string } | null;
+  cliente?: { nome: string; id: string } | null;
 }) => {
   await fetch("/api/projetos/createProject", {
     method: "POST",

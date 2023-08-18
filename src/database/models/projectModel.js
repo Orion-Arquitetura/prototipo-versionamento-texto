@@ -19,14 +19,9 @@ const projectSchema = new mongoose.Schema({
     ],
     default: []
   },
-  lideres: {
-    type: [
-      {
-        nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "UserFuncionario" }
-      }
-    ],
-    default: []
+  lider: {
+    nome: String,
+    id: { type: mongoose.Schema.Types.ObjectId, ref: "UserFuncionario" }
   },
   projetistas: {
     type: [

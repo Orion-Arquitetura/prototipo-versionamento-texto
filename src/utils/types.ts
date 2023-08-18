@@ -46,7 +46,7 @@ export type Projeto = {
   nome: string;
   dataCriacao: string;
   clientesResponsaveis: [{ nome: string; id: string }];
-  lideres: [{ nome: string; id: string }];
+  lider: { nome: string; id: string };
   projetistas: [{ nome: string; id: string }];
   usuarios: [{ nome: string; id: string }];
   arquivos: string[];

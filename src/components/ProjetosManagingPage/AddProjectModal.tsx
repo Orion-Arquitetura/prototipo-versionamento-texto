@@ -26,14 +26,14 @@ export default function AddProjectModal({
     const { mutate: createProject } = useCreateProject();
     const [projectData, setProjectData] = useState<{
         nome: string;
-        cliente?: { nome: string; id: string } | undefined;
-        lider?: { nome: string; id: string } | undefined;
-        projetista?: { nome: string; id: string } | undefined;
+        cliente: { nome: string; id: string } | null;
+        lider: { nome: string; id: string } | null;
+        projetista: { nome: string; id: string } | null;
     }>({
         nome: "",
-        cliente: { nome: "", id: "" },
-        lider: { nome: "", id: "" },
-        projetista: { nome: "", id: "" },
+        cliente: null,
+        lider: null,
+        projetista: null,
     });
 
     const clientes = users?.filter((user: User) => user.tipo === "cliente");
@@ -71,21 +71,29 @@ export default function AddProjectModal({
     }
 
     function handleCreateProject() {
-        if (projectData.nome.match(/[^a-zA-Z]/g)) {
+        if (projectData.nome.match(/[^a-zA-Z-\d]/g)) {
             window.alert("Nome de projeto inválido, apenas letras são permitidas.");
             return;
         }
 
         createProject(projectData)
+
+        setProjectData({
+            nome: "",
+            cliente: null,
+            lider: null,
+            projetista: null,
+        })
+        
         handleClose();
     }
 
     function cancelSubmit() {
         setProjectData({
             nome: "",
-            cliente: { nome: "", id: "" },
-            lider: { nome: "", id: "" },
-            projetista: { nome: "", id: "" },
+            cliente: null,
+            lider: null,
+            projetista: null,
         })
 
         handleClose();
@@ -115,7 +123,7 @@ export default function AddProjectModal({
                             <FormControl fullWidth>
                                 <InputLabel>Cliente responsável</InputLabel>
                                 <Select
-                                    value={JSON.stringify(projectData.cliente)}
+                                    value={projectData.cliente === null ? "" : JSON.stringify(projectData.cliente)}
                                     label="Cliente responsável"
                                     onChange={(ev) => setCliente(ev.target.value)}
                                 >
@@ -140,24 +148,22 @@ export default function AddProjectModal({
                             <FormControl fullWidth>
                                 <InputLabel>Líder do projeto</InputLabel>
                                 <Select
-                                    value={JSON.stringify(projectData.lider)}
+                                    value={projectData.lider === null ? "" : JSON.stringify(projectData.lider)}
                                     label="Líder do projeto"
                                     onChange={(ev) => setLider(ev.target.value)}
                                 >
                                     {!isLoading &&
                                         funcionarios.map((funcionario: User) => {
                                             return (
-                                                funcionario._id !== projectData.projetista!.id && (
-                                                    <MenuItem
-                                                        key={funcionario._id}
-                                                        value={JSON.stringify({
-                                                            nome: funcionario.nome,
-                                                            id: funcionario._id,
-                                                        })}
-                                                    >
-                                                        {funcionario.nome}
-                                                    </MenuItem>
-                                                )
+                                                <MenuItem
+                                                    key={funcionario._id}
+                                                    value={JSON.stringify({
+                                                        nome: funcionario.nome,
+                                                        id: funcionario._id,
+                                                    })}
+                                                >
+                                                    {funcionario.nome}
+                                                </MenuItem>
                                             );
                                         })}
                                 </Select>
@@ -167,24 +173,22 @@ export default function AddProjectModal({
                             <FormControl fullWidth>
                                 <InputLabel>Projetista do projeto</InputLabel>
                                 <Select
-                                    value={JSON.stringify(projectData.projetista)}
+                                    value={projectData.projetista === null ? "" : JSON.stringify(projectData.projetista)}
                                     label="Projetista do projeto"
                                     onChange={(ev) => setProjetista(ev.target.value)}
                                 >
                                     {!isLoading &&
                                         funcionarios.map((funcionario: User) => {
                                             return (
-                                                funcionario._id !== projectData.lider!.id && (
-                                                    <MenuItem
-                                                        key={funcionario._id}
-                                                        value={JSON.stringify({
-                                                            nome: funcionario.nome,
-                                                            id: funcionario._id,
-                                                        })}
-                                                    >
-                                                        {funcionario.nome}
-                                                    </MenuItem>
-                                                )
+                                                <MenuItem
+                                                    key={funcionario._id}
+                                                    value={JSON.stringify({
+                                                        nome: funcionario.nome,
+                                                        id: funcionario._id,
+                                                    })}
+                                                >
+                                                    {funcionario.nome}
+                                                </MenuItem>
                                             );
                                         })}
                                 </Select>
