@@ -3,5 +3,3 @@ Criar funções:
     Atribuir cliente(s) (vários por projeto) ao projeto
     Atribuir projetista(s) (vários por projeto) ao projeto
     Atribuir líder (apenas um por projeto) ao projeto
-
-TEM QUE DAR UM JEITO DE FAZER COM QUE O LIDER TAMBEM ESTEJA NA LISTA DE PROJETISTAS DO PROJETO
