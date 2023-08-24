@@ -1,9 +1,13 @@
 import { useGetProjects } from "@/hooks/projetos";
-import { Grid } from "@mui/material";
+import { Grid, Paper } from "@mui/material";
 import ProjectListItem from "./ProjectListItem";
 
 export default function ProjectsList() {
     const { data: projetos, isLoading } = useGetProjects();
+ 
+    if (!isLoading && projetos.length === 0) {
+        return <Paper elevation={8} sx={{p:3}}>Nenhum projeto disponível.</Paper>
+    }
 
     return (
         <Grid

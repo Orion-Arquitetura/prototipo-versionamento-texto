@@ -1,11 +1,26 @@
 import { useGetProjects } from "@/hooks/projetos";
 import { useAddUserToProjects } from "@/hooks/user";
 import { User } from "@/utils/types";
-import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Paper, Typography } from "@mui/material";
+import {
+    Button,
+    Checkbox,
+    FormControlLabel,
+    FormGroup,
+    Modal,
+    Paper,
+    Typography,
+} from "@mui/material";
 import { useState } from "react";
 
-
-export default function AddUserToProjectsModal({ user, isOpen, handleClose }: { user: User, isOpen: boolean, handleClose: () => void }) {
+export default function AddUserToProjectsModal({
+    user,
+    isOpen,
+    handleClose,
+}: {
+    user: User;
+    isOpen: boolean;
+    handleClose: () => void;
+}) {
     const { data: projetos, isLoading } = useGetProjects();
 
     const { mutate: addUserToProjects } = useAddUserToProjects();
@@ -16,11 +31,15 @@ export default function AddUserToProjectsModal({ user, isOpen, handleClose }: { 
 
     function adicionarOuRemoverProjetosDoState(projeto: string) {
         const { id, nome } = JSON.parse(projeto);
-        const index = projetosSelecionados.findIndex((element: any) => element.id === id);
+        const index = projetosSelecionados.findIndex(
+            (element: any) => element.id === id
+        );
 
         if (index === -1) {
             setProjetosSelecionados((prevState) =>
-                projetosSelecionados.length === 0 ? [{ id, nome }] : [...prevState, { id, nome }]
+                projetosSelecionados.length === 0
+                    ? [{ id, nome }]
+                    : [...prevState, { id, nome }]
             );
         } else {
             setProjetosSelecionados((prevState) => {
@@ -33,7 +52,7 @@ export default function AddUserToProjectsModal({ user, isOpen, handleClose }: { 
 
     async function handleAddUserToProjects() {
         setProjetosSelecionados([]);
-        addUserToProjects({ userData: user, projetosSelecionados })
+        addUserToProjects({ userData: user, projetosSelecionados });
         handleClose();
     }
 
@@ -43,36 +62,52 @@ export default function AddUserToProjectsModal({ user, isOpen, handleClose }: { 
     }
 
     return (
-        <Modal open={isOpen} onClose={cancelSubmit} sx={{ display: "grid", placeItems: "center" }}>
+        <Modal
+            open={isOpen}
+            onClose={cancelSubmit}
+            sx={{ display: "grid", placeItems: "center" }}
+        >
             <Paper elevation={8} sx={{ width: "auto", p: 3 }}>
                 <form>
-                    <Typography>Adicionar usuário aos projetos:</Typography>
+                    <Typography>Adicionar {user.nome} aos projetos:</Typography>
                     <FormGroup
                         onChange={(ev) =>
-                            adicionarOuRemoverProjetosDoState((ev.target as HTMLInputElement).value)
+                            adicionarOuRemoverProjetosDoState(
+                                (ev.target as HTMLInputElement).value
+                            )
                         }
                     >
-                        {!isLoading && projetos?.map((project: { nome: string; _id: string }) => {
-                            if (
-                                user.projetos.find(
-                                    (projeto: { nome: string; id: string }) => projeto.id === project._id
-                                )
-                            ) {
-                                return null
-                            }
+                        {!isLoading &&
+                            projetos?.map((project: { nome: string; _id: string }) => {
+                                if (
+                                    user.projetos.find(
+                                        (projeto: { nome: string; id: string }) =>
+                                            projeto.id === project._id
+                                    )
+                                ) {
+                                    return null;
+                                }
 
-                            return (
-                                <FormControlLabel
-                                    key={project.nome}
-                                    control={
-                                        <Checkbox
-                                            value={JSON.stringify({ id: project._id, nome: project.nome })}
-                                        />
-                                    }
-                                    label={project.nome}
-                                />
-                            );
-                        })}
+                                return (
+                                    <FormControlLabel
+                                        key={project.nome}
+                                        control={
+                                            <Checkbox
+                                                value={JSON.stringify({
+                                                    id: project._id,
+                                                    nome: project.nome,
+                                                })}
+                                            />
+                                        }
+                                        label={project.nome}
+                                    />
+                                );
+                            })}
+                        {!isLoading &&
+                            projetos.length === 0 &&
+                            user.projetos.length === 0 && (
+                                <Typography sx={{ mt: 2, mb: 2 }}>Nenhum resultado</Typography>
+                            )}
                     </FormGroup>
                     <Button
                         variant="contained"
@@ -84,5 +119,5 @@ export default function AddUserToProjectsModal({ user, isOpen, handleClose }: { 
                 </form>
             </Paper>
         </Modal>
-    )
+    );
 }

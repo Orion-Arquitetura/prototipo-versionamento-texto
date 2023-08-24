@@ -65,7 +65,7 @@ export default function RemoveUserFromProjectsModal({
         >
             <Paper elevation={8} sx={{ p: 3 }}>
                 <form>
-                    <Typography>Remover usuário dos projetos:</Typography>
+                    <Typography>Remover {user.nome} dos projetos:</Typography>
                     <FormGroup
                         onChange={(ev) =>
                             adicionarOuRemoverProjetosDoState(
@@ -73,22 +73,25 @@ export default function RemoveUserFromProjectsModal({
                             )
                         }
                     >
-                        {user.projetos.map((projeto) => {
-                            return (
-                                <FormControlLabel
-                                    key={projeto.nome}
-                                    control={
-                                        <Checkbox
-                                            value={JSON.stringify({
-                                                id: projeto.id,
-                                                nome: projeto.nome,
-                                            })}
-                                        />
-                                    }
-                                    label={projeto.nome}
-                                />
-                            );
-                        })}
+                        {
+                            user.projetos.map((projeto) => {
+                                return (
+                                    <FormControlLabel
+                                        key={projeto.nome}
+                                        control={
+                                            <Checkbox
+                                                value={JSON.stringify({
+                                                    id: projeto.id,
+                                                    nome: projeto.nome,
+                                                })}
+                                            />
+                                        }
+                                        label={projeto.nome}
+                                    />
+                                );
+                            })
+                        }
+                        {user.projetos.length === 0 && <Typography sx={{mt: 2, mb: 2}}>Nenhum resultado</Typography>}
                     </FormGroup>
                     <Button
                         variant="contained"

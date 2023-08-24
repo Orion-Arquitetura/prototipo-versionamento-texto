@@ -36,7 +36,8 @@ const projectSchema = new mongoose.Schema({
     type: [
       {
         nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "UserFuncionario" },
+        id: { type: mongoose.Schema.Types.ObjectId },
+        roles: { type: [String], enum: ["funcionario", "lider", "projetista", "cliente"], default: ["funcionario"] }
       },
     ],
     default: [],

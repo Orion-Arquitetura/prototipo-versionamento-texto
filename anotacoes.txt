@@ -3,3 +3,7 @@ Criar funções:
     Atribuir cliente(s) (vários por projeto) ao projeto
     Atribuir projetista(s) (vários por projeto) ao projeto
     Atribuir líder (apenas um por projeto) ao projeto
+
+RETIRAR PAGINA DE CONFIGURACAO DE UM UNICO PROJETO DO DIRETORIO DE ADMIN
+EM VEZ DE: /auth/admin/projetos/projeto?id=64df868a7008c612f1f0bcf
+FAZER: /auth/projetos/projeto/config?id=64df868a7008c612f1f0bcf

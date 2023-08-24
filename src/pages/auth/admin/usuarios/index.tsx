@@ -5,7 +5,7 @@ import { Container } from "@mui/material";
 
 export default function Usuarios() {
     return (
-        <Container>
+        <Container sx={{pb: 10}}>
             <UsersManagingToolbar />
             <UsersList />
         </Container>

@@ -1,5 +1,5 @@
 import Projeto from "@/database/models/projectModel";
-import { User } from "@/utils/types";
+import { sanitizeInputKeepUnderscoreAndNumbers } from "@/utils/sanitizeInput";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -16,38 +16,50 @@ export default async function handler(
 
   const usuarios = [lider, projetista, cliente].filter((user) => user !== null);
 
-  const usuariosSemDuplicata: { nome: string; id: string }[] = [];
 
-  usuarios.forEach((user) => {
-    if (usuariosSemDuplicata.find((usuario) => usuario.id === user.id)) {
-      return;
-    }
-
-    usuariosSemDuplicata.push(user);
-  });
-
-  if (usuariosSemDuplicata.length > 0) {
-    const ids = usuariosSemDuplicata.map(
-      ({ id }: { nome: string; id: string }) =>
-        new mongoose.Types.ObjectId(id)
-    );
+  if (usuarios.length > 0) {
+    const usuariosSemDuplicata: {
+      nome: string;
+      id: string;
+      roles: Array<"lider" | "cliente" | "projetista" | "funcionario">;
+    }[] = [];
+  
+    usuarios.forEach((user) => {
+      const duplicateIndex = usuariosSemDuplicata.findIndex((usuario) => usuario.id === user.id)
+  
+      if (duplicateIndex !== -1) {
+        usuariosSemDuplicata[duplicateIndex].roles = Array.from(new Set([...usuariosSemDuplicata[duplicateIndex].roles, ...user.roles]))
+        return
+      }
+  
+      usuariosSemDuplicata.push(user);
+    });
 
     const novoProjeto = new Projeto({
-      nome,
-      lider: lider === null ? "" : lider,
-      projetistas: projetista === null ? [] : [projetista],
-      clientesResponsaveis: cliente === null ? [] : [cliente],
+      nome: sanitizeInputKeepUnderscoreAndNumbers(nome),
       usuarios: usuariosSemDuplicata,
     });
 
     const usersCollection = mongoose.connection.collection("Users");
 
-    await usersCollection.updateMany(
-      { _id: { $in: ids } },
-      {
-        $addToSet: { projetos: { nome, id: novoProjeto._id } },
-      }
-    );
+    const updateUsersOperations = usuariosSemDuplicata.map((user) => {
+      return {
+        updateOne: {
+          filter: { _id: new mongoose.Types.ObjectId(user.id) },
+          update: {
+            $addToSet: {
+              projetos: {
+                nome,
+                id: novoProjeto._id,
+                roles: user.roles,
+              },
+            },
+          },
+        },
+      };
+    });
+
+    await usersCollection.bulkWrite(updateUsersOperations);
 
     await novoProjeto.save();
 

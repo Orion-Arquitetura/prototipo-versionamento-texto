@@ -1,6 +1,6 @@
 import { useCreateProject } from "@/hooks/projetos";
 import { useGetUsers } from "@/hooks/user";
-import { User } from "@/utils/types";
+import { ClienteUser, FuncionarioUser } from "@/utils/types";
 import {
     Modal,
     Paper,
@@ -26,9 +26,9 @@ export default function AddProjectModal({
     const { mutate: createProject } = useCreateProject();
     const [projectData, setProjectData] = useState<{
         nome: string;
-        cliente: { nome: string; id: string } | null;
-        lider: { nome: string; id: string } | null;
-        projetista: { nome: string; id: string } | null;
+        cliente: { nome: string; id: string, roles: ["cliente"] } | null;
+        lider: { nome: string; id: string, roles: ["funcionario", "lider"] } | null;
+        projetista: { nome: string; id: string, roles: ["funcionario", "projetista"] } | null;
     }>({
         nome: "",
         cliente: null,
@@ -36,10 +36,10 @@ export default function AddProjectModal({
         projetista: null,
     });
 
-    const clientes = users?.filter((user: User) => user.tipo === "cliente");
+    const clientes = users?.filter((user: ClienteUser) => user.tipo === "cliente");
 
     const funcionarios = users?.filter(
-        (user: User) => user.tipo === "funcionario"
+        (user: FuncionarioUser) => user.tipo === "funcionario"
     );
 
     function setNome(value: string) {
@@ -71,11 +71,12 @@ export default function AddProjectModal({
     }
 
     function handleCreateProject() {
-        if (projectData.nome.match(/[^a-zA-Z-\d]/g)) {
-            window.alert("Nome de projeto inválido, apenas letras são permitidas.");
+        if (projectData.nome.match(/[^a-zA-Z_\d]/g)) {
+            window.alert("Nome de projeto inválido, apenas letras, números e underline são permitidos.");
             return;
         }
 
+        console.log(projectData)
         createProject(projectData)
 
         setProjectData({
@@ -84,7 +85,7 @@ export default function AddProjectModal({
             lider: null,
             projetista: null,
         })
-        
+
         handleClose();
     }
 
@@ -113,7 +114,7 @@ export default function AddProjectModal({
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
-                                onChange={(ev) => setNome(ev.target.value)}
+                                onChange={(ev) => setNome(ev.target.value.toUpperCase())}
                                 fullWidth
                                 label={"Nome do projeto"}
                                 required
@@ -128,13 +129,14 @@ export default function AddProjectModal({
                                     onChange={(ev) => setCliente(ev.target.value)}
                                 >
                                     {!isLoading &&
-                                        clientes.map((cliente: User) => {
+                                        clientes.map((cliente: ClienteUser) => {
                                             return (
                                                 <MenuItem
                                                     key={cliente._id}
                                                     value={JSON.stringify({
                                                         nome: cliente.nome,
                                                         id: cliente._id,
+                                                        roles: ["cliente"]
                                                     })}
                                                 >
                                                     {cliente.nome}
@@ -153,13 +155,14 @@ export default function AddProjectModal({
                                     onChange={(ev) => setLider(ev.target.value)}
                                 >
                                     {!isLoading &&
-                                        funcionarios.map((funcionario: User) => {
+                                        funcionarios.map((funcionario: FuncionarioUser) => {
                                             return (
                                                 <MenuItem
                                                     key={funcionario._id}
                                                     value={JSON.stringify({
                                                         nome: funcionario.nome,
                                                         id: funcionario._id,
+                                                        roles: ["funcionario", "lider"]
                                                     })}
                                                 >
                                                     {funcionario.nome}
@@ -178,13 +181,14 @@ export default function AddProjectModal({
                                     onChange={(ev) => setProjetista(ev.target.value)}
                                 >
                                     {!isLoading &&
-                                        funcionarios.map((funcionario: User) => {
+                                        funcionarios.map((funcionario: FuncionarioUser) => {
                                             return (
                                                 <MenuItem
                                                     key={funcionario._id}
                                                     value={JSON.stringify({
                                                         nome: funcionario.nome,
                                                         id: funcionario._id,
+                                                        roles: ["funcionario", "projetista"]
                                                     })}
                                                 >
                                                     {funcionario.nome}

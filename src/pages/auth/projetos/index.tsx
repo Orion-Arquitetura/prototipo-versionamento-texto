@@ -1,5 +1,6 @@
 import PageTitle from "@/components/PageTitle";
 import ProjectsList from "@/components/ProjetosPage/ProjectsList";
+import connectToDatabase from "@/database/mongodbConnection";
 import { Container } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
@@ -16,6 +17,7 @@ export default function Projetos() {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const cookies = parseCookies(context);
+
 
     if (!cookies.token) {
         return {

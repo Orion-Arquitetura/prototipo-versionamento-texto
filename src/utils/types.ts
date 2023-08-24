@@ -1,9 +1,13 @@
-export type User = {
+export type FuncionarioUser = {
   _id: string;
   nome: string;
   email: string;
-  tipo: "funcionario" | "cliente" | "administrador";
-  projetos: [{ nome: string; id: string }];
+  tipo: "funcionario" | "administrador";
+  projetos: {
+    nome: string;
+    id: string;
+    roles: Array<"projetista" | "lider" | "funcionario">;
+  }[];
   tarefas: {
     concluidas: [
       {
@@ -41,13 +45,27 @@ export type User = {
   dataCriacao: string;
 };
 
+export type ClienteUser = {
+  _id: string;
+  nome: string;
+  email: string;
+  tipo: "cliente";
+  projetos: {
+    nome: string;
+    id: string;
+    roles: "cliente";
+  }[];
+  dataCriacao: string;
+};
+
 export type Projeto = {
   _id: string;
   nome: string;
   dataCriacao: string;
-  clientesResponsaveis: [{ nome: string; id: string }];
-  lider: { nome: string; id: string };
-  projetistas: [{ nome: string; id: string }];
-  usuarios: [{ nome: string; id: string }];
+  usuarios: {
+    nome: string;
+    id: string;
+    roles: Array<"cliente" | "projetista" | "lider" | "funcionario">;
+  }[];
   arquivos: string[];
 };

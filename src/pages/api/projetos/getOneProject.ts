@@ -10,6 +10,5 @@ export default async function handler(
   const data = await Projeto.findOne({ _id: id })
     .exec()
     .then((res) => res);
-  console.log(data);
   res.status(200).json(data);
 }

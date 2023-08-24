@@ -1,3 +1,4 @@
+import { Projeto } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getProjects = async () => {
@@ -35,6 +36,74 @@ const deleteProject = async (id: string) => {
   await fetch("/api/projetos/deleteProject", { method: "POST", body: id });
 };
 
+const addLiderToProject = async ({
+  projectID,
+  user,
+}: {
+  projectID: string;
+  user: { nome: string; _id: string };
+}) => {
+  console.log(user);
+  await fetch("/api/projetos/addLiderToProject", {
+    method: "POST",
+    body: JSON.stringify({ projectID, user }),
+  });
+};
+
+const addClientesToProject = async ({
+  projectID,
+  users,
+}: {
+  projectID: string;
+  users: { nome: string; id: string }[];
+}) => {
+  await fetch("/api/projetos/addClientesToProject", {
+    method: "POST",
+    body: JSON.stringify({ projectID, users }),
+  });
+};
+
+const addProjetistasToProject = async ({
+  project,
+  users,
+}: {
+  project: Projeto;
+  users: { nome: string; id: string }[];
+}) => {
+  await fetch("/api/projetos/addProjetistasToProject", {
+    method: "POST",
+    body: JSON.stringify({ project, users }),
+  });
+};
+
+const removeProjectLider = async ({ user, project }) => {
+  await fetch("/api/projetos/removeProjectLider", {
+    method: "POST",
+    body: JSON.stringify({ user, project }),
+  });
+};
+
+const removeProjetistaFromProject = async ({ user, project }) => {
+  await fetch("/api/projetos/removeProjetistaFromProject", {
+    method: "POST",
+    body: JSON.stringify({ user, project }),
+  });
+};
+
+const removeClienteFromProject = async ({ user, project }) => {
+  await fetch("/api/projetos/removeClienteFromProject", {
+    method: "POST",
+    body: JSON.stringify({ user, project }),
+  });
+};
+
+const changeProjectLider = async ({ user, project }) => {
+  await fetch("/api/projetos/changeProjectLider", {
+    method: "POST",
+    body: JSON.stringify({ user, project }),
+  });
+};
+
 //////////////////// CUSTOM HOOKS AREA /////////////////////////
 
 export const useGetProjects = () => {
@@ -69,3 +138,94 @@ export const useDeleteProject = () => {
     onSuccess: async () => await queryClient.invalidateQueries(["projects"]),
   });
 };
+
+export const useAddLiderToProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addLiderToProject,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-funcionarios"]);
+    },
+  });
+};
+
+export const useAddClientesToProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addClientesToProject,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-clientes"]);
+    },
+  });
+};
+
+export const useAddProjetistasToProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: addProjetistasToProject,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-funcionarios"]);
+    },
+  });
+};
+
+export const useRemoveProjectLider = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeProjectLider,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-funcionarios"]);
+    },
+  });
+};
+
+export const useRemoveProjetistaFromProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeProjetistaFromProject,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-funcionarios"]);
+    },
+  });
+};
+
+export const useRemoveClienteFromProject = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: removeClienteFromProject,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-clientes"]);
+    },
+  });
+};
+
+export const useChangeProjectLider = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: changeProjectLider,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries(["get-users"]);
+      await queryClient.invalidateQueries(["get-funcionarios"]);
+    },
+  });
+}

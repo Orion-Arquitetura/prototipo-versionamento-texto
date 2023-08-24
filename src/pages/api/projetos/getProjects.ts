@@ -14,7 +14,7 @@ export default async function handler(
 
   const cookies = parseCookies({ req });
 
-  await connectToDatabase("App")
+  await connectToDatabase("App");
 
   if (cookies.tipo === "administrador") {
     const projetos = await Projeto.find().exec();

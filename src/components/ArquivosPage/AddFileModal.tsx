@@ -115,7 +115,7 @@ export default function AddFileModal({ open, handleClose, project }: any) {
         <form onSubmit={submitNewFileData}>
           <Grid
             container
-            rowGap={2}
+            rowGap={1}
             columnGap={1}
             display={"flex"}
             justifyContent="space-between"

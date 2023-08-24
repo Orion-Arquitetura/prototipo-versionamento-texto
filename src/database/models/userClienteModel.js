@@ -22,7 +22,7 @@ export const userClienteSchema = new mongoose.Schema({
     default: "cliente",
   },
   projetos: [
-    { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } },
+    { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" }},
   ],
   dataCriacao: {
     type: Date,

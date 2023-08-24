@@ -9,8 +9,8 @@ export default async function handler(
   const userId = req.query.id;
 
   if (
-    userId !== parseCookies({ req })["user-id"] &&
-    parseCookies({ req })["user-tipo"] !== "administrador"
+    userId !== parseCookies({ req })["id"] &&
+    parseCookies({ req })["tipo"] !== "administrador"
   ) {
     res.status(403).end();
     return;

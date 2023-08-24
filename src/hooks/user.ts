@@ -27,10 +27,16 @@ const getFuncionarios = async () => {
 };
 
 const createUser = async (userData: any) => {
-  return await fetch("/api/user/createUser", {
+  const response = await fetch("/api/user/createUser", {
     method: "POST",
     body: JSON.stringify(userData),
-  });
+  }).then(res => res.json());
+
+  if (response.erro) {
+    window.alert(response.erro)
+  }
+
+  return response
 };
 
 const deleteUser = async (userData: any) => {

@@ -1,90 +1,84 @@
 import PageTitle from "@/components/PageTitle";
+import DeleteProjectModal from "@/components/ProjetosManagingPage/DeleteProjectModal";
 import ProjectUsers from "@/components/ProjetosManagingPage/ProjectUsers";
 import { useGetOneProject } from "@/hooks/projetos";
 import { theme } from "@/theme/theme";
-import { Container, FormControl, InputLabel, MenuItem, Paper, Select, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Typography,
+} from "@mui/material";
 import { GetServerSidePropsContext } from "next";
+import Router from "next/router";
+import { useState } from "react";
 
 export default function Projeto({ id }: { id: string }) {
-    const { data: projeto, isLoading } = useGetOneProject(id);
+  const { data: projeto, isLoading } = useGetOneProject(id);
+  const [deleteProjectModalState, setDeleteProjectModalState] = useState(false)
 
-    if (isLoading) {
-        return null;
-    }
+  function openDeleteProjectModal() {
+    setDeleteProjectModalState(true)
+  }
 
-    console.log(projeto)
+  function closeDeleteProjectModal() {
+    console.log(Router.pathname)
+    setDeleteProjectModalState(false)
+  }
 
-    function formatDate(date: string) {
-        return date.split("T")[0].split("-").reverse().join("/");
-    }
 
-    return (
-        <Container sx={{ pb: 5 }}>
-            <PageTitle title={projeto.nome} hasBackButton />
-            <Paper elevation={8} sx={{ p: 3 }}>
-                <Typography variant="h5">{projeto.nome}</Typography>
+  if (isLoading) {
+    return null;
+  }
 
-                <Typography variant="caption">
-                    Criado em: {formatDate(projeto.dataCriacao)}
-                </Typography>
+  function formatDate(date: string) {
+    return date.split("T")[0].split("-").reverse().join("/");
+  }
 
-                <Paper
-                    elevation={8}
-                    sx={{
-                        mt: 2,
-                        backgroundColor: theme.palette.secondary.main,
-                        p: 3,
-                        display: "flex",
-                        flexDirection: "column",
-                        rowGap: "10px",
-                    }}
-                >
+  return (
+    <Container sx={{ pb: 5 }}>
+      <PageTitle title={`Gerenciar projeto - ${projeto.nome}`} hasBackButton />
+      <Paper elevation={8} sx={{ p: 3 }}>
+        <Typography variant="h5">{projeto.nome}</Typography>
 
-                    <ProjectUsers
-                        title="Adicionar clientes"
-                        project={projeto}
-                        usersList={projeto.clientesResponsaveis}
-                        emptyListText="Ainda não foi atribuído um cliente responsável por este projeto."
-                        filledListText="Clientes do projeto: "
-                        usersType="cliente"
-                    />
+        <Typography variant="caption">
+          Criado em: {formatDate(projeto.dataCriacao)}
+        </Typography>
 
-                    <ProjectUsers
-                        title="Adicionar um líder"
-                        project={projeto}
-                        usersList={projeto.lider ? [projeto.lider] : []}
-                        emptyListText="Ainda não foi atribuído um líder a este projeto."
-                        filledListText="Líder do projeto: "
-                        usersType="funcionario"
-                    />
+        <Paper
+          elevation={8}
+          sx={{
+            mt: 2,
+            backgroundColor: theme.palette.secondary.main,
+            p: 3,
+            display: "flex",
+            flexDirection: "column",
+            rowGap: "10px",
+          }}
+        >
+          <ProjectUsers tipo="cliente" project={projeto} />
 
-                    <ProjectUsers
-                        title="Adicionar projetistas"
-                        project={projeto}
-                        usersList={projeto.projetistas}
-                        emptyListText="Ainda não foi atribuído um projetista para este projeto."
-                        filledListText="Projetistas do projeto: "
-                        usersType="funcionario"
-                    />
+          <ProjectUsers tipo="lider" project={projeto} />
 
-                    <ProjectUsers
-                        title="Adicionar usuarios"
-                        project={projeto}
-                        usersList={projeto.usuarios}
-                        emptyListText="Ainda não existem usuários neste projeto."
-                        filledListText="Usuários gerais do projeto: "
-                        usersType="funcionario"
-                    />
-                </Paper>
-            </Paper>
-        </Container>
-    );
+          <ProjectUsers tipo="projetista" project={projeto} />
+
+          <ProjectUsers tipo="funcionario" project={projeto} />
+        </Paper>
+        <Button variant="contained" color="error" sx={{mt: 2 }} onClick={openDeleteProjectModal}>Excluir projeto</Button>
+      </Paper>
+      <DeleteProjectModal open={deleteProjectModalState} handleClose={closeDeleteProjectModal} project={projeto} />
+    </Container>
+  );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const { id } = context.query;
+  const { id } = context.query;
 
-    return {
-        props: { id },
-    };
+  return {
+    props: { id },
+  };
 }

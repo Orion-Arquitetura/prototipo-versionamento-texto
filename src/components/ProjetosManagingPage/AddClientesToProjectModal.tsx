@@ -1,22 +1,21 @@
-import { useGetUsers } from "@/hooks/user";
-import { Projeto, User } from "@/utils/types";
+import { useAddClientesToProject } from "@/hooks/projetos";
+import { useGetClientes, useGetUsers } from "@/hooks/user";
+import { Projeto, ClienteUser } from "@/utils/types";
 import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 
-export default function AddUsersToProjectModal({
+export default function AddClientesToProjectModal({
     open,
     handleClose,
-    title,
     project,
-    tipo
 }: {
     open: boolean;
     handleClose: () => void;
-    title: string;
     project: Projeto;
-    tipo: string
 }) {
-    const { data: users } = useGetUsers();
+    const { data: users } = useGetClientes();
+
+    const { mutate: addClientesToProject } = useAddClientesToProject()
 
     const [usuariosSelecionados, setUsuariosSelecionados] = useState<
         { id: string; nome: string }[]
@@ -39,11 +38,7 @@ export default function AddUsersToProjectModal({
         }
     }
 
-    const availableUsers = (users && users.filter((user: User) => {
-        if (user.tipo === "administrador") {
-            return false
-        }
-
+    const availableUsers = (users && users.filter((user: ClienteUser) => {
         if (user.projetos.some(projeto => projeto.id === project._id)) {
             return false
         }
@@ -51,8 +46,10 @@ export default function AddUsersToProjectModal({
         return true
     })) || []
 
-    function handleAddUsersToProject() {
-
+    function handleAddClientesToProject() {
+        addClientesToProject({ projectID: project._id, users: usuariosSelecionados })
+        setUsuariosSelecionados([])
+        handleClose()
     }
 
     function cancelSubmit() {
@@ -63,40 +60,26 @@ export default function AddUsersToProjectModal({
     return (
         <Modal open={open} onClose={cancelSubmit} sx={{ display: "grid", placeItems: "center" }}>
             <Paper elevation={8} sx={{ p: 3 }}>
-                <Typography variant="h6">{title} - {project.nome}</Typography>
+                <Typography variant="h6">Adicionar clientes - {project.nome}</Typography>
                 <FormGroup onChange={(ev) => adicionarOuRemoverUsuariosDoState((ev.target as HTMLInputElement).value)}>
                     {
-                        availableUsers.map((user: User) => {
-                            return user.tipo === tipo && (
-                                <FormControlLabel
-                                    key={user._id}
-                                    control={
-                                        <Checkbox
-                                            value={JSON.stringify({ id: user._id, nome: user.nome })}
-                                        />
-                                    }
-                                    label={user.nome}
-                                />
-                            );
-                        })
-                    }
-                    {
-                        (title === "Adicionar projetistas" && !project.projetistas.some(user => user.nome === project.lider.nome)) &&
-                        <FormControlLabel
-                            key={project.lider.id}
-                            control={
-                                <Checkbox
-                                    value={JSON.stringify({ id: project.lider.id, nome: project.lider.nome })}
-                                />
-                            }
-                            label={project.lider.nome}
-                        />
+                        availableUsers.map((user: ClienteUser) => (
+                            <FormControlLabel
+                                key={user._id}
+                                control={
+                                    <Checkbox
+                                        value={JSON.stringify({ id: user._id, nome: user.nome })}
+                                    />
+                                }
+                                label={user.nome}
+                            />
+                        ))
                     }
                 </FormGroup>
                 <Button
                     variant="contained"
                     disabled={usuariosSelecionados.length === 0 ? true : false}
-                    onClick={handleAddUsersToProject}
+                    onClick={handleAddClientesToProject}
                 >
                     Enviar
                 </Button>

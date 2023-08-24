@@ -20,7 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     if (user === null) {
       throw new Error("Usuário não existe")
     } else {
-      console.log(user)
       res.status(200).json({
         nome: user.nome,
         email: user.email,

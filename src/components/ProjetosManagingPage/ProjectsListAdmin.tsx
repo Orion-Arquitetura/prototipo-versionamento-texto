@@ -1,13 +1,15 @@
 import { useGetProjects } from "@/hooks/projetos";
 import { Projeto } from "@/utils/types";
-import { List } from "@mui/material";
+import { List, Paper } from "@mui/material";
 import ProjectsListItem from "./ProjectsListItem";
 
 
 export default function ProjectsList() {
     const { data: projetos, isLoading } = useGetProjects();
 
-    console.log(projetos)
+    if (!isLoading && projetos.length === 0) {
+        return <Paper elevation={8} sx={{p:3}}>Nenhum projeto criado.</Paper>
+    }
 
     return (
         <List sx={{display: "flex", flexDirection: "column", rowGap: 1}}>

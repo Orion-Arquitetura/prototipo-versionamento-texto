@@ -4,7 +4,7 @@ export const userFuncionarioSchema = new mongoose.Schema({
   nome: {
     type: String,
     required: true,
-    maxLength: 40
+    maxLength: 40,
   },
   email: {
     type: String,
@@ -12,20 +12,24 @@ export const userFuncionarioSchema = new mongoose.Schema({
     unique: true,
     trim: true,
     lowercase: true,
-    maxLength: 40
+    maxLength: 40,
   },
   senha: {
     type: String,
     required: true,
     default: "senha",
-    maxLength: 12
+    maxLength: 12,
   },
   tipo: {
     type: String,
     default: "funcionario",
   },
   projetos: [
-    { nome: String, id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" } },
+    {
+      nome: String,
+      id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+      roles: {type: [String], enum: ["funcionario", "lider", "projetista"], default: ["funcionario"]}
+    },
   ],
   tarefas: {
     concluidas: [
@@ -42,15 +46,18 @@ export const userFuncionarioSchema = new mongoose.Schema({
           id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
         },
         textoRequerimento: String,
-        textoResposta: String
+        textoResposta: String,
       },
-    ]
-    ,
+    ],
     emAndamento: [
       {
         arquivo: {
           nome: String,
           id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
+        },
+        requerente: {
+          nome: String,
+          id: { type: mongoose.Schema.Types.ObjectId }
         },
         dataRequerimento: String,
         prazo: String,
@@ -58,7 +65,7 @@ export const userFuncionarioSchema = new mongoose.Schema({
           nome: String,
           id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
         },
-        textoRequerimento: String
+        textoRequerimento: String,
       },
     ],
   },
@@ -72,4 +79,4 @@ const UserFuncionario =
   mongoose.models.UserFuncionario ||
   mongoose.model("UserFuncionario", userFuncionarioSchema, "Users");
 
-export default UserFuncionario
+export default UserFuncionario;

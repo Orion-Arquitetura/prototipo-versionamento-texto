@@ -2,12 +2,16 @@ import { User } from "@/utils/types";
 import styled from "@emotion/styled";
 import { ListItem, Typography } from "@mui/material";
 import UsersListItemOptions from "./UsersListItemOptions";
+import { theme } from "@/theme/theme";
 
 
 const StyledListItem = styled(ListItem)`
     display: flex;
-    justify-content: space-between;
+    background-color: ${theme.palette.primary.main};
+    color: white;
     padding: 16px;
+    border-radius: 6px;
+    justify-content: space-between;
 `;
 
 function tipo(tipo: "funcionario" | "cliente" | "administrador") {

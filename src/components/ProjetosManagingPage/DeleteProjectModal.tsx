@@ -1,6 +1,7 @@
 import { useDeleteProject } from "@/hooks/projetos";
 import { Projeto } from "@/utils/types";
 import { Box, Button, Modal, Paper, Typography } from "@mui/material";
+import Router from "next/router";
 
 export default function DeleteProjectModal({
     open,
@@ -11,13 +12,19 @@ export default function DeleteProjectModal({
     handleClose: () => void;
     project: Projeto;
 }) {
-    const {mutate: deleteProject} = useDeleteProject();
+    const { mutate: deleteProject } = useDeleteProject();
 
     function cancelSubmit() {
         handleClose();
     }
 
     function handleDeleteProject() {
+        if (/\/projeto$/.test(Router.pathname)) {
+            deleteProject(project._id)
+            Router.replace("/auth/admin/projetos")
+            return
+        }
+        
         deleteProject(project._id)
     }
 
