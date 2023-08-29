@@ -6,9 +6,6 @@ import { theme } from "@/theme/theme";
 import {
   Button,
   Container,
-  FormControl,
-  InputLabel,
-  MenuItem,
   Paper,
   Select,
   Typography,
@@ -29,7 +26,6 @@ export default function Projeto({ id }: { id: string }) {
     console.log(Router.pathname)
     setDeleteProjectModalState(false)
   }
-
 
   if (isLoading) {
     return null;
@@ -74,6 +70,8 @@ export default function Projeto({ id }: { id: string }) {
     </Container>
   );
 }
+
+
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query;

@@ -16,6 +16,7 @@ export default async function handler(
 
   const usuarios = [lider, projetista, cliente].filter((user) => user !== null);
 
+  const projetoName = `${new Date().getFullYear()}.${sanitizeInputKeepUnderscoreAndNumbers(nome)}`
 
   if (usuarios.length > 0) {
     const usuariosSemDuplicata: {
@@ -36,7 +37,7 @@ export default async function handler(
     });
 
     const novoProjeto = new Projeto({
-      nome: sanitizeInputKeepUnderscoreAndNumbers(nome),
+      nome: projetoName,
       usuarios: usuariosSemDuplicata,
     });
 
@@ -69,7 +70,7 @@ export default async function handler(
   }
 
   const novoProjeto = new Projeto({
-    nome,
+    nome: projetoName,
   });
 
   await novoProjeto.save();

@@ -16,7 +16,7 @@ export default function DisciplinesList({
 }) {
   const { data: disciplinas, isLoading: isLoadingDisciplinas } =
     useGetDisciplines();
-  console.log(disciplinas);
+
   return (
     <Box sx={{ flexBasis: "30%" }}>
       <List

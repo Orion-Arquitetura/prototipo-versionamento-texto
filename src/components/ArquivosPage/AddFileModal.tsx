@@ -122,7 +122,7 @@ export default function AddFileModal({ open, handleClose, project }: any) {
           >
             <Grid item xs={12}>
               <Typography sx={{ textAlign: "center", fontSize: "1.3rem" }}>
-                Adicionar arquivo
+                Adicionar primeira versão de arquivo
               </Typography>
             </Grid>
             <Grid item xs={6}>
