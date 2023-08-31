@@ -2,6 +2,7 @@ import Projeto from "@/database/models/projectModel";
 import connectToDatabase from "@/database/mongodbConnection";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
+import { parseCookies } from "nookies";
 
 export default async function handler(
   req: NextApiRequest,

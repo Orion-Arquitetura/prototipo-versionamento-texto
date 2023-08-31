@@ -3,42 +3,30 @@ import UserCliente from "@/database/models/userClienteModel";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { projectID, users } = JSON.parse(req.body);
 
   const projectObjectID = new mongoose.Types.ObjectId(projectID);
-  const usersObjectID = users.map(
+  const usersObjectIDs = users.map(
     (user: { nome: string; id: string }) => new mongoose.Types.ObjectId(user.id)
   );
 
-  const usersObjects = users.map((user: { nome: string; id: string }) => ({
-    nome: user.nome,
-    id: new mongoose.Types.ObjectId(user.id),
-    roles: ["cliente"]
-  }));
-
-  const projeto = await Projeto.findOneAndUpdate(
+  await Projeto.findOneAndUpdate(
     { _id: projectObjectID },
     {
       $addToSet: {
-        usuarios: {
-          $each: usersObjects,
-        },
+        "usuarios.clientes": { $each: usersObjectIDs },
       },
     }
   );
 
   await UserCliente.updateMany(
-    { _id: { $in: usersObjectID } },
+    { _id: { $in: usersObjectIDs } },
     {
       $addToSet: {
         projetos: {
-          nome: projeto.nome,
-          id: projectObjectID,
-          roles: ["cliente"]
+          projeto: projectObjectID,
+          roles: ["cliente"],
         },
       },
     }

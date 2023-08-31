@@ -3,63 +3,48 @@ import UserFuncionario from "@/database/models/userFuncionarioModel";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const { projectID, user } = JSON.parse(req.body);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const { project, user } = JSON.parse(req.body);
 
-  const projectObjectID = new mongoose.Types.ObjectId(projectID);
+  const projectObjectID = new mongoose.Types.ObjectId(project._id);
   const userObjectID = new mongoose.Types.ObjectId(user._id);
 
-  const projeto = await Projeto.findOne({ _id: projectObjectID }).exec();
+  console.log({ project, user })
 
-  const isUserAlreadyInProject = projeto.usuarios.find(
-    (usuario) => usuario.id.toString() === user._id
+  const isNextLiderProjetista = project.usuarios.projetistas.some(
+    (user1) => user1.nome === user.nome
   );
 
-  if (isUserAlreadyInProject) {
-    await UserFuncionario.updateOne(
-      { _id: userObjectID, "projetos.id": projectObjectID },
-      { $addToSet: { "projetos.$.roles": "lider" } }
+  if (isNextLiderProjetista) {
+    await Projeto.updateOne(
+      { _id: projectObjectID },
+      { $set: { "usuarios.lider": userObjectID }, $pull: { "usuarios.projetistas": userObjectID } }
     );
 
-    await Projeto.updateOne(
-      {
-        _id: projectObjectID,
-        "usuarios.id": userObjectID,
-      },
-      { $addToSet: { "usuarios.$.roles": "lider" } }
+    await UserFuncionario.updateOne(
+      { _id: userObjectID, "projetos.projeto": projectObjectID },
+      { $pull: { "projetos.$.roles": "projetista" } }
+    );
+
+    await UserFuncionario.updateOne(
+      { _id: userObjectID, "projetos.projeto": projectObjectID },
+      { $addToSet: { "projetos.$.roles": "lider" } }
     );
 
     res.status(200).end();
     return;
   }
 
-  await UserFuncionario.updateOne(
-    { _id: userObjectID },
-    {
-      $addToSet: {
-        projetos: {
-          nome: projeto.nome,
-          id: projectObjectID,
-          roles: ["funcionario", "lider"],
-        },
-      },
-    }
-  );
-
   await Projeto.updateOne(
     { _id: projectObjectID },
     {
-      $addToSet: {
-        usuarios: {
-          nome: user.nome,
-          id: userObjectID,
-          roles: ["funcionario", "lider"],
-        },
-      },
+      "usuarios.lider": userObjectID ,
     }
+  );
+
+  await UserFuncionario.updateOne(
+    { _id: userObjectID },
+    { $set: { projetos: { projeto: projectObjectID, roles: ["funcionario", "lider"] } } }
   );
 
   res.status(200).end();

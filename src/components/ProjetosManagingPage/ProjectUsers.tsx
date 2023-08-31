@@ -20,15 +20,6 @@ type ProjectUsersType = {
 };
 
 export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
-    const clientes = project.usuarios.filter((user) =>
-        user.roles.some((role) => role === "cliente")
-    );
-    const lider = project.usuarios.filter((user) =>
-        user.roles.some((role) => role === "lider")
-    );
-    const projetistas = project.usuarios.filter((user) =>
-        user.roles.some((role) => role === "projetista")
-    );
 
     const { mutate: removeClienteFromProject } = useRemoveClienteFromProject()
     const { mutate: removeProjetistaFromProject } = useRemoveProjetistaFromProject()
@@ -57,11 +48,11 @@ export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
 
     function handleRemoveLider() {
         handleCloseMenu()
-        removeLiderFromProject({user: lider[0], project})
+        removeLiderFromProject({user: project.usuarios.lider, project})
     }
 
     if (tipo === "lider") {
-        return lider.length > 0 ? (
+        return project.usuarios.lider ? (
             <Paper elevation={8} sx={PaperStyles}>
                 <Typography>Líder deste projeto:</Typography>
                 <Paper elevation={8} sx={{
@@ -73,7 +64,7 @@ export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
                     justifyContent: "space-between",
                     alignItems: "center"
                 }}>
-                    {lider[0].nome}
+                    {project.usuarios.lider.nome}
                     <Button
                         onClick={handleClickMenu}
                         sx={{  }}
@@ -107,13 +98,13 @@ export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
         return (
             <Paper elevation={8} sx={PaperStyles}>
                 <Typography>
-                    {clientes.length === 0
+                    {project.usuarios.clientes.length === 0
                         ? "Ainda não foram atribuídos clientes responsáveis por este projeto."
                         : "Clientes do projeto: "}
                 </Typography>
                 <Box sx={{ mt: 1, mb: 1 }}>
-                    {clientes.length > 0 &&
-                        clientes.map((user: { nome: string; id: string }) => (
+                    {project.usuarios.clientes.length > 0 &&
+                        project.usuarios.clientes.map((user) => (
                             <Paper
                                 elevation={8}
                                 sx={{
@@ -125,7 +116,7 @@ export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
                                     justifyContent: "space-between",
                                     alignItems: "center"
                                 }}
-                                key={user.id}
+                                key={user.nome}
                             >
                                 {user.nome}{" "}
                                 <Button onClick={() => removeClienteFromProject({ user, project })}>
@@ -144,13 +135,13 @@ export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
         return (
             <Paper elevation={8} sx={PaperStyles}>
                 <Typography>
-                    {projetistas.length === 0
+                    {project.usuarios.projetistas.length === 0
                         ? "Ainda não foi atribuído um projetista para este projeto."
                         : "Projetistas do projeto: "}
                 </Typography>
                 <Box sx={{ mt: 1, mb: 1 }}>
-                    {projetistas.length > 0 &&
-                        projetistas.map((user: { nome: string; id: string }) => (
+                    {project.usuarios.projetistas.length > 0 &&
+                        project.usuarios.projetistas.map((user) => (
                             <Paper elevation={8} sx={{
                                 mt: 1,
                                 mb: 1,
@@ -159,7 +150,7 @@ export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
                                 display: "flex",
                                 justifyContent: "space-between",
                                 alignItems: "center"
-                            }} key={user.id}>
+                            }} key={user.nome}>
                                 {user.nome}{" "}
                                 <Button onClick={() => removeProjetistaFromProject({ user, project })}>
                                     <Delete />

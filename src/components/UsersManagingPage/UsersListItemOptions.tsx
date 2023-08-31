@@ -4,12 +4,12 @@ import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
-import { User } from "@/utils/types";
+import { FuncionarioUser, ClienteUser } from "@/utils/types";
 import AddUserToProjectsModal from "./AddUserToProjectsModal";
 import RemoveUserFromProjectsModal from "./RemoveUserFromProjectsModal";
 import DeleteUserModal from "./DeleteUserModal";
 
-export default function UsersListItemOptions({ user }: { user: User }) {
+export default function UsersListItemOptions({ user }: { user: FuncionarioUser | ClienteUser }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -91,17 +91,17 @@ export default function UsersListItemOptions({ user }: { user: User }) {
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: "center", horizontal: "left" }}
       >
-        <MenuItem onClick={openAddUserToProjectsModal}>
+        {/* <MenuItem onClick={openAddUserToProjectsModal}>
           Adicionar a projetos
         </MenuItem>
         <MenuItem onClick={openRemoveUserFromProjectsModal}>
           Remover de projetos
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem sx={{ p: 0 }}>
           <Link
             href={{
               pathname: `/auth/admin/usuarios/usuario`,
-              query: { id: user._id },
+              query: { id: user._id, type: user.tipo },
             }}
             style={{ padding: "8px", paddingLeft: "16px", width: "100%" }}
           >

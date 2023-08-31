@@ -50,34 +50,7 @@ export default function AddProjetistasToProjectModal({
         }
     }
 
-    const userIsProjectLider = project.usuarios.find(
-        (user) => user.id === project._id.toString() && user.roles.includes("lider")
-    );
-
-    const availableUsers =
-        (users &&
-            users.filter((user: FuncionarioUser) => {
-                const isUserInProject = project.usuarios.some(
-                    (user1) => user1.id.toString() === user._id.toString()
-                );
-                const isUserProjectLider = user.projetos.find(
-                    (projeto, index) =>
-                        projeto.id.toString() === project._id.toString() &&
-                        user.projetos[index].roles.includes("lider") &&
-                        !user.projetos[index].roles.includes("projetista")
-                );
-
-                if (isUserInProject) {
-                    if (isUserProjectLider) {
-                        return true;
-                    }
-
-                    return false;
-                }
-
-                return true;
-            })) ||
-        [];
+    const availableUsers = (users && users?.filter((user: FuncionarioUser) => !user.projetos.some(projetoData => projetoData.projeto.nome === project.nome))) || []
 
     function handleAddProjetistasToProject() {
         addProjetistasToProject({ project, users: usuariosSelecionados });
@@ -89,6 +62,7 @@ export default function AddProjetistasToProjectModal({
         setUsuariosSelecionados([]);
         handleClose();
     }
+
 
     return (
         <Modal

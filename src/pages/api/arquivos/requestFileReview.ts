@@ -1,36 +1,14 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import Projeto from "@/database/models/projectModel";
+import Tarefa from "@/database/models/tarefaModel";
 import mongoose from "mongoose";
+import { parseCookies } from "nookies";
+import UserFuncionario from "@/database/models/userFuncionarioModel";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { file, usuario, prazo, texto } = JSON.parse(req.body);
 
-  const usersCollection = mongoose.connection.collection("Users");
-
-  const projeto = await Projeto.findOne({
-    _id: new mongoose.Types.ObjectId(file.metadata.projeto.id),
-  });
-
-  const isUserAlreadyInProject = projeto.usuarios.some(
-    (user: any) => user.nome === usuario.nome
-  ) as boolean;
-
-  if (!isUserAlreadyInProject) {
-    await usersCollection.updateOne(
-      { _id: new mongoose.Types.ObjectId(usuario.id) },
-      {
-        $push: {
-          projetos: {
-            id: file.metadata.projeto.id,
-            nome: file.metadata.projeto.nome,
-          },
-        },
-      }
-    );
-  }
+  const usuarioQueAtribuiuTarefa = parseCookies({ req })["id"];
 
   const filesCollection = mongoose.connection.collection("Arquivos.files");
 
@@ -39,30 +17,29 @@ export default async function handler(
     {
       $set: {
         "metadata.emRevisao": true,
-        "metadata.responsavelRevisao": usuario,
+        "metadata.atribuidaPor": new mongoose.Types.ObjectId(usuarioQueAtribuiuTarefa),
+        "metadata.responsavelRevisao": new mongoose.Types.ObjectId(usuario.id),
         "metadata.comentarioRevisao": texto,
         "metadata.prazoRevisao": prazo,
       },
     }
   );
 
-  await usersCollection.updateOne(
+  const novaTarefa = new Tarefa({
+    arquivoInicial: {id: file._id, nome: file.filename},
+    projeto: file.metadata.projeto._id,
+    atribuidaPor: new mongoose.Types.ObjectId(usuarioQueAtribuiuTarefa),
+    responsavel: new mongoose.Types.ObjectId(usuario.id),
+    prazo: prazo === "" ? "Sem prazo definido" : prazo,
+    textoRequerimento: texto,
+  });
+
+  await novaTarefa.save();
+
+  await UserFuncionario.updateOne(
     { _id: new mongoose.Types.ObjectId(usuario.id) },
     {
-      $push: {
-        "tarefas.emAndamento": {
-          arquivo: {
-            nome: file.filename,
-            id: file._id,
-          },
-          prazo,
-          projeto: {
-            nome: projeto.nome,
-            id: projeto._id,
-          },
-          comentarioRevisao: texto,
-        },
-      },
+      $addToSet: { tarefas: novaTarefa._id },
     }
   );
 

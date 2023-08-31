@@ -26,49 +26,11 @@ export const userFuncionarioSchema = new mongoose.Schema({
   },
   projetos: [
     {
-      nome: String,
-      id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
-      roles: {type: [String], enum: ["funcionario", "lider", "projetista"], default: ["funcionario"]}
+      projeto: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
+      roles: { type: [String], enum: ["funcionario", "lider", "projetista"], default: ["funcionario"] }
     },
   ],
-  tarefas: {
-    concluidas: [
-      {
-        arquivo: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
-        },
-        prazo: String,
-        dataRequerimento: String,
-        dataConclusao: String,
-        projeto: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
-        },
-        textoRequerimento: String,
-        textoResposta: String,
-      },
-    ],
-    emAndamento: [
-      {
-        arquivo: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivo" },
-        },
-        requerente: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId }
-        },
-        dataRequerimento: String,
-        prazo: String,
-        projeto: {
-          nome: String,
-          id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
-        },
-        textoRequerimento: String,
-      },
-    ],
-  },
+  tarefas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tarefa" }],
   dataCriacao: {
     type: Date,
     default: Date.now,

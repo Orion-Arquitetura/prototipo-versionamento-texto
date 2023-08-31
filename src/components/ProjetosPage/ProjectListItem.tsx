@@ -34,7 +34,7 @@ function CustomComponent({ children }: { children: ReactNode }) {
                     display: "flex",
                     flexDirection: "column",
                     justifyContent: "space-between",
-                }
+                },
             }}
         >
             {children}
@@ -42,17 +42,27 @@ function CustomComponent({ children }: { children: ReactNode }) {
     );
 }
 
-export default function ProjectListItem({ title, users, arquivos, id }: { title: string, users: number, arquivos: number, id: string }) {
+export default function ProjectListItem({
+    title,
+    users,
+    arquivos,
+    id,
+}: {
+    title: string;
+    users: { lider: string | null; projetistas: string[]; clientes: string[]; outros: string[] };
+    arquivos: number;
+    id: string;
+}) {
+    const usersCount = users.projetistas.length + users.clientes.length + users.outros.length + (users.lider ? 1 : 0)
+    
     return (
         <Grid item component={CustomComponent}>
-            <Link href={
-                { pathname: "/auth/projetos/projeto", query: { id: id } }
-            }>
+            <Link href={{ pathname: "/auth/projetos/projeto", query: { id: id } }}>
                 <p>{title}</p>
                 <Box sx={{ display: "flex", columnGap: 2 }}>
                     <Box sx={{ display: "flex", alignItems: "center", fontSize: "0.8rem", columnGap: 1 }}>
                         <GroupIcon fontSize="small" />
-                        {users}
+                        {usersCount}
                     </Box>
                     <Box sx={{ display: "flex", alignItems: "center", fontSize: "0.8rem", columnGap: 1 }}>
                         <FolderIcon fontSize="small" />

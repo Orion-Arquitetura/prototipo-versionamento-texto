@@ -5,24 +5,18 @@ const getUsers = async () => {
   return users;
 };
 
-const getOneUser = async (id: string) => {
-  const user = await fetch(`/api/user/getOneUser?id=${id}`).then((res) =>
-    res.json()
-  );
+const getOneUser = async ({ id, type }) => {
+  const user = await fetch(`/api/user/getOneUser?id=${id}&type=${type}`).then((res) => res.json());
   return user;
 };
 
 const getClientes = async () => {
-  const clientes = await fetch("/api/user/getAllClientes").then((res) =>
-    res.json()
-  );
+  const clientes = await fetch("/api/user/getAllClientes").then((res) => res.json());
   return clientes;
 };
 
 const getFuncionarios = async () => {
-  const funcionarios = await fetch("/api/user/getAllFuncionarios").then((res) =>
-    res.json()
-  );
+  const funcionarios = await fetch("/api/user/getAllFuncionarios").then((res) => res.json());
   return funcionarios;
 };
 
@@ -30,13 +24,13 @@ const createUser = async (userData: any) => {
   const response = await fetch("/api/user/createUser", {
     method: "POST",
     body: JSON.stringify(userData),
-  }).then(res => res.json());
+  }).then((res) => res.json());
 
   if (response.erro) {
-    window.alert(response.erro)
+    window.alert(response.erro);
   }
 
-  return response
+  return response;
 };
 
 const deleteUser = async (userData: any) => {
@@ -61,6 +55,14 @@ const removeUserFromProjects = async ({ userID, projectsIDs }: any) => {
   });
 };
 
+const changeUserPassword = async ({newPassword, user}:{newPassword: string, user: any}) => {
+  await fetch("/api/user/changePassword", { method: "POST", body: JSON.stringify({newPassword, user}) });
+};
+
+const changeUserEmail = async ({newEmail, user}:{newEmail: string, user: any}) => {
+  await fetch("/api/user/changeEmail", { method: "POST", body: JSON.stringify({newEmail, user}) });
+};
+
 //////////////////CUSTOM HOOKS AREA///////////////////
 
 export const useGetUsers = () => {
@@ -71,10 +73,10 @@ export const useGetUsers = () => {
   });
 };
 
-export const useGetOneUser = (id: string) => {
+export const useGetOneUser = ({ id, type }) => {
   return useQuery({
     queryKey: ["get-one-user"],
-    queryFn: () => getOneUser(id),
+    queryFn: () => getOneUser({ id, type }),
   });
 };
 
@@ -135,5 +137,17 @@ export const useRemoveUserFromProjects = () => {
     onSuccess: async () => {
       await queryClient.invalidateQueries(["get-users"]);
     },
+  });
+};
+
+export const useChangeUserPassword = () => {
+  return useMutation({
+    mutationFn: changeUserPassword,
+  });
+};
+
+export const useChangeUserEmail = () => {
+  return useMutation({
+    mutationFn: changeUserEmail,
   });
 };

@@ -13,6 +13,8 @@ export default function ProjectsListItemOptions({ projeto }: { projeto: Projeto 
     const [deleteProjectModalState, setDeleteProjectModalState] = useState(false);
     const open = Boolean(anchorEl);
 
+    console.log(projeto)
+
     function handleClickMenu(event: any) {
         setAnchorEl(event.currentTarget);
     }

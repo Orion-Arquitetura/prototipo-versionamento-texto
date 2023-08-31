@@ -13,39 +13,26 @@ export default async function handler(
     return
   }
 
-  const userType = parseCookies({req})["tipo"]
+  // const userType = parseCookies({req})["tipo"]
 
-  if (userType !== "administrador") {
-    res.status(403).end()
-    return
-  }
+  // if (userType !== "administrador") {
+  //   res.status(403).end()
+  //   return
+  // }
   
   const { user, project } = JSON.parse(req.body);
 
-  const userObjectID = new mongoose.Types.ObjectId(user.id);
+  const userObjectID = new mongoose.Types.ObjectId(user._id);
   const projectObjectID = new mongoose.Types.ObjectId(project._id);
-
-  if (user.roles.includes("projetista")) {
-    await UserFuncionario.updateOne(
-      { _id: userObjectID, "projetos.id": projectObjectID },
-      { $pull: { "projetos.$.roles": "lider" } }
-    );
-
-    await Projeto.updateOne(
-      { _id: projectObjectID, "usuarios.id": userObjectID },
-      { $pull: { "usuarios.$.roles": "lider" } }
-    );
-
-    res.status(200).end();
-    return;
-  }
 
   await UserFuncionario.updateOne(
     {
       _id: userObjectID,
     },
     {
-      $pull: { projetos: { id: projectObjectID } },
+      $pull: {
+        projetos: { projeto: projectObjectID },
+      },
     }
   );
 
@@ -53,7 +40,7 @@ export default async function handler(
     {
       _id: projectObjectID,
     },
-    { $pull: { usuarios: { id: userObjectID } } }
+    { $set: { "usuarios.lider": null } }
   );
 
   res.status(200).end();

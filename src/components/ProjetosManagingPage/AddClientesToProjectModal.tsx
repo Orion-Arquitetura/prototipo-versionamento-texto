@@ -38,13 +38,7 @@ export default function AddClientesToProjectModal({
         }
     }
 
-    const availableUsers = (users && users.filter((user: ClienteUser) => {
-        if (user.projetos.some(projeto => projeto.id === project._id)) {
-            return false
-        }
-
-        return true
-    })) || []
+    const availableUsers = (users && users.filter((user: ClienteUser) =>  !user.projetos.some(projetoData => projetoData.projeto.nome === project.nome))) || []
 
     function handleAddClientesToProject() {
         addClientesToProject({ projectID: project._id, users: usuariosSelecionados })

@@ -41,7 +41,7 @@ export default function ResponsiveAppBar() {
               Projetos
             </Link>
             <Link
-              href={`/profile?id=${authData?.userId}`}
+              href={`/auth/perfil?id=${authData?.userId}&type=${authData?.userType}`}
               style={{ color: "black" }}
             >
               Perfil

@@ -20,12 +20,12 @@ export default function DeleteProjectModal({
 
     function handleDeleteProject() {
         if (/\/projeto$/.test(Router.pathname)) {
-            deleteProject(project._id)
+            deleteProject(project)
             Router.replace("/auth/admin/projetos")
             return
         }
         
-        deleteProject(project._id)
+        deleteProject(project)
     }
 
     return (

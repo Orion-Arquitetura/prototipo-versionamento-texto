@@ -8,12 +8,12 @@ export default async function handler(
 ) {
   const usersCollection = mongoose.connection.collection("Users");
 
-  await usersCollection.updateMany({}, { $pull: { projetos: {} } });
+  await usersCollection.updateMany({}, { $set: {projetos: []}});
 
   await Projeto.updateMany(
     {},
     {
-      $pull: { usuarios: {} },
+      $set: { "usuarios.lider": null, "usuarios.projetistas": [], "usuarios.clientes": [], "usuarios.outros": [] },
     }
   );
 

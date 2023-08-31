@@ -2,16 +2,12 @@ import { Projeto } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getProjects = async () => {
-  const projetos = await fetch("/api/projetos/getProjects").then((res) =>
-    res.json()
-  );
+  const projetos = await fetch("/api/projetos/getProjects").then((res) => res.json());
   return projetos;
 };
 
 const getOneProject = async (id: string) => {
-  const project = await fetch(`/api/projetos/getOneProject?id=${id}`).then(
-    (res) => res.json()
-  );
+  const project = await fetch(`/api/projetos/getOneProject?id=${id}`).then((res) => res.json());
   return project;
 };
 
@@ -32,21 +28,21 @@ const createProject = async ({
   });
 };
 
-const deleteProject = async (id: string) => {
-  await fetch("/api/projetos/deleteProject", { method: "POST", body: id });
+const deleteProject = async (project: Projeto) => {
+  await fetch("/api/projetos/deleteProject", { method: "POST", body: JSON.stringify(project) });
 };
 
 const addLiderToProject = async ({
-  projectID,
+  project,
   user,
 }: {
-  projectID: string;
+  project: Projeto;
   user: { nome: string; _id: string };
 }) => {
   console.log(user);
   await fetch("/api/projetos/addLiderToProject", {
     method: "POST",
-    body: JSON.stringify({ projectID, user }),
+    body: JSON.stringify({ project, user }),
   });
 };
 
@@ -228,4 +224,4 @@ export const useChangeProjectLider = () => {
       await queryClient.invalidateQueries(["get-funcionarios"]);
     },
   });
-}
+};

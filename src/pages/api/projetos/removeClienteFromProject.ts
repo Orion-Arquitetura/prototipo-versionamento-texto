@@ -4,36 +4,32 @@ import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== "POST") {
-    res.status(405).end()
-    return
+    res.status(405).end();
+    return;
   }
 
-  const userType = parseCookies({req})["tipo"]
+  // const userType = parseCookies({req})["tipo"]
 
-  if (userType !== "administrador") {
-    res.status(403).end()
-    return
-  }
+  // if (userType !== "administrador") {
+  //   res.status(403).end()
+  //   return
+  // }
 
   const { user, project } = JSON.parse(req.body);
 
   const projectObjectID = new mongoose.Types.ObjectId(project._id);
 
-  const userObjectID = new mongoose.Types.ObjectId(user.id);
+  const userObjectID = new mongoose.Types.ObjectId(user._id);
 
   await UserCliente.updateOne(
     {
       _id: userObjectID,
-      "projetos.id": projectObjectID,
     },
     {
       $pull: {
-        projetos: { id: projectObjectID },
+        projetos: { projeto: projectObjectID },
       },
     }
   );
@@ -42,7 +38,7 @@ export default async function handler(
     {
       _id: projectObjectID,
     },
-    { $pull: { usuarios: {id: userObjectID} } }
+    { $pull: { "usuarios.clientes": userObjectID } }
   );
 
   res.status(200).end();

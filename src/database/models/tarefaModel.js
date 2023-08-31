@@ -2,49 +2,42 @@ import mongoose from "mongoose";
 
 export const tarefaSchema = new mongoose.Schema({
     arquivoInicial: {
-        nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivos.files" },
-        required: true
+        id: { type: mongoose.Schema.Types.ObjectId },
+        nome: String
     },
     projeto: {
-        nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "Projeto" },
-        required: true
+        type: mongoose.Schema.Types.ObjectId, ref: "Projeto"
     },
     atribuidaPor: {
-        nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "UsuarioFuncionario" },
-        required: true
+        type: mongoose.Schema.Types.ObjectId, ref: "UserFuncionario"
     },
     responsavel: {
-        nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "UsuarioFuncionario" },
-        required: true
+        type: mongoose.Schema.Types.ObjectId, ref: "UserFuncionario"
     },
     prazo: {
-        type: String,
-        default: ""
+        type: mongoose.Schema.Types.Mixed
     },
     finalizada: {
         type: Boolean,
         default: false,
         required: true
     },
+    dataFinalizacao: { type: Date },
     textoRequerimento: {
         type: String,
         required: true
     },
     textoResposta: {
         type: String,
-        required: true
+        default: "",
     },
     arquivoFinal: {
-        nome: String,
-        id: { type: mongoose.Schema.Types.ObjectId, ref: "Arquivos.files" },
-        required: true
+        type: mongoose.Schema.Types.ObjectId, ref: "Arquivos.files"
     },
 })
 
-export const Tarefa =
+const Tarefa =
     mongoose.models.Tarefa ||
     mongoose.model("Tarefa", tarefaSchema, "Tarefas");
+
+export default Tarefa

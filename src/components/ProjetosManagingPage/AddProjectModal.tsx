@@ -156,6 +156,9 @@ export default function AddProjectModal({
                                 >
                                     {!isLoading &&
                                         funcionarios.map((funcionario: FuncionarioUser) => {
+                                            if (projectData.projetista?.id === funcionario._id) {
+                                                return null
+                                            }
                                             return (
                                                 <MenuItem
                                                     key={funcionario._id}
@@ -182,6 +185,9 @@ export default function AddProjectModal({
                                 >
                                     {!isLoading &&
                                         funcionarios.map((funcionario: FuncionarioUser) => {
+                                            if (projectData.lider?.id === funcionario._id) {
+                                                return null
+                                            }
                                             return (
                                                 <MenuItem
                                                     key={funcionario._id}

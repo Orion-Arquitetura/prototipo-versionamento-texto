@@ -12,7 +12,7 @@ export default function AddLiderToProjectModal({ open, handleClose, project }: {
     const { mutate: addLiderToProject } = useAddLiderToProject()
 
     function handleAddLiderToProject() {
-        addLiderToProject({ projectID: project._id, user: selectedUser! })
+        addLiderToProject({ project, user: selectedUser! })
         handleClose()
     }
 

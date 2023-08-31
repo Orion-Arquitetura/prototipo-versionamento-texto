@@ -1,20 +1,13 @@
 import PageTitle from "@/components/PageTitle";
 import { useGetOneUser } from "@/hooks/user";
 import { theme } from "@/theme/theme";
-import {
-    Button,
-    Container,
-    Grid,
-    Paper,
-    Stack,
-    Switch,
-    Typography,
-} from "@mui/material";
+import { Button, Container, Grid, Paper, Stack, Switch, Typography } from "@mui/material";
 import styled from "@emotion/styled";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
 import { useState } from "react";
 import DeleteUserModal from "@/components/UsersManagingPage/DeleteUserModal";
+import { Projeto } from "@/utils/types";
 
 const StyledSwitch = styled(Switch)`
   & .MuiSwitch-track {
@@ -28,146 +21,161 @@ const StyledSwitch = styled(Switch)`
   }
 `;
 
-export default function Usuario({ id }: { id: string }) {
-    const { data: usuario, isLoading } = useGetOneUser(id);
-    const [tipoTarefas, setTipoTarefas] = useState("emAndamento");
-    const [deleteUserModalState, setDeleteUserModalState] = useState(false)
+export default function Usuario({ id, type }: { id: string; type: string }) {
+  const { data: usuario, isLoading } = useGetOneUser({ id, type });
+  const [tipoTarefas, setTipoTarefas] = useState("emAndamento");
+  const [deleteUserModalState, setDeleteUserModalState] = useState(false);
 
-    function openDeleteUserModalState() {
-        setDeleteUserModalState(true)
-    }
+  function openDeleteUserModalState() {
+    setDeleteUserModalState(true);
+  }
 
-    function closeDeleteUserModalState() {
-        setDeleteUserModalState(false)
-    }
+  function closeDeleteUserModalState() {
+    setDeleteUserModalState(false);
+  }
 
-    function formatDate(date: string) {
-        return date.split("T")[0].split("-").reverse().join("/");
-    }
+  function formatDate(date: string) {
+    return date.split("T")[0].split("-").reverse().join("/");
+  }
 
-    if (isLoading) {
-        return null;
-    }
+  if (isLoading) {
+    return null;
+  }
 
-    return (
-        <Container sx={{ pb: 10 }}>
-            <PageTitle title={`Gerenciar usuário - ${usuario.nome}`} hasBackButton />
-            <Paper elevation={8} sx={{ p: 3 }}>
-                <Typography variant="h5">{usuario.nome}</Typography>
-                <Typography variant="caption">
-                    Adicionado em: {formatDate(usuario.dataCriacao)}
-                </Typography>
+  console.log(usuario.tarefas);
 
-                <Paper
+  const tarefasConcluidas =
+    (!isLoading && usuario.tarefas.filter((tarefa) => !!tarefa.finalizada)) || [];
+  const tarefasNaoConcluidas =
+    (!isLoading && usuario.tarefas.filter((tarefa) => !tarefa.finalizada)) || [];
+
+  return (
+    <Container sx={{ pb: 10 }}>
+      <PageTitle title={`Gerenciar usuário - ${usuario.nome}`} hasBackButton />
+      <Paper elevation={8} sx={{ p: 3 }}>
+        <Typography variant="h5">{usuario.nome}</Typography>
+        <Typography variant="caption">Adicionado em: {formatDate(usuario.dataCriacao)}</Typography>
+
+        <Paper
+          elevation={8}
+          sx={{
+            mt: 2,
+            backgroundColor: theme.palette.primary.main,
+            p: 3,
+            mb: 3,
+          }}
+        >
+          <Typography variant="h6" sx={{ color: "white" }}>
+            Projetos
+          </Typography>
+
+          <Grid container sx={{ columnGap: 2 }}>
+            {(usuario.projetos.length > 0 &&
+              usuario.projetos.map((projetoData: { projeto: Projeto; roles: string[] }) => {
+                return (
+                  <Grid
+                    item
+                    key={projetoData.projeto.nome}
+                    component={Paper}
                     elevation={8}
-                    sx={{
-                        mt: 2,
-                        backgroundColor: theme.palette.primary.main,
-                        p: 3,
-                        mb: 3,
-                    }}
-                >
-                    <Typography variant="h6" sx={{ color: "white" }}>
-                        Projetos
-                    </Typography>
-
-                    <Grid container>
-                        {(usuario.projetos.length > 0 &&
-                            usuario.projetos.map(
-                                (projeto: { nome: string; id: string; role: string }) => {
-                                    return (
-                                        <Grid
-                                            item
-                                            key={projeto.nome}
-                                            component={Paper}
-                                            elevation={8}
-                                            sx={{ p: 3, mt: 2 }}
-                                        >
-                                            {projeto.nome} <br />
-                                            Função: {projeto.role}
-                                        </Grid>
-                                    );
-                                }
-                            )) || (
-                                <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
-                                    Usuário não está em nenhum projeto.
-                                </Paper>
-                            )}
-                    </Grid>
+                    sx={{ p: 3, mt: 2 }}
+                  >
+                    {projetoData.projeto.nome} <br />
+                    Função: {projetoData.roles.join(" - ")}
+                  </Grid>
+                );
+              })) || (
+                <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
+                  Usuário não está em nenhum projeto.
                 </Paper>
-                {usuario.tipo !== "cliente" && usuario.tipo !== "administrador" && (
-                    <Paper
-                        elevation={8}
-                        sx={{
-                            mt: 2,
-                            backgroundColor: theme.palette.primary.main,
-                            p: 3,
-                            mb: 3,
-                        }}
-                    >
-                        <Typography variant="h6" sx={{ color: "white" }}>
-                            Tarefas
-                        </Typography>
-                        <Stack direction="row" spacing={1} alignItems="center">
-                            <Typography sx={{ color: "white" }}>Em andamento</Typography>
-                            <StyledSwitch
-                                checked={tipoTarefas === "emAndamento" ? false : true}
-                                onChange={() =>
-                                    setTipoTarefas((prevState) =>
-                                        prevState === "emAndamento" ? "concluidas" : "emAndamento"
-                                    )
-                                }
-                            />
-                            <Typography sx={{ color: "white" }}>Concluídas</Typography>
-                        </Stack>
-                        {(usuario.tarefas[tipoTarefas].length > 0 &&
-                            usuario.projetos.map(
-                                (projeto: { nome: string; id: string; role: string }) => {
-                                    return (
-                                        <Grid
-                                            item
-                                            key={projeto.nome}
-                                            component={Paper}
-                                            elevation={8}
-                                            sx={{ p: 3, mt: 2 }}
-                                        >
-                                            {projeto.nome} <br />
-                                            Função: {projeto.role}
-                                        </Grid>
-                                    );
-                                }
-                            )) || (
-                                <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
-                                    Usuário não tem nenhuma tarefa{" "}
-                                    {tipoTarefas === "emAndamento" ? "em andamento" : "concluida"}.
-                                </Paper>
-                            )}
-                    </Paper>
-                )}
-                <Button variant="contained" color="error" onClick={openDeleteUserModalState}>Excluir usuário</Button>
-                <DeleteUserModal open={deleteUserModalState} handleClose={closeDeleteUserModalState} user={usuario} />
-            </Paper>
-        </Container>
-    );
+              )}
+          </Grid>
+        </Paper>
+        {usuario.tipo !== "cliente" && usuario.tipo !== "administrador" && (
+          <Paper
+            elevation={8}
+            sx={{
+              mt: 2,
+              backgroundColor: theme.palette.primary.main,
+              p: 3,
+              mb: 3,
+            }}
+          >
+            <Typography variant="h6" sx={{ color: "white" }}>
+              Tarefas
+            </Typography>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography sx={{ color: "white" }}>Em andamento</Typography>
+              <StyledSwitch
+                checked={tipoTarefas === "emAndamento" ? false : true}
+                onChange={() =>
+                  setTipoTarefas((prevState) =>
+                    prevState === "emAndamento" ? "concluidas" : "emAndamento"
+                  )
+                }
+              />
+              <Typography sx={{ color: "white" }}>Concluídas</Typography>
+            </Stack>
+            {tipoTarefas === "emAndamento" &&
+              ((tarefasNaoConcluidas.length === 0 && (
+                <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
+                  Usuário não tem nenhuma tarefa em andamento.
+                </Paper>
+              )) ||
+                tarefasNaoConcluidas.map((tarefa) => (
+                  <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
+                    <Typography>Arquivo: {tarefa.arquivoInicial.nome}</Typography>
+                    <Typography>Prazo: {tarefa.prazo}</Typography>
+                    <Typography>Atribuído por: {tarefa.atribuidaPor.nome}</Typography>
+                  </Paper>
+                )))}
+
+            {tipoTarefas === "concluidas" &&
+              ((tarefasConcluidas.length === 0 && (
+                <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
+                  Usuário não tem nenhuma tarefa concluida.
+                </Paper>
+              )) ||
+                tarefasConcluidas.map((tarefa) => (
+                  <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
+                    <Typography>Arquivo: {tarefa.arquivoInicial.nome}</Typography>
+                    <Typography>Prazo estipulado: {tarefa.prazo}</Typography>
+                    <Typography>Data de finalização: {tarefa.dataFinalizacao}</Typography>
+                  </Paper>
+                )))}
+          </Paper>
+        )}
+        <Button variant="contained" color="error" onClick={openDeleteUserModalState}>
+          Excluir usuário
+        </Button>
+        <DeleteUserModal
+          open={deleteUserModalState}
+          handleClose={closeDeleteUserModalState}
+          user={usuario}
+        />
+      </Paper>
+    </Container>
+  );
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const { id } = context.query;
+  const { id, type } = context.query;
 
-    const tipo = parseCookies(context)["tipo"];
+  const tipo = parseCookies(context)["tipo"];
 
-    if (tipo !== "administrador") {
-        return {
-            redirect: {
-                destination: "/auth/projetos",
-                permanent: false,
-            },
-        };
-    }
-
+  if (tipo !== "administrador") {
     return {
-        props: {
-            id,
-        },
+      redirect: {
+        destination: "/auth/projetos",
+        permanent: false,
+      },
     };
+  }
+
+  return {
+    props: {
+      id,
+      type,
+    },
+  };
 }

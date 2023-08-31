@@ -17,18 +17,16 @@ export default async function handler(
   await connectToDatabase("App");
 
   if (cookies.tipo === "administrador") {
-    const projetos = await Projeto.find().exec();
+    const projetos = await Projeto.find().populate("usuarios.clientes usuarios.lider usuarios.projetistas usuarios.outros").exec();
     res.status(200).json(projetos);
     return;
   }
 
-  const projetosPermitidos = JSON.parse(cookies.projetos).map(
-    (projeto: { nome: string; id: string }) => projeto.id
-  );
+  const projetosPermitidos = JSON.parse(cookies.projetos).map(({projeto}) => projeto)
 
   const projetos = await Projeto.find({
     _id: { $in: projetosPermitidos },
-  }).exec();
+  }).populate("usuarios.clientes usuarios.lider usuarios.projetistas usuarios.outros").exec();
 
   res.status(200).json(projetos);
 }

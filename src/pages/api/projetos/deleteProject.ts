@@ -3,39 +3,38 @@ import connectToDatabase from "@/database/mongodbConnection";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const id = req.body;
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const projeto = JSON.parse(req.body);
+
+  const usuarios = [
+    projeto.usuarios.lider,
+    ...projeto.usuarios.projetistas,
+    ...projeto.usuarios.clientes,
+    ...projeto.usuarios.outros,
+  ]
+    .filter((user) => user !== null)
+    .map((user) => new mongoose.Types.ObjectId(user._id));
 
   const { bucket } = await connectToDatabase("App");
 
-  const projetoDeletado = await Projeto.findOneAndDelete({
-    _id: new mongoose.Types.ObjectId(id),
-  }).exec();
+  const usersCollection = mongoose.connection.collection("Users");
 
-  const projetoDeletadoUsersIds = projetoDeletado.usuarios.map(
-    (usuario: { nome: string; id: string }) => usuario.id
+  await usersCollection.updateMany(
+    { _id: { $in: usuarios } },
+    {
+      $pull: { projetos: { projeto: new mongoose.Types.ObjectId(projeto._id) } as any },
+    }
   );
 
-  const projetoDeletadoFilesIds = projetoDeletado.arquivos.map(
-    (arquivo: any) => arquivo._id
-  );
+  await Projeto.deleteOne({_id: projeto._id})
 
-  if (projetoDeletadoFilesIds.length > 0) {
-    await bucket.deleteMany({_id: {$in: projetoDeletadoFilesIds}})
-  }
+  const files = await bucket.find({ "metadata.projeto.id": projeto._id }).toArray();
+  const deletePromises:any = [];
+  await files.forEach(async (file:any) => {
+    deletePromises.push(bucket.delete(file._id));
+  });
 
-  if (projetoDeletadoUsersIds.length > 0) {
-    const usersCollection = mongoose.connection.collection("Users");
-    usersCollection.updateMany(
-      { _id: { $in: projetoDeletadoUsersIds } },
-      {
-        $pull: { projetos: { id: projetoDeletado._id } },
-      }
-    );
-  }
+  await Promise.all(deletePromises);
 
   res.status(200).end();
 }

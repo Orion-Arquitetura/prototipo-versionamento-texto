@@ -1,28 +1,43 @@
+import UserCliente from "@/database/models/userClienteModel";
+import UserFuncionario from "@/database/models/userFuncionarioModel";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const userId = req.query.id;
+  const userType = req.query.type;
 
-  if (
-    userId !== parseCookies({ req })["id"] &&
-    parseCookies({ req })["tipo"] !== "administrador"
-  ) {
+  if (userId !== parseCookies({ req })["id"] && parseCookies({ req })["tipo"] !== "administrador") {
     res.status(403).end();
     return;
   }
 
-  const usersCollection = mongoose.connection.collection("Users");
+  if (userType === "cliente") {
+    const userData = await UserCliente.findOne({
+      _id: new mongoose.Types.ObjectId(userId as string),
+    })
+      .populate({ path: "projetos.projeto", select: "-senha" })
+      .exec();
+    res.status(200).json(userData);
+    return;
+  }
 
-  const userData = await usersCollection.findOne({
+  const userData = await UserFuncionario.findOne({
     _id: new mongoose.Types.ObjectId(userId as string),
-  });
+  })
+    .populate({ path: "projetos.projeto", select: "-senha" })
+    .populate({
+      path: "tarefas",
+      populate: [
+        { path: "projeto" },
+        { path: "atribuidaPor", select: "-senha" }
+      ]
+    })
+    .exec();
 
-  delete userData!.senha;
+
+  console.log(userData.tarefas);
 
   res.status(200).json(userData);
 }

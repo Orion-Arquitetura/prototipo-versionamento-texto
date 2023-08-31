@@ -32,7 +32,7 @@ export default function ChangeProjectLiderModal({
   const { data: users, isLoading } = useGetFuncionarios();
   const { mutate: changeProjectLider } = useChangeProjectLider();
 
-  const projectLider: { nome: string; id: string; roles: ("cliente" | "projetista" | "lider" | "funcionario")[]; } | undefined = project.usuarios.find(user => user.roles.includes("lider"))
+  const projectLider = project.usuarios.lider
 
   function handleChangeProjectLider() {
     changeProjectLider({ user: selectedUser, project });

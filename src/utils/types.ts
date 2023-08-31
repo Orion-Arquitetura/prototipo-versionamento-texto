@@ -4,8 +4,7 @@ export type FuncionarioUser = {
   email: string;
   tipo: "funcionario" | "administrador";
   projetos: {
-    nome: string;
-    id: string;
+    projeto: Projeto;
     roles: Array<"projetista" | "lider" | "funcionario">;
   }[];
   tarefas: {
@@ -51,9 +50,8 @@ export type ClienteUser = {
   email: string;
   tipo: "cliente";
   projetos: {
-    nome: string;
-    id: string;
-    roles: "cliente";
+    projeto: Projeto;
+    roles: Array<"projetista" | "lider" | "funcionario">;
   }[];
   dataCriacao: string;
 };
@@ -63,9 +61,10 @@ export type Projeto = {
   nome: string;
   dataCriacao: string;
   usuarios: {
-    nome: string;
-    id: string;
-    roles: Array<"cliente" | "projetista" | "lider" | "funcionario">;
-  }[];
+    lider: FuncionarioUser,
+    projetistas: FuncionarioUser[],
+    clientes: ClienteUser[],
+    outros: FuncionarioUser[]
+  };
   arquivos: string[];
 };

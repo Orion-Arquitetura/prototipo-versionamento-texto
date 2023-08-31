@@ -1,6 +1,7 @@
 import { useGetProjects } from "@/hooks/projetos";
 import { Grid, Paper } from "@mui/material";
 import ProjectListItem from "./ProjectListItem";
+import Projeto from "@/database/models/projectModel";
 
 export default function ProjectsList() {
     const { data: projetos, isLoading } = useGetProjects();
@@ -8,6 +9,7 @@ export default function ProjectsList() {
     if (!isLoading && projetos.length === 0) {
         return <Paper elevation={8} sx={{p:3}}>Nenhum projeto disponível.</Paper>
     }
+
 
     return (
         <Grid
@@ -20,13 +22,13 @@ export default function ProjectsList() {
                     (projeto: {
                         nome: string;
                         _id: string;
-                        usuarios: any[];
+                        usuarios: { lider: string | null; projetistas: string[]; clientes: string[]; outros: string[] };
                         arquivos: any[];
                     }) => (
                         <ProjectListItem
                             key={projeto.nome}
                             title={projeto.nome}
-                            users={projeto.usuarios.length}
+                            users={projeto.usuarios}
                             arquivos={projeto.arquivos.length}
                             id={projeto._id}
                         />
