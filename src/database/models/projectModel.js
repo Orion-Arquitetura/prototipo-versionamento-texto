@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const projectSchema = new mongoose.Schema({
+export const projectSchema = new mongoose.Schema({
   nome: {
     type: String,
     required: true,

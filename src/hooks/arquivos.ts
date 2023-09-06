@@ -15,22 +15,14 @@ const createFile = async ({ fileData }: { fileData: any }) => {
   }
 };
 
-const deleteFile = async ({
-  fileID,
-  projectID,
-}: {
-  fileID: string;
-  projectID: string;
-}) => {
-  await fetch(
-    `/api/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`
-  );
+const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: string }) => {
+  await fetch(`/api/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`);
 };
 
 const getProjectFiles = async (projectID: string) => {
-  const files = await fetch(
-    `/api/arquivos/getProjectFiles?projectID=${projectID}`
-  ).then((res) => res.json());
+  const files = await fetch(`/api/arquivos/getProjectFiles?projectID=${projectID}`).then((res) =>
+    res.json()
+  );
   return files;
 };
 
@@ -58,9 +50,7 @@ const getFileBinaries = async (fileID: string) => {
 };
 
 const getFileMetadata = async (fileID: string) => {
-  const file = await fetch(`/api/arquivos/getFileMetadata?id=${fileID}`).then(
-    (res) => res.json()
-  );
+  const file = await fetch(`/api/arquivos/getFileMetadata?id=${fileID}`).then((res) => res.json());
   return file;
 };
 
@@ -79,6 +69,17 @@ const cancelFileReviewRequest = async (file: any) => {
   });
 };
 
+const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
+  await fetch("/api/arquivos/editFileReviewRequest", {
+    method: "POST",
+    body: JSON.stringify({ file, usuario, prazo, texto }),
+  });
+};
+
+const sendReviewedFile = async ({ fileData }: any) => {
+  await fetch("/api/arquivos/createNewFileFromRevision", { method: "POST", body: fileData });
+};
+
 //////////////////CUSTOM HOOKS AREA///////////////////
 
 export const useCreateFile = ({
@@ -93,9 +94,7 @@ export const useCreateFile = ({
     mutationFn: createFile,
     onSuccess: async () => {
       setTimeout(async () => {
-        await queryClient.invalidateQueries([
-          `project-${projectID}-${discipline}-files`,
-        ]);
+        await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
       }, 2000);
     },
   });
@@ -113,9 +112,7 @@ export const useDeleteFile = ({
   return useMutation({
     mutationFn: deleteFile,
     onSuccess: async () => {
-      await queryClient.invalidateQueries([
-        `project-${projectID}-${discipline}-files`,
-      ]);
+      await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
     },
   });
 };
@@ -185,6 +182,34 @@ export const useCancelFileReviewRequest = (file) => {
 
   return useMutation({
     mutationFn: cancelFileReviewRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
+      await queryClient.invalidateQueries([
+        `project-${file.metadata.projeto.id}-${file.metadata.disciplina}-files`,
+      ]);
+    },
+  });
+};
+
+export const useEditFileReviewRequest = (file) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: editFileReviewRequest,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
+      await queryClient.invalidateQueries([
+        `project-${file.metadata.projeto.id}-${file.metadata.disciplina}-files`,
+      ]);
+    },
+  });
+};
+
+export const useSendReviewedFile = (file) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: sendReviewedFile,
     onSuccess: async () => {
       await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
       await queryClient.invalidateQueries([

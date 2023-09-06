@@ -32,7 +32,8 @@ export const tarefaSchema = new mongoose.Schema({
         default: "",
     },
     arquivoFinal: {
-        type: mongoose.Schema.Types.ObjectId, ref: "Arquivos.files"
+        id: { type: mongoose.Schema.Types.ObjectId },
+        nome: String
     },
 })
 

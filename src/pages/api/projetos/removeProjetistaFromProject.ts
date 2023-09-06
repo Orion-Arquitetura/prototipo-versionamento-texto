@@ -1,4 +1,5 @@
 import Projeto from "@/database/models/projectModel";
+import Tarefa from "@/database/models/tarefaModel";
 import UserFuncionario from "@/database/models/userFuncionarioModel";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -21,9 +22,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const projectObjectID = new mongoose.Types.ObjectId(project._id);
 
-  const userObjectID = new mongoose.Types.ObjectId(user._id);
+  const userObjectID = new mongoose.Types.ObjectId(user._id || user.id);
 
-  await UserFuncionario.updateOne(
+  const userDocument = await UserFuncionario.findOneAndUpdate(
     {
       _id: userObjectID,
     },
@@ -32,7 +33,43 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         projetos: { projeto: projectObjectID },
       },
     }
-  );
+  )
+    .populate("tarefas")
+    .exec();
+
+  const tarefasPendentes = userDocument.tarefas
+    .filter((tarefa) => tarefa.projeto.toString() === project._id && tarefa.finalizada === false)
+    .map((tarefa) => new mongoose.Types.ObjectId(tarefa._id.toString()));
+
+  console.log(tarefasPendentes);
+
+  if (tarefasPendentes.length > 0) {
+    await Tarefa.deleteMany({ _id: tarefasPendentes });
+
+    const filesCollection = mongoose.connection.collection("Arquivos.files");
+    await filesCollection.updateMany(
+      { "metadata.tarefaId": { $in: tarefasPendentes } },
+      {
+        $set: {
+          "metadata.emRevisao": false,
+        },
+        $unset: {
+          "metadata.responsavelRevisao": 1,
+          "metadata.comentarioRevisao": 1,
+          "metadata.prazoRevisao": 1,
+          "metadata.tarefaId": 1,
+          "metadata.atribuidaPor": 1,
+        },
+      }
+    );
+
+    await UserFuncionario.updateOne(
+      { _id: userObjectID },
+      {
+        $pull: { tarefas: { $in: tarefasPendentes } },
+      }
+    );
+  }
 
   await Projeto.updateOne(
     {

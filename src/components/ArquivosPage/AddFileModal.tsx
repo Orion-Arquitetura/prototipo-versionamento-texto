@@ -18,10 +18,8 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     conteudoDoArquivo: "",
   });
 
-  console.log(project);
+  const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({ multiple: false });
 
-  const { getRootProps, getInputProps, isDragActive, acceptedFiles } =
-    useDropzone({ multiple: false });
   const { mutate: createFile } = useCreateFile({
     projectID: project._id,
     discipline: fileFilters.disciplina,

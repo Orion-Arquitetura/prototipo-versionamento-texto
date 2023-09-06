@@ -120,7 +120,7 @@ export default function FileListItem({ file }: { file: any }) {
               <Typography component={({ children }) => <Button color="secondary" variant="contained">{children}</Button>}>Visualizar</Typography>
             </Link>
 
-            {authData?.userType === "administrador" && (
+            {authData?.userType === "administrador" && file.metadata.ultimaVersao && (
               <Button
                 variant="contained"
                 color="error"

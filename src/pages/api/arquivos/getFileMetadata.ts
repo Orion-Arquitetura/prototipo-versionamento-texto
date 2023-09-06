@@ -3,10 +3,7 @@ import connectToDatabase from "@/database/mongodbConnection";
 import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
   const arquivosCollection = mongoose.connection.collection("Arquivos.files");
@@ -15,9 +12,11 @@ export default async function handler(
     _id: new mongoose.Types.ObjectId(id as string),
   });
 
-  const projetoData = await Projeto.findOne({_id: data!.metadata.projeto.id}).populate("usuarios.lider usuarios.projetistas usuarios.outros").exec()
-
-  data!.metadata.projeto = projetoData
+  const projetoData = await Projeto.findOne({ _id: data!.metadata.projeto.id })
+    .populate("usuarios.lider usuarios.projetistas usuarios.outros")
+    .exec();
+    
+  data!.metadata.projeto = projetoData;
 
   res.status(200).json(data);
 }

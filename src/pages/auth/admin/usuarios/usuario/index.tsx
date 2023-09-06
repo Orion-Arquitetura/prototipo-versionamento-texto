@@ -8,6 +8,8 @@ import { parseCookies } from "nookies";
 import { useState } from "react";
 import DeleteUserModal from "@/components/UsersManagingPage/DeleteUserModal";
 import { Projeto } from "@/utils/types";
+import Link from "next/link";
+import formatDate from "@/utils/formatDate";
 
 const StyledSwitch = styled(Switch)`
   & .MuiSwitch-track {
@@ -34,15 +36,9 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
     setDeleteUserModalState(false);
   }
 
-  function formatDate(date: string) {
-    return date.split("T")[0].split("-").reverse().join("/");
-  }
-
   if (isLoading) {
     return null;
   }
-
-  console.log(usuario.tarefas);
 
   const tarefasConcluidas =
     (!isLoading && usuario.tarefas.filter((tarefa) => !!tarefa.finalizada)) || [];
@@ -102,7 +98,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
             }}
           >
             <Typography variant="h6" sx={{ color: "white" }}>
-              Tarefas
+              Revisões
             </Typography>
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography sx={{ color: "white" }}>Em andamento</Typography>
@@ -124,7 +120,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
               )) ||
                 tarefasNaoConcluidas.map((tarefa) => (
                   <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
-                    <Typography>Arquivo: {tarefa.arquivoInicial.nome}</Typography>
+                    <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
                     <Typography>Prazo: {tarefa.prazo}</Typography>
                     <Typography>Atribuído por: {tarefa.atribuidaPor.nome}</Typography>
                   </Paper>
@@ -136,13 +132,13 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                   Usuário não tem nenhuma tarefa concluida.
                 </Paper>
               )) ||
-                tarefasConcluidas.map((tarefa) => (
+                tarefasConcluidas.map((tarefa) => {console.log(tarefa.dataFinalizacao); return (
                   <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
-                    <Typography>Arquivo: {tarefa.arquivoInicial.nome}</Typography>
-                    <Typography>Prazo estipulado: {tarefa.prazo}</Typography>
-                    <Typography>Data de finalização: {tarefa.dataFinalizacao}</Typography>
+                    <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
+                    <Typography>Prazo: {tarefa.prazo}</Typography>
+                    <Typography>Data de finalização: {formatDate(tarefa.dataFinalizacao)}</Typography>
                   </Paper>
-                )))}
+                )}))}
           </Paper>
         )}
         <Button variant="contained" color="error" onClick={openDeleteUserModalState}>

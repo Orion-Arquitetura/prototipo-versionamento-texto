@@ -21,7 +21,7 @@ export default function AddFileButton({project}:{project:Projeto}) {
       <Button
         onClick={openAddFileModal}
         variant="contained"
-        title="Adicionar arquivo"
+        title="Adicionar primeira versão de arquivo"
       >
         <Add />
       </Button>

@@ -46,12 +46,12 @@ export default function ResponsiveAppBar() {
             >
               Perfil
             </Link>
-            {authData?.userType === "funcionario" && <Link
+            {/* {authData?.userType === "funcionario" && <Link
               href={`/auth/tarefas?id=${authData?.userId}`}
               style={{ color: "black" }}
             >
               Tarefas
-            </Link>}
+            </Link>} */}
             {authData?.userType === "administrador" && <Link
               href={"/auth/admin"}
               style={{ color: "black" }}

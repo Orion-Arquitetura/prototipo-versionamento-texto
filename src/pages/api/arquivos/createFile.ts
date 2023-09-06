@@ -60,8 +60,8 @@ export default async function handler(
       emRevisao: false,
       revisoes: [],
       criadoPor: {
-        userName: cookies["user-nome"],
-        userId: cookies["user-id"],
+        userName: cookies["nome"],
+        userId: cookies["id"],
       },
     };
 
