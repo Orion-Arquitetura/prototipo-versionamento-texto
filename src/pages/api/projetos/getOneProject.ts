@@ -10,6 +10,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       select: "-senha",
     })
     .exec()
-    .then((res) => res);
+    
   res.status(200).json(data);
 }
