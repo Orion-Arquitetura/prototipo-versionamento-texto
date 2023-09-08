@@ -26,13 +26,13 @@ export default async function handler(
       disciplina,
       etapaDoProjeto,
       conteudoDoArquivo,
-    } = JSON.parse(fields.fileFilters as string);
+    } = JSON.parse(fields.fileFilters as any);
 
     if ((files.arquivo as File[])[0].mimetype !== "application/pdf") {
       throw new Error("Formato de arquivo inválido.");
     }
 
-    const projectData = await Projeto.findById(fields.projectId[0]);
+    const projectData = await Projeto.findById(fields.projectId![0]);
 
     const fileName = `${projectData.nome}.${conteudoDoArquivo}.${tipoDeConteudo}.${disciplina}.${etapaDoProjeto}-R00`;
 
@@ -48,7 +48,7 @@ export default async function handler(
 
     const newFileMetadata = {
       projeto: {
-        id: fields.projectId[0],
+        id: fields.projectId![0],
         nome: projectData.nome,
       },
       tipo: tipoDeConteudo,

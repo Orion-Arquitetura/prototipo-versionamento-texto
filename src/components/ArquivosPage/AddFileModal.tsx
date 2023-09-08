@@ -73,7 +73,7 @@ export default function AddFileModal({ open, handleClose, project }: any) {
   async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (acceptedFiles[0].path.match(/\.pdf$/)) {
+    // if (acceptedFiles[0].path.match(/\.pdf$/)) {
       const formData = new FormData();
       formData.append("arquivo", acceptedFiles[0]);
       formData.append("fileFilters", JSON.stringify(fileFilters));
@@ -82,11 +82,11 @@ export default function AddFileModal({ open, handleClose, project }: any) {
       acceptedFiles.pop();
       handleClose();
       return;
-    }
+    // }
 
-    window.alert("Formato de arquivo inválido.");
-    acceptedFiles.pop();
-    return;
+    // window.alert("Formato de arquivo inválido.");
+    // acceptedFiles.pop();
+    // return;
   }
 
   function cancelSubmit() {
