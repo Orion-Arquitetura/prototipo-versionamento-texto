@@ -12,7 +12,7 @@ import { TipoDeConteudoSchema } from "./models/tiposDeConteudoModel";
 let cachedBucket;
 
 async function connectToDatabase(dbname = "") {
-  const uri = process.env.MONGO_URI.replace("{dbname}", dbname);
+  const uri = process.env.MONGODB_URI.replace("{dbname}", dbname);
 
   if (mongoose.connection.readyState === 1) {
     console.log("Já está conectado");
