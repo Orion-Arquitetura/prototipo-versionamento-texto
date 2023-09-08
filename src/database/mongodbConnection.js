@@ -34,6 +34,7 @@ async function connectToDatabase(dbname = "") {
     .connect(uri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      dbName: "App"
     })
     .then(() => {
       console.log("Connected");
