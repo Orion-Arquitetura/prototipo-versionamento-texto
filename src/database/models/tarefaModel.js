@@ -22,7 +22,7 @@ export const tarefaSchema = new mongoose.Schema({
         default: false,
         required: true
     },
-    dataFinalizacao: { type: Date },
+    dataFinalizacao: { type: mongoose.Schema.Types.Mixed },
     textoRequerimento: {
         type: String,
         required: true

@@ -75,17 +75,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   );
 
-  console.log("//////////////////////////////////////////////")
-  console.log(newFileId)
-  console.log(newFileId.toString())
-  console.log("//////////////////////////////////////////////")
-
   await Tarefa.updateOne(
     { _id: new mongoose.Types.ObjectId(oldVersionData.metadata.tarefaId) },
     {
       $set: {
         textoResposta: texto,
-        dataFinalizacao: new Date().toLocaleDateString("pt-BR"),
+        dataFinalizacao: new Date().toLocaleDateString("pt-BR").split('T')[0],
         arquivoFinal: {
           id: new mongoose.Types.ObjectId(newFileId.toString()),
           nome: fileName,

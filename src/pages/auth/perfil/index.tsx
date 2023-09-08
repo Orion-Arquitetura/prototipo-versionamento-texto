@@ -163,7 +163,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                                             <Typography>Arquivo a revisar: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
                                             <Typography>Prazo: {tarefa.prazo}</Typography>
                                             <Typography>Arquivo resultado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoFinal.id } }}>{tarefa.arquivoFinal.nome}</Link></Typography>
-                                            <Typography>Data de conclusão: {new Date(tarefa.dataFinalizacao).toLocaleDateString("pt-BR")}</Typography>
+                                            <Typography>Data de conclusão: {formatDate(tarefa.dataFinalizacao)}</Typography>
                                         </Paper>
                                     )))}
                         </Paper>
