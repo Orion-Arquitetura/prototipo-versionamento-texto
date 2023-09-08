@@ -5,7 +5,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const data = await Disciplina.find();
+  const data = await Disciplina.find({});
 
   res.status(200).json(data);
 }
