@@ -4,9 +4,9 @@ import mongoose from "mongoose";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await connectToDatabase("App");
-
+  
   try {
+    await connectToDatabase("App");
     const filter = new ObjectId(req.body);
     const usersCollection = mongoose.connection.collection("Users");
     const userData = (await usersCollection.findOne({_id: filter}).then((res) => res)) as {

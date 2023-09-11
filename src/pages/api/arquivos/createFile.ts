@@ -11,11 +11,12 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const cookies = parseCookies({ req });
-
-  const { bucket } = await connectToDatabase("App");
-
+  
   try {
+    const cookies = parseCookies({ req });
+  
+    const { bucket } = await connectToDatabase("App");
+    
     const form = formidable({});
 
     const [fields, files] = await form.parse(req);

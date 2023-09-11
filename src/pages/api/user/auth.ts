@@ -4,11 +4,10 @@ import connectToDatabase from "@/database/mongodbConnection";
 import mongoose from "mongoose";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  await connectToDatabase("App");
-
-  const { email, senha } = JSON.parse(req.body);
-
   try {
+    await connectToDatabase("App");
+
+    const { email, senha } = JSON.parse(req.body);
     const usersCollection = mongoose.connection.collection("Users");
     const user = await usersCollection
       .findOne({
@@ -18,7 +17,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       .then((result: any) => result);
 
     if (user === null) {
-      throw new Error("Usuário não existe")
+      throw new Error("Usuário não existe");
     } else {
       res.status(200).json({
         nome: user.nome,
@@ -27,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         id: user._id,
         token: uuid(),
         projetos: user.projetos,
-        tarefas: user.tarefas
+        tarefas: user.tarefas,
       });
     }
 

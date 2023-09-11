@@ -6,6 +6,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+ try {
   if (req.method !== "POST") {
     res.status(405).end();
     return;
@@ -79,4 +80,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   );
 
   res.status(200).end();
+ } catch(e) {
+  console.log(e)
+  res.status(500).end()
+ }
 }

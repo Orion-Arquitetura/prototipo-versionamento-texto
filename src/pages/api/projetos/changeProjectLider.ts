@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+ try {
   const { user, project } = JSON.parse(req.body);
 
   const projectObjectID = new mongoose.Types.ObjectId(project._id);
@@ -52,6 +53,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   res.status(200).end();
   return;
+ } catch(e) {
+  console.log(e)
+  res.status(500).end()
+ }
 
   // const usuarioLiderAtual: {
   //   nome: string;

@@ -5,7 +5,8 @@ import { parseCookies } from "nookies";
 import UserFuncionario from "@/database/models/userFuncionarioModel";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { file, usuario, prazo, texto } = JSON.parse(req.body);
+  try {
+    const { file, usuario, prazo, texto } = JSON.parse(req.body);
 
   const {"id": usuarioQueAtribuiuTarefa, "nome": usuarioQueAtribuiuNome, tipo} = parseCookies({req});
 
@@ -56,4 +57,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
   res.status(403).end()
+  } catch (e) {
+    console.log(e)
+    res.status(500).end()
+  }
 }

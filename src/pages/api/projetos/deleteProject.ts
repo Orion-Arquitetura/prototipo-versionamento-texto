@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+try {
   const projeto = JSON.parse(req.body);
 
   const usuarios = [
@@ -37,4 +38,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await Promise.all(deletePromises);
 
   res.status(200).end();
+} catch(e) {
+  console.log(e)
+  res.status(500).end()
+}
 }

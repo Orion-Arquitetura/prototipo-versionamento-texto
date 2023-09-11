@@ -3,15 +3,9 @@ import UserFuncionario from "@/database/models/userFuncionarioModel";
 import UserAdministrador from "@/database/models/userAdministradorModel";
 import UserCliente from "@/database/models/userClienteModel";
 import connectToDatabase from "@/database/mongodbConnection";
-import {
-  sanitizeEmail,
-  sanitizeInputKeepOnlyLettersAndSpaces,
-} from "@/utils/sanitizeInput";
+import { sanitizeEmail, sanitizeInputKeepOnlyLettersAndSpaces } from "@/utils/sanitizeInput";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
     await connectToDatabase("App");
 
@@ -35,8 +29,8 @@ export default async function handler(
       const user = await UserAdministrador.create({
         nome: sanitizeInputKeepOnlyLettersAndSpaces(nome),
         email: sanitizedEmail,
-      }).then(result => result);;
-      delete user.senha
+      }).then((result) => result);
+      delete user.senha;
       res.status(200).json(user);
       return;
     }
@@ -45,8 +39,8 @@ export default async function handler(
       const user = await UserCliente.create({
         nome: sanitizeInputKeepOnlyLettersAndSpaces(nome),
         email: sanitizedEmail,
-      }).then(result => result);;
-      delete user.senha
+      }).then((result) => result);
+      delete user.senha;
       res.status(200).json(user);
       return;
     }
@@ -55,13 +49,13 @@ export default async function handler(
       const user = await UserFuncionario.create({
         nome: sanitizeInputKeepOnlyLettersAndSpaces(nome),
         email: sanitizedEmail,
-      }).then(result => result);;
-      delete user.senha
+      }).then((result) => result);
+      delete user.senha;
       res.status(200).json(user);
       return;
     }
   } catch (e: any) {
-    res.status(400).json({erro: e.message});
+    res.status(400).json({ erro: e.message });
   }
 
   res.status(400).end();

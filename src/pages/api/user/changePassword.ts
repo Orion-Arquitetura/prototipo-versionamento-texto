@@ -3,7 +3,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { newPassword, user } = JSON.parse(req.body);
+  try {
+    const { newPassword, user } = JSON.parse(req.body);
 
   const cookiesUserID = parseCookies({ req })["id"];
 
@@ -20,4 +21,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   );
 
   res.status(200).end();
+  } catch(e) {
+    console.log(e)
+    res.status(500).end()
+  }
 }

@@ -5,33 +5,38 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { parseCookies } from "nookies";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { fileID, projectID } = req.query;
+  try {
+    const { fileID, projectID } = req.query;
 
-  const { bucket } = await connectToDatabase();
+    const { bucket } = await connectToDatabase();
 
-  const arquivosCollection = mongoose.connection.collection("Arquivos.files");
+    const arquivosCollection = mongoose.connection.collection("Arquivos.files");
 
-  const arquivo = await arquivosCollection.findOne({
-    _id: new mongoose.Types.ObjectId(fileID as string),
-  });
+    const arquivo = await arquivosCollection.findOne({
+      _id: new mongoose.Types.ObjectId(fileID as string),
+    });
 
-  await arquivosCollection.updateOne(
-    { "metadata.versao": arquivo!.metadata.versao - 1 },
-    {
-      $set: { "metadata.ultimaVersao": true },
-    }
-  );
+    await arquivosCollection.updateOne(
+      { "metadata.versao": arquivo!.metadata.versao - 1 },
+      {
+        $set: { "metadata.ultimaVersao": true },
+      }
+    );
 
-  await bucket.delete(new mongoose.Types.ObjectId(fileID as string));
+    await bucket.delete(new mongoose.Types.ObjectId(fileID as string));
 
-  await Projeto.updateOne(
-    { _id: new mongoose.Types.ObjectId(projectID as string) },
-    {
-      $pull: {
-        arquivos: { id: new mongoose.Types.ObjectId(fileID as string) },
-      },
-    }
-  );
+    await Projeto.updateOne(
+      { _id: new mongoose.Types.ObjectId(projectID as string) },
+      {
+        $pull: {
+          arquivos: { id: new mongoose.Types.ObjectId(fileID as string) },
+        },
+      }
+    );
 
-  res.status(200).end();
+    res.status(200).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
 }

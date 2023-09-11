@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.query;
+  try {
+    const { id } = req.query;
 
   const arquivosCollection = mongoose.connection.collection("Arquivos.files");
 
@@ -19,4 +20,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   data!.metadata.projeto = projetoData;
 
   res.status(200).json(data);
+  } catch(e) {
+    console.log(e)
+    res.status(500).end()
+  }
 }

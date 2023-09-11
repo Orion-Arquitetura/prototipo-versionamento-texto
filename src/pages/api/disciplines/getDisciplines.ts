@@ -5,7 +5,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const data = await Disciplina.find({});
 
-  res.status(200).json(data);
+  try {
+    const data = await Disciplina.find({});
+  
+    res.status(200).json(data);
+  } catch(e) {
+    console.log(e)
+    res.status(500).end()
+  }
+
 }
