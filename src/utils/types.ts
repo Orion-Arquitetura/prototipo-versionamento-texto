@@ -59,6 +59,8 @@ export type ClienteUser = {
 export type Projeto = {
   _id: string;
   nome: string;
+  ano: string;
+  numero: number;
   dataCriacao: string;
   usuarios: {
     lider: FuncionarioUser,

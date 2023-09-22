@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 
-const getConteudosDeArquivo = async () => {
+const getTiposDeDocumento = async () => {
   const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getTiposDeDocumento").then(
     (res) => res.json()
   );
   return disciplinas;
 };
 
-export const useGetConteudosDeArquivo = () => {
+export const useGetTiposDeConteudos = () => {
   return useQuery({
-    queryKey: ["conteudos-de-arquivo"],
-    queryFn: getConteudosDeArquivo,
+    queryKey: ["tipos-de-documento"],
+    queryFn: getTiposDeDocumento,
     staleTime: Infinity,
   });
 };

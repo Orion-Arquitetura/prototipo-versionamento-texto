@@ -3,10 +3,10 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function EtapaDoProjetoSelect({
   setEtapaDoProjeto,
-  selectedEtapaDoProjeto,
+  selectedTipoDeArquivo,
 }: {
   setEtapaDoProjeto: (etapa:string) => void;
-  selectedEtapaDoProjeto: string;
+  selectedTipoDeArquivo: string;
 }) {
   const { data: etapasDoProjeto, isLoading } = useGetEtapasDoProjeto();
 
@@ -14,7 +14,7 @@ export default function EtapaDoProjetoSelect({
     <FormControl fullWidth>
       <InputLabel>Etapa do projeto</InputLabel>
       <Select
-        value={selectedEtapaDoProjeto}
+        value={selectedTipoDeArquivo}
         label="Etapa do projeto"
         onChange={(ev) => setEtapaDoProjeto(ev.target.value)}
       >

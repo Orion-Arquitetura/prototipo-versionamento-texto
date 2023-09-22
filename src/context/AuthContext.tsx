@@ -1,126 +1,134 @@
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Router from "next/router";
-import { setCookie, destroyCookie, parseCookies } from "nookies";
-import { ReactNode, createContext, useState, useEffect, useCallback } from "react";
+import { destroyCookie, setCookie } from "nookies";
+import { ReactNode, createContext, useEffect, useState } from "react";
 
 type AuthContextType = {
-    authData: AuthData | null
-    auth: (email: string, senha: string) => void
-    logOff: () => void
-    isLoadingUserData: boolean
-}
+  userData: any;
+  auth: (email: string, senha: string) => void;
+  logOff: () => void;
+  isLoadingUserData: boolean;
+};
 
-type AuthData = {
-    userName: string,
-    userEmail: string,
-    userId: string,
-    userType: string,
-    token: string,
-    projetos: { nome: string, id: string }[]
-    tarefas: string[]
-}
-
-export const AuthContext = createContext({} as AuthContextType)
+export const AuthContext = createContext({} as AuthContextType);
 
 export default function AuthContextProvider({ children }: { children: ReactNode }) {
-    const [authData, setAuthData] = useState<AuthData | null>(null);
-    const [isLoadingUserData, setIsLoadingUserData] = useState(false);
-
-    async function auth(email: string, senha: string) {
-        setIsLoadingUserData(true)
-
-        const response = await fetch("/api/auth/authUser", { method: "POST", body: JSON.stringify({ email, senha }) }).then(res => res.json())
-
-        if (response.erro) {
-            window.alert(response.erro)
-            setIsLoadingUserData(false)
-            return
+  const [isLoadingUserData, setIsLoadingUserData] = useState(false);
+  const [userData, setUserData] = useState<{} | null>(null);
+  const queryClient = useQueryClient();
+  const { data: userCookies } = useQuery({
+    queryKey: ["user-cookies"],
+    queryFn: async () => {
+      const response = await fetch("https://orion-code-backend.onrender.com/users/getCookies", {
+        credentials: "include",
+      }).then((res) => {
+        if (res.status === 400) {
+          return false;
         }
 
-        setAuthData({
-            userName: response.userData.nome,
-            userEmail: response.userData.email,
-            userId: response.userData._id,
-            userType: response.userData.tipo,
-            token: response.userData.token,
-            projetos: response.userData.projetos || [],
-            tarefas: response.userData.tarefas || []
-        })
+        return res.json();
+      });
+      return response;
+    },
+  });
 
-        setCookie(null, "nome", response.userData.nome, {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
-        setCookie(null, "token", response.userData.token, {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
-        setCookie(null, "email", response.userData.email, {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
-        setCookie(null, "id", response.userData._id, {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
-        setCookie(null, "tipo", response.userData.tipo, {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
-        setCookie(null, "projetos", JSON.stringify(response.userData.projetos || []), {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
-        setCookie(null, "tarefas", JSON.stringify(response.userData.tarefas || []), {
-            maxAge: 60 * 60 * 24,
-            path: "/"
-        });
+  useEffect(() => {
+    setUserData(userCookies);
+  }, [userCookies]);
 
-        await Router.replace("/auth/projetos");
+  async function auth(email: string, senha: string) {
+    setIsLoadingUserData(true);
 
-        return
+    const response = await fetch("https://orion-code-backend.onrender.com/users/authUser", {
+      method: "POST",
+      body: JSON.stringify({ email, senha }),
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then(async (res) => {
+      await queryClient.invalidateQueries(["user-cookies"]);
+      return res.json();
+    });
+
+    if (response.erro) {
+      window.alert(response.erro);
+      setIsLoadingUserData(false);
+      return;
     }
 
-    async function logOff() {
-        try {
-            destroyCookie(null, "nome", { path: "/" });
-            destroyCookie(null, "token", { path: "/" });
-            destroyCookie(null, "email", { path: "/" });
-            destroyCookie(null, "id", { path: "/" });
-            destroyCookie(null, "tipo", { path: "/" });
-            destroyCookie(null, "projetos", { path: "/" });
-            destroyCookie(null, "tarefas", { path: "/" });
-            setIsLoadingUserData(false)
-            setAuthData(null)
-        } finally {
-            await Router.replace("/")
-        }
-        return
+    setCookie(null, "client_tipo", response.tipo, {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
+    setCookie(null, "client_id", response.id, {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
+    setCookie(null, "client_nome", response.nome, {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
+    setCookie(null, "client_email", response.email, {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
+    setCookie(null, "client_projetos", JSON.stringify(response.projetos || []), {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
+    setCookie(null, "client_tarefas", JSON.stringify(response.tarefas || []), {
+      path: "/",
+      maxAge: 60 * 60 * 24,
+      sameSite: "none",
+      secure: true,
+    });
+
+    await Router.replace("/auth/projetos");
+
+    return;
+  }
+
+  async function logOff() {
+    try {
+      setIsLoadingUserData(true);
+      await fetch("https://orion-code-backend.onrender.com/users/logOff", {
+        credentials: "include",
+      }).then(async (res) => {
+        await queryClient.invalidateQueries(["user-cookies"]);
+      });
+      setIsLoadingUserData(false);
+    } finally {
+      destroyCookie(null, "client_tipo", {
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        sameSite: "none",
+        secure: true,
+      });
+      destroyCookie(null, "client_id", {
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        sameSite: "none",
+        secure: true,
+      });
+      await Router.replace("/");
     }
+    return;
+  }
 
-    useEffect(() => {
-        const { tipo, email, id, token, nome, projetos, tarefas } = parseCookies();
-
-        if (token === undefined) {
-            logOff()
-            return
-        }
-
-        setAuthData({
-            userName: nome,
-            userEmail: email,
-            userId: id,
-            userType: tipo,
-            token: token,
-            projetos: JSON.parse(projetos) || [],
-            tarefas: JSON.parse(tarefas) || []
-        })
-
-    }, [])
-
-
-    return (
-        <AuthContext.Provider value={{ authData, auth, logOff, isLoadingUserData }}>
-            {children}
-        </AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider value={{ auth, logOff, isLoadingUserData, userData }}>
+      {children}
+    </AuthContext.Provider>
+  );
 }

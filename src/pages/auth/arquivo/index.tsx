@@ -9,7 +9,7 @@ import { useContext } from "react";
 import { parseCookies } from "nookies";
 
 export default function Arquivo({ fileId }: { fileId: string }) {
-  const { authData } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
 
   const { data: file, isLoading: isLoadingFile } = useGetFileMetadata(fileId);
 
@@ -28,7 +28,7 @@ export default function Arquivo({ fileId }: { fileId: string }) {
         </Grid>
 
         <Grid item xs={true}>
-          {!isLoadingFile && <FileInfoPanel file={file} userData={authData} />}
+          {!isLoadingFile && <FileInfoPanel file={file} userData={userData} />}
         </Grid>
       </Grid>
     </Container>
@@ -40,7 +40,7 @@ export function getServerSideProps(context: GetServerSidePropsContext) {
 
   const cookies = parseCookies(context);
 
-  if (!cookies.token) {
+  if (cookies.client_tipo === undefined) {
     return {
       redirect: {
         destination: "/",

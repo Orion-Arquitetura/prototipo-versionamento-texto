@@ -13,16 +13,34 @@ const createFile = async ({ fileData }: { fileData: any }) => {
   } catch (e) {
     window.alert(e);
   }
+
+  // try {
+  //   const resposta = await fetch("https://orion-code-backend.onrender.com/arquivos/createFile", {
+  //     method: "POST",
+  //     body: fileData,
+  //     headers: {
+  //       "Content-Type": "multipart/form-data"
+  //     }
+  //   }).then((result) => result.json());
+
+  //   if (resposta.Erro) {
+  //     throw new Error(resposta.Erro);
+  //   }
+  // } catch (e) {
+  //   window.alert(e);
+  // }
 };
 
 const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: string }) => {
-  await fetch(`/api/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`);
+  await fetch(`https://orion-code-backend.onrender.com/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`, {
+    method: "DELETE",
+  });
 };
 
 const getProjectFiles = async (projectID: string) => {
-  const files = await fetch(`/api/arquivos/getProjectFiles?projectID=${projectID}`).then((res) =>
-    res.json()
-  );
+  const files = await fetch(
+    `https://orion-code-backend.onrender.com/arquivos/getProjectFiles?projectID=${projectID}`
+  ).then((res) => res.json());
   return files;
 };
 
@@ -34,7 +52,7 @@ const getFilesByDiscipline = async ({
   discipline: string;
 }) => {
   const files = await fetch(
-    `/api/arquivos/getFilesByDiscipline?projectID=${projectID}&discipline=${discipline}`
+    `https://orion-code-backend.onrender.com/arquivos/getFilesByDiscipline?projectID=${projectID}&discipline=${discipline}`
   ).then((res) => {
     return res.json();
   });
@@ -42,7 +60,7 @@ const getFilesByDiscipline = async ({
 };
 
 const getFileBinaries = async (fileID: string) => {
-  const fileUrl = await fetch(`/api/arquivos/getFileBinaries?id=${fileID}`)
+  const fileUrl = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileBinaries?id=${fileID}`)
     .then((res) => res.blob())
     .then((res) => URL.createObjectURL(res));
 
@@ -50,34 +68,50 @@ const getFileBinaries = async (fileID: string) => {
 };
 
 const getFileMetadata = async (fileID: string) => {
-  const file = await fetch(`/api/arquivos/getFileMetadata?id=${fileID}`).then((res) => res.json());
+  const file = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileMetadata?id=${fileID}`).then(
+    (res) => res.json()
+  );
   return file;
 };
 
-const addFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
-  await fetch("/api/arquivos/requestFileReview", {
+const createFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
+  await fetch("https://orion-code-backend.onrender.com/arquivos/createFileReviewRequest", {
     method: "POST",
     body: JSON.stringify({ file, usuario, prazo, texto }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
   });
 };
 
 const cancelFileReviewRequest = async (file: any) => {
-  console.log(file);
-  await fetch("/api/arquivos/cancelFileReviewRequest", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/arquivos/cancelFileReviewRequest", {
+    method: "DELETE",
     body: JSON.stringify(file),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
   });
 };
 
 const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
-  await fetch("/api/arquivos/editFileReviewRequest", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/arquivos/editFileReviewRequest", {
+    method: "PATCH",
     body: JSON.stringify({ file, usuario, prazo, texto }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
   });
 };
 
-const sendReviewedFile = async ({ fileData }: any) => {
-  await fetch("/api/arquivos/createNewFileFromRevision", { method: "POST", body: fileData });
+const createNewFileFromRevision = async ({ fileData }: any) => {
+  await fetch("/api/arquivos/createNewFileFromRevision", {
+    method: "POST",
+    body: fileData,
+  });
 };
 
 //////////////////CUSTOM HOOKS AREA///////////////////
@@ -163,11 +197,11 @@ export const useGetFileMetadata = (fileID: string) => {
   });
 };
 
-export const useFileReviewRequest = (file) => {
+export const useCreateFileReviewRequest = (file) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: addFileReviewRequest,
+    mutationFn: createFileReviewRequest,
     onSuccess: async () => {
       await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
       await queryClient.invalidateQueries([
@@ -209,7 +243,7 @@ export const useSendReviewedFile = (file) => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: sendReviewedFile,
+    mutationFn: createNewFileFromRevision,
     onSuccess: async () => {
       await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
       await queryClient.invalidateQueries([

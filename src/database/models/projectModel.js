@@ -6,6 +6,14 @@ export const projectSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  ano: {
+    type: Number,
+    required: true
+  },
+  numero: {
+    type: Number,
+    required: true
+  },
   dataCriacao: {
     type: Date,
     default: Date.now,

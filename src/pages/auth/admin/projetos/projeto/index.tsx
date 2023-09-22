@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
 import Router from "next/router";
+import { parseCookies } from "nookies";
 import { useState } from "react";
 
 export default function Projeto({ id }: { id: string }) {
@@ -39,7 +40,7 @@ export default function Projeto({ id }: { id: string }) {
     <Container sx={{ pb: 5 }}>
       <PageTitle title={`Gerenciar projeto - ${projeto.nome}`} hasBackButton />
       <Paper elevation={8} sx={{ p: 3 }}>
-        <Typography variant="h5">{projeto.nome}</Typography>
+        <Typography variant="h5">{projeto.ano}-{projeto.nome}</Typography>
 
         <Typography variant="caption">
           Criado em: {formatDate(projeto.dataCriacao)}
@@ -64,7 +65,7 @@ export default function Projeto({ id }: { id: string }) {
 
           <ProjectUsers tipo="funcionario" project={projeto} />
         </Paper>
-        <Button variant="contained" color="error" sx={{mt: 2 }} onClick={openDeleteProjectModal}>Excluir projeto</Button>
+        <Button variant="contained" color="error" sx={{ mt: 2 }} onClick={openDeleteProjectModal}>Excluir projeto</Button>
       </Paper>
       <DeleteProjectModal open={deleteProjectModalState} handleClose={closeDeleteProjectModal} project={projeto} />
     </Container>
@@ -75,6 +76,17 @@ export default function Projeto({ id }: { id: string }) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id } = context.query;
+
+  const cookies = parseCookies(context);
+
+  if ((cookies.client_tipo !== "administrador") || (cookies.client_tipo === undefined)) {
+      return {
+          redirect: {
+              destination: "/",
+              permanent: false
+          }
+      }
+  }
 
   return {
     props: { id },

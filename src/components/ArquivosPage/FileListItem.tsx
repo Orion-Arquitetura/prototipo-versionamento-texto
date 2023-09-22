@@ -13,8 +13,6 @@ import {
 import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
-// import DeleteFileModal from "./DeleteFileModal";
-// import { Arquivo } from "@/utils/interfaces";
 import Link from "next/link";
 import { useDeleteFile } from "@/hooks/arquivos";
 import { theme } from "@/theme/theme";
@@ -41,7 +39,7 @@ export default function FileListItem({ file }: { file: any }) {
   const [open, setOpen] = useState(false);
   const [deleteFileModalState, setDeleteFileModalState] = useState(false);
 
-  const { authData } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
   const { mutate: deleteFile } = useDeleteFile({ projectID: file.metadata.projeto.id, discipline: file.metadata.disciplina })
 
   function handleCloseDeleteFileModal() {
@@ -120,7 +118,7 @@ export default function FileListItem({ file }: { file: any }) {
               <Typography component={({ children }) => <Button color="secondary" variant="contained">{children}</Button>}>Visualizar</Typography>
             </Link>
 
-            {authData?.userType === "administrador" && file.metadata.ultimaVersao && (
+            {userData.tipo === "administrador" && file.metadata.ultimaVersao && (
               <Button
                 variant="contained"
                 color="error"

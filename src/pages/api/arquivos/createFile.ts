@@ -4,8 +4,13 @@ import { parseCookies } from "nookies";
 import connectToDatabase from "@/database/mongodbConnection";
 import formidable, { File } from "formidable";
 import { createReadStream } from "fs";
+import mongoose from "mongoose";
 
-function isFileValid(file: any) {}
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,20 +27,20 @@ export default async function handler(
     const [fields, files] = await form.parse(req);
 
     const {
-      tipoDeArquivo,
-      tipoDeConteudo,
+      tipoDeDocumento,
       disciplina,
       etapaDoProjeto,
-      conteudoDoArquivo,
     } = JSON.parse(fields.fileFilters as any);
+
+    const numeroDaPrancha = fields.numeroPrancha![0]
 
     if ((files.arquivo as File[])[0].mimetype !== "application/pdf") {
       throw new Error("Formato de arquivo inválido.");
     }
 
-    const projectData = await Projeto.findById(fields.projectId![0]);
+    const projectData = await Projeto.findById(fields.projectId![0]).exec()
 
-    const fileName = `${projectData.nome}.${conteudoDoArquivo}.${tipoDeConteudo}.${disciplina}.${etapaDoProjeto}-R00`;
+    const fileName = `${projectData.ano}-${projectData.numero > 9 ? projectData.numero : `0${projectData.numero}`}-${projectData.nome}-${numeroDaPrancha}-${tipoDeDocumento}-${disciplina}-${etapaDoProjeto}-R00`;
 
     const fileAlreadyExists = await bucket
       .find({ filename: fileName })
@@ -52,10 +57,10 @@ export default async function handler(
         id: fields.projectId![0],
         nome: projectData.nome,
       },
-      tipo: tipoDeConteudo,
+      numeroDaPrancha,
+      tipoDeDocumento,
       disciplina,
       etapa: etapaDoProjeto,
-      conteudo: conteudoDoArquivo,
       versao: 0,
       ultimaVersao: true,
       emRevisao: false,
@@ -72,15 +77,19 @@ export default async function handler(
       metadata: newFileMetadata,
     });
 
-    const newFileId = uploadStream.id;
-
-    projectData.arquivos.push({ disciplina, id: newFileId });
-
-    await projectData.save();
-
-    const readStream = createReadStream(file.filepath);
-
-    readStream.pipe(uploadStream);
+    try {
+      const newFileId = uploadStream.id;
+  
+      projectData.arquivos.push({ disciplina, id: newFileId });
+  
+      await projectData.save();
+  
+      const readStream = createReadStream(file.filepath);
+  
+      readStream.pipe(uploadStream);
+    } catch(e) {
+      throw e
+    } 
 
     res.status(201).json({ok: "Ok"});
   } catch (e: any) {
@@ -89,8 +98,3 @@ export default async function handler(
   }
 }
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};

@@ -40,10 +40,10 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
     return null;
   }
 
-  const tarefasConcluidas =
-    (!isLoading && usuario.tarefas.filter((tarefa) => !!tarefa.finalizada)) || [];
-  const tarefasNaoConcluidas =
-    (!isLoading && usuario.tarefas.filter((tarefa) => !tarefa.finalizada)) || [];
+  const tarefasConcluidas = usuario.tarefas ?
+    !isLoading && usuario.tarefas.filter((tarefa) => !!tarefa.finalizada) : [];
+  const tarefasNaoConcluidas = usuario.tarefas ?
+    !isLoading && usuario.tarefas.filter((tarefa) => !tarefa.finalizada) : [];
 
   return (
     <Container sx={{ pb: 10 }}>
@@ -132,13 +132,15 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                   Usuário não tem nenhuma tarefa concluida.
                 </Paper>
               )) ||
-                tarefasConcluidas.map((tarefa) => {console.log(tarefa.dataFinalizacao); return (
-                  <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
-                    <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
-                    <Typography>Prazo: {tarefa.prazo}</Typography>
-                    <Typography>Data de finalização: {formatDate(tarefa.dataFinalizacao)}</Typography>
-                  </Paper>
-                )}))}
+                tarefasConcluidas.map((tarefa) => {
+                  console.log(tarefa.dataFinalizacao); return (
+                    <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
+                      <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
+                      <Typography>Prazo: {tarefa.prazo}</Typography>
+                      <Typography>Data de finalização: {formatDate(tarefa.dataFinalizacao)}</Typography>
+                    </Paper>
+                  )
+                }))}
           </Paper>
         )}
         <Button variant="contained" color="error" onClick={openDeleteUserModalState}>
@@ -157,15 +159,15 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { id, type } = context.query;
 
-  const tipo = parseCookies(context)["tipo"];
+  const cookies = parseCookies(context);
 
-  if (tipo !== "administrador") {
-    return {
-      redirect: {
-        destination: "/auth/projetos",
-        permanent: false,
-      },
-    };
+  if ((cookies.client_tipo !== "administrador") || (cookies.client_tipo === undefined)) {
+      return {
+          redirect: {
+              destination: "/",
+              permanent: false
+          }
+      }
   }
 
   return {

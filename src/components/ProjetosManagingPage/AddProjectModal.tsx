@@ -13,7 +13,7 @@ import {
     MenuItem,
     Select,
 } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export default function AddProjectModal({
     open,
@@ -26,11 +26,13 @@ export default function AddProjectModal({
     const { mutate: createProject } = useCreateProject();
     const [projectData, setProjectData] = useState<{
         nome: string;
+        ano: string;
         cliente: { nome: string; id: string, roles: ["cliente"] } | null;
         lider: { nome: string; id: string, roles: ["funcionario", "lider"] } | null;
         projetista: { nome: string; id: string, roles: ["funcionario", "projetista"] } | null;
     }>({
         nome: "",
+        ano: "",
         cliente: null,
         lider: null,
         projetista: null,
@@ -46,6 +48,13 @@ export default function AddProjectModal({
         setProjectData((prevData) => ({
             ...prevData,
             nome: value,
+        }));
+    }
+
+    function setAno(value: string) {
+        setProjectData((prevData) => ({
+            ...prevData,
+            ano: value,
         }));
     }
 
@@ -76,11 +85,21 @@ export default function AddProjectModal({
             return;
         }
 
+        if (!/^\d+$/.test(projectData.ano)) {
+            window.alert("Ano de projeto inválido, apenas números são permitidos.");
+            return;
+        }
+
+        if (projectData.ano.length < 4) {
+            window.alert("Digite o ano inteiro.");
+        }
+
         console.log(projectData)
         createProject(projectData)
 
         setProjectData({
             nome: "",
+            ano: "",
             cliente: null,
             lider: null,
             projetista: null,
@@ -92,6 +111,7 @@ export default function AddProjectModal({
     function cancelSubmit() {
         setProjectData({
             nome: "",
+            ano: "",
             cliente: null,
             lider: null,
             projetista: null,
@@ -108,16 +128,25 @@ export default function AddProjectModal({
         >
             <Paper elevation={8} sx={{ p: 3, maxWidth: "50%" }}>
                 <form>
-                    <Grid container rowGap={2}>
+                    <Grid container rowGap={2} columnGap={1}>
                         <Grid item xs={12}>
-                            <Typography>Criar novo projeto</Typography>
+                            <Typography variant="h5" textAlign="center">Criar novo projeto</Typography>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={9}>
                             <TextField
                                 onChange={(ev) => setNome(ev.target.value.toUpperCase())}
                                 fullWidth
                                 label={"Nome do projeto"}
                                 required
+                            />
+                        </Grid>
+                        <Grid item xs={true}>
+                            <TextField
+                                onChange={(ev) => setAno(ev.target.value)}
+                                fullWidth
+                                label={"Ano do projeto"}
+                                required
+                                inputProps={{ maxLength: 4 }}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -204,7 +233,8 @@ export default function AddProjectModal({
                                 </Select>
                             </FormControl>
                         </Grid>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} display="flex" justifyContent={"space-between"}>
+                            <Button onClick={cancelSubmit} variant="contained" color="error">Cancelar</Button>
                             <Button onClick={handleCreateProject} variant="contained">Enviar</Button>
                         </Grid>
                     </Grid>

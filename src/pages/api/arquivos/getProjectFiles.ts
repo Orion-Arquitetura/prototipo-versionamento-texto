@@ -16,8 +16,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(200).json({ projectName: projeto.nome });
     }
 
-    console.log(arquivos);
-
     return res.status(200).json(arquivos);
   } catch (e) {
     console.log(e);

@@ -29,7 +29,7 @@ export default function ChangeEmailModal({
             window.alert("Digite um email válido")
             return
         }
-        changeEmail({ newEmail, user })
+        changeEmail({ newEmail, userID: user._id })
         handleClose()
 
     }

@@ -9,13 +9,13 @@ import { parseCookies } from "nookies";
 import { useState } from "react";
 
 
-export default function Projeto({ projectID }: { projectID: string }) {
+export default function Projeto({ projectID, tipoDeUsuarioAcessando, idUsuarioAcessando }: { projectID: string, tipoDeUsuarioAcessando: string, idUsuarioAcessando: string }) {
     const { data: project, isLoading: isLoadingProject } = useGetOneProject(projectID);
     const [selectedDiscipline, setSelectedDiscipline] = useState({ nome: "", sigla: "" })
 
     return (
         <Container sx={{ mt: 2 }}>
-            {!isLoadingProject && <ProjectsPageToolbar project={project} />}
+            {!isLoadingProject && <ProjectsPageToolbar project={project} tipoDeUsuarioAcessando={tipoDeUsuarioAcessando} idUsuarioAcessando={idUsuarioAcessando} />}
             <Grid container columnGap={1}>
                 <Grid item xs={3}>
                     <DisciplinesList selectedDiscipline={selectedDiscipline} setSelectedDiscipline={setSelectedDiscipline} />
@@ -43,7 +43,7 @@ export default function Projeto({ projectID }: { projectID: string }) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const cookies = parseCookies(context);
 
-    if (!cookies.token) {
+    if (cookies.client_tipo === undefined) {
         return {
             redirect: {
                 destination: "/",
@@ -54,7 +54,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     return {
         props: {
-            projectID: context.query.id
+            projectID: context.query.id,
+            tipoDeUsuarioAcessando: cookies.client_tipo,
+            idUsuarioAcessando: cookies.client_tipo
         }
     }
 }

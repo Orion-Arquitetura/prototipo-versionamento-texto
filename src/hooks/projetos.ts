@@ -2,34 +2,45 @@ import { Projeto } from "@/utils/types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getProjects = async () => {
-  const projetos = await fetch("/api/projetos/getProjects").then((res) => res.json());
+  const projetos = await fetch("https://orion-code-backend.onrender.com/projetos/getProjects", {
+    credentials: "include",
+  }).then((res) => res.json());
   return projetos;
 };
 
 const getOneProject = async (id: string) => {
-  const project = await fetch(`/api/projetos/getOneProject?id=${id}`).then((res) => res.json());
+  const project = await fetch(`https://orion-code-backend.onrender.com/projetos/getOneProject?id=${id}`).then((res) =>
+    res.json()
+  );
   return project;
 };
 
 const createProject = async ({
   nome,
+  ano,
   lider,
   projetista,
   cliente,
 }: {
   nome: string;
+  ano: string;
   lider?: { nome: string; id: string } | null;
   projetista?: { nome: string; id: string } | null;
   cliente?: { nome: string; id: string } | null;
 }) => {
-  await fetch("/api/projetos/createProject", {
+  await fetch("https://orion-code-backend.onrender.com/projetos/createProject", {
     method: "POST",
-    body: JSON.stringify({ nome, lider, projetista, cliente }),
+    body: JSON.stringify({ nome, ano, lider, projetista, cliente }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
 const deleteProject = async (project: Projeto) => {
-  await fetch("/api/projetos/deleteProject", { method: "POST", body: JSON.stringify(project) });
+  await fetch(`https://orion-code-backend.onrender.com/projetos/deleteProject?id=${project._id}`, {
+    method: "DELETE",
+  });
 };
 
 const addLiderToProject = async ({
@@ -39,10 +50,12 @@ const addLiderToProject = async ({
   project: Projeto;
   user: { nome: string; _id: string };
 }) => {
-  console.log(user);
-  await fetch("/api/projetos/addLiderToProject", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/addLiderToProject", {
+    method: "PATCH",
     body: JSON.stringify({ project, user }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
@@ -53,9 +66,12 @@ const addClientesToProject = async ({
   projectID: string;
   users: { nome: string; id: string }[];
 }) => {
-  await fetch("/api/projetos/addClientesToProject", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/addClientesToProject", {
+    method: "PATCH",
     body: JSON.stringify({ projectID, users }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
@@ -66,37 +82,52 @@ const addProjetistasToProject = async ({
   project: Projeto;
   users: { nome: string; id: string }[];
 }) => {
-  await fetch("/api/projetos/addProjetistasToProject", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/addProjetistasToProject", {
+    method: "PATCH",
     body: JSON.stringify({ project, users }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
 const removeProjectLider = async ({ user, project }) => {
-  await fetch("/api/projetos/removeProjectLider", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/removeProjectLider", {
+    method: "PATCH",
     body: JSON.stringify({ user, project }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
 const removeProjetistaFromProject = async ({ user, project }) => {
-  await fetch("/api/projetos/removeProjetistaFromProject", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/removeProjetistaFromProject", {
+    method: "PATCH",
     body: JSON.stringify({ user, project }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
 const removeClienteFromProject = async ({ user, project }) => {
-  await fetch("/api/projetos/removeClienteFromProject", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/removeClienteFromProject", {
+    method: "PATCH",
     body: JSON.stringify({ user, project }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 
 const changeProjectLider = async ({ user, project }) => {
-  await fetch("/api/projetos/changeProjectLider", {
-    method: "POST",
+  await fetch("https://orion-code-backend.onrender.com/projetos/changeProjectLider", {
+    method: "PATCH",
     body: JSON.stringify({ user, project }),
+    headers: {
+      "Content-Type": "application/json",
+    },
   });
 };
 

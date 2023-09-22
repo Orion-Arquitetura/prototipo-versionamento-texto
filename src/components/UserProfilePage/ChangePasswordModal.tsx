@@ -33,7 +33,7 @@ export default function ChangePasswordModal({
             window.alert("Sua senha deve ter no mínimo 8 caracteres.")
             return
         }
-        changePassword({ newPassword, user })
+        changePassword({ newPassword, userID: user._id })
         handleClose()
         setVisibility(false)
 

@@ -10,8 +10,8 @@ import { useContext } from "react";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
 
-export default function ResponsiveAppBar() {
-  const { logOff, authData } = useContext(AuthContext);
+export default function ResponsiveAppBar({cookies}:{cookies: any}) {
+  const { logOff } = useContext(AuthContext);
 
   return (
     <AppBar
@@ -41,7 +41,7 @@ export default function ResponsiveAppBar() {
               Projetos
             </Link>
             <Link
-              href={`/auth/perfil?id=${authData?.userId}&type=${authData?.userType}`}
+              href={`/auth/perfil?id=${cookies?.id}&type=${cookies?.tipo}`}
               style={{ color: "black" }}
             >
               Perfil
@@ -52,7 +52,7 @@ export default function ResponsiveAppBar() {
             >
               Tarefas
             </Link>} */}
-            {authData?.userType === "administrador" && <Link
+            {cookies?.tipo === "administrador" && <Link
               href={"/auth/admin"}
               style={{ color: "black" }}
             >

@@ -36,7 +36,7 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
         );
 
         if (isFuncionarioInsideProject) {
-            if (project.usuarios.lider._id === funcionario._id) {
+            if (project.usuarios.lider?._id === funcionario._id) {
                 return
             }
 
@@ -66,7 +66,7 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
                     >
                         <Grid item>
                             <Typography>Remover projetistas</Typography>
-                            <Typography variant="caption">Aviso: remover projetistas do projeto irá cancelar suas revisões pendentes</Typography>
+                            <Typography variant="caption">Aviso: remover projetistas do projeto irá cancelar suas revisões pendentes neste projeto</Typography>
                         </Grid>
                         <Grid item>
                             <List>

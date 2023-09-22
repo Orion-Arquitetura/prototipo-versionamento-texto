@@ -38,9 +38,9 @@ export default function FileInfoPanel({ file, userData }: any) {
         setSendReviewdFileModalState(false)
     }
 
-    const isUserProjectLider = file.metadata.projeto.usuarios.lider._id === userData?.userId;
+    const isUserProjectLider = file.metadata.projeto.usuarios.lider._id === userData?.id;
 
-    const isUserReviewResponsible = file.metadata.responsavelRevisao?.id === userData?.userId;
+    const isUserReviewResponsible = file.metadata.responsavelRevisao?.id === userData?.id;
 
     return (
         <Paper sx={{ p: 3 }} elevation={8}>
@@ -59,7 +59,7 @@ export default function FileInfoPanel({ file, userData }: any) {
                 file?.metadata.emRevisao ? <Typography>Prazo para revisão: <br /> {file?.metadata.prazoRevisao}</Typography> : null
             }
             <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column" }}>
-                {(userData?.userType === "administrador" || isUserProjectLider) && file?.metadata.emRevisao &&
+                {(userData?.tipo === "administrador" || isUserProjectLider) && file?.metadata.emRevisao &&
                     (
                         <Button
                             variant="contained"
@@ -70,7 +70,7 @@ export default function FileInfoPanel({ file, userData }: any) {
                             Editar revisao
                         </Button>
                     )}
-                {(userData?.userType === "administrador" || isUserProjectLider) && file?.metadata.ultimaVersao &&
+                {(userData?.tipo === "administrador" || isUserProjectLider) && file?.metadata.ultimaVersao &&
                     (
                         <Button
                             variant="contained"

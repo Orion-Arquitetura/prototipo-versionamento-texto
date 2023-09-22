@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 const getDisciplines = async () => {
-  const disciplinas = await fetch("/api/disciplines/getDisciplines").then(
+  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getDisciplines").then(
     (res) => res.json()
   );
   return disciplinas;

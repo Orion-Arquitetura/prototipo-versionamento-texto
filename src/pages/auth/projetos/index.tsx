@@ -1,11 +1,8 @@
 import PageTitle from "@/components/PageTitle";
 import ProjectsList from "@/components/ProjetosPage/ProjectsList";
-import connectToDatabase from "@/database/mongodbConnection";
 import { Container } from "@mui/material";
-import mongoose from "mongoose";
 import { GetServerSidePropsContext } from "next";
 import { parseCookies } from "nookies";
-
 
 export default function Projetos() {
 
@@ -17,10 +14,10 @@ export default function Projetos() {
     )
 }
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const cookies = parseCookies(context);
+export async function getServerSideProps(ctx: GetServerSidePropsContext) {
+    const cookies = parseCookies(ctx)
 
-    if (!cookies.token) {
+    if (cookies.client_tipo === undefined) {
         return {
             redirect: {
                 destination: "/",

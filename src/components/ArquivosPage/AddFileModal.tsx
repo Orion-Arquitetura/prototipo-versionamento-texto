@@ -1,22 +1,20 @@
 import { FormEvent, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Grid, Paper, Modal, Button, Typography } from "@mui/material";
+import { Grid, Paper, Modal, Button, Typography, TextField } from "@mui/material";
 import { useCreateFile } from "@/hooks/arquivos";
 import DisciplinesSelect from "./Selects/DisciplineSelect";
-import TipoDeArquivoSelect from "./Selects/TipoDeArquivoSelect";
-import ConteudoDeArquivoSelect from "./Selects/ConteudoDeArquivoSelect";
-import TipoDeConteudoSelect from "./Selects/TipoDeConteudoSelect";
 import EtapaDoProjetoSelect from "./Selects/EtapaDoProjetoSelect";
 import FileUploadInput from "./FileUploadInput";
+import TipoDeDocumentoSelect from "./Selects2/TipoDeDocumentoSelect";
 
 export default function AddFileModal({ open, handleClose, project }: any) {
   const [fileFilters, setFileFilters] = useState({
-    tipoDeArquivo: "",
-    tipoDeConteudo: "",
+    tipoDeDocumento: "",
     disciplina: "",
     etapaDoProjeto: "",
-    conteudoDoArquivo: "",
   });
+
+  const [numeroPrancha, setNumeroPrancha] = useState("")
 
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({ multiple: false });
 
@@ -25,20 +23,50 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     discipline: fileFilters.disciplina,
   });
 
-  function setTipoDeArquivo(value: string) {
-    setFileFilters((prevState) => {
-      return {
-        ...prevState,
-        tipoDeArquivo: value,
-      };
-    });
+  async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (numeroPrancha.length < 3 || numeroPrancha.length === 0) {
+      window.alert("Número da prancha deve conter 3 caracteres.")
+      return
+    }
+
+    // if (acceptedFiles[0].path.match(/\.pdf$/)) {
+    const formData = new FormData();
+    formData.append("arquivo", acceptedFiles[0]);
+    formData.append("fileFilters", JSON.stringify(fileFilters));
+    formData.append("numeroPrancha", numeroPrancha)
+    formData.append("projectId", project._id);
+    createFile({ fileData: formData });
+    acceptedFiles.pop();
+    handleClose();
+    return;
+    // }
+
+    // window.alert("Formato de arquivo inválido.");
+    // acceptedFiles.pop();
+    // return;
   }
 
-  function setTipoDeConteudo(tipo: string) {
+  function cancelSubmit() {
+    setFileFilters({
+      tipoDeDocumento: "",
+      disciplina: "",
+      etapaDoProjeto: "",
+    });
+
+    setNumeroPrancha("")
+
+    acceptedFiles.pop();
+
+    handleClose();
+  }
+
+  function setTipoDeDocumento(tipo: string) {
     setFileFilters((prevState) => {
       return {
         ...prevState,
-        tipoDeConteudo: tipo,
+        tipoDeDocumento: tipo,
       };
     });
   }
@@ -61,48 +89,6 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     });
   }
 
-  function setConteudoDoArquivo(conteudo: string) {
-    setFileFilters((prevState) => {
-      return {
-        ...prevState,
-        conteudoDoArquivo: conteudo,
-      };
-    });
-  }
-
-  async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    // if (acceptedFiles[0].path.match(/\.pdf$/)) {
-      const formData = new FormData();
-      formData.append("arquivo", acceptedFiles[0]);
-      formData.append("fileFilters", JSON.stringify(fileFilters));
-      formData.append("projectId", project._id);
-      createFile({ fileData: formData });
-      acceptedFiles.pop();
-      handleClose();
-      return;
-    // }
-
-    // window.alert("Formato de arquivo inválido.");
-    // acceptedFiles.pop();
-    // return;
-  }
-
-  function cancelSubmit() {
-    setFileFilters({
-      tipoDeArquivo: "",
-      tipoDeConteudo: "",
-      disciplina: "",
-      etapaDoProjeto: "",
-      conteudoDoArquivo: "",
-    });
-
-    acceptedFiles.pop();
-
-    handleClose();
-  }
-
   return (
     <Modal
       open={open}
@@ -123,35 +109,19 @@ export default function AddFileModal({ open, handleClose, project }: any) {
                 Adicionar primeira versão de arquivo
               </Typography>
             </Grid>
-            <Grid item xs={6}>
-              <TipoDeArquivoSelect
-                setTipoDeArquivo={setTipoDeArquivo}
-                selectedTipoDeArquivo={fileFilters.tipoDeArquivo}
-              />
-            </Grid>
-            <Grid item xs={true}>
-              <DisciplinesSelect
-                setDisciplina={setDisciplina}
-                selectedDisciplina={fileFilters.disciplina}
-              />
+            <Grid container item columnGap={1}>
+              <Grid item xs={true}>
+                <TextField defaultValue={numeroPrancha} label="Numero de prancha" fullWidth inputProps={{ maxLength: 3 }} onChange={(ev) => setNumeroPrancha(ev.target.value)} />
+              </Grid>
+              <Grid item xs={true}>
+                <TipoDeDocumentoSelect setTipoDeDocumento={setTipoDeDocumento} selectedTipoDeDocumento={fileFilters.tipoDeDocumento} />
+              </Grid>
+              <Grid item xs={true}>
+                <DisciplinesSelect selectedDisciplina={fileFilters.disciplina} setDisciplina={setDisciplina} />
+              </Grid>
             </Grid>
             <Grid item xs={12}>
-              <TipoDeConteudoSelect
-                setTipoDeConteudo={setTipoDeConteudo}
-                selectedTipoDeConteudo={fileFilters.tipoDeConteudo}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <ConteudoDeArquivoSelect
-                setConteudoDoArquivo={setConteudoDoArquivo}
-                selectedConteudoDoArquivo={fileFilters.conteudoDoArquivo}
-              />
-            </Grid>
-            <Grid item xs={true}>
-              <EtapaDoProjetoSelect
-                setEtapaDoProjeto={setEtapaDoProjeto}
-                selectedTipoDeArquivo={fileFilters.etapaDoProjeto}
-              />
+              <EtapaDoProjetoSelect setEtapaDoProjeto={setEtapaDoProjeto} selectedEtapaDoProjeto={fileFilters.etapaDoProjeto} />
             </Grid>
             <Grid item xs={12}>
               <FileUploadInput
@@ -184,6 +154,6 @@ export default function AddFileModal({ open, handleClose, project }: any) {
           </Grid>
         </form>
       </Paper>
-    </Modal>
-  );
+    </Modal >
+  )
 }

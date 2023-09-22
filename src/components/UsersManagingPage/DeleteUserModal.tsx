@@ -15,7 +15,7 @@ export default function DeleteUserModal({
   const { mutate: deleteUser } = useDeleteUser();
 
   function handleDeleteUser() {
-    deleteUser(user);
+    deleteUser(user._id);
     Router.replace("/auth/admin/usuarios");
   }
 

@@ -1,4 +1,4 @@
-import { useFileReviewRequest } from "@/hooks/arquivos";
+import { useCreateFileReviewRequest } from "@/hooks/arquivos";
 import { useGetFuncionarios, useGetUsers } from "@/hooks/user";
 import {
     Button,
@@ -25,7 +25,7 @@ export default function RequireReviewModal({ handleClose, isOpen, file }: any) {
     });
     const [texto, setTexto] = useState("");
 
-    const { mutate: fileReviewRequest } = useFileReviewRequest(file);
+    const { mutate: createFileReviewRequest } = useCreateFileReviewRequest(file);
 
     function setUser(userName: string) {
         const user = users.find((user: any) => user.nome === userName);
@@ -60,7 +60,7 @@ export default function RequireReviewModal({ handleClose, isOpen, file }: any) {
     }
 
     function enviar() {
-        fileReviewRequest({ file, usuario: formData.usuario, prazo: formData.prazo, texto });
+        createFileReviewRequest({ file, usuario: formData.usuario, prazo: formData.prazo, texto });
         handleClose();
     }
 

@@ -5,7 +5,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-
   try {
     const data = await Disciplina.find({});
   
@@ -14,5 +13,4 @@ export default async function handler(
     console.log(e)
     res.status(500).end()
   }
-
 }

@@ -40,20 +40,3 @@ export default function AdminPage() {
         </Container>
     )
 }
-
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-    const { token, tipo } = parseCookies(context);
-
-    if (token && (tipo === "administrador")) {
-        return { props: {} };
-    }
-
-    if (token && (tipo !== "administrador")) {
-        return {
-            redirect: {
-                permanent: false,
-                destination: "/projetos",
-            },
-        };
-    }
-}

@@ -1,8 +1,9 @@
-import { ReactNode } from "react";
+'use client'
+import { ReactNode, useContext, useEffect } from "react";
 import styled from "@emotion/styled";
-import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
 import ResponsiveAppBar from "./ResponsiveAppBar";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/router";
 
 const Main = styled.main`
     min-height: 100vh;
@@ -10,12 +11,24 @@ const Main = styled.main`
 `;
 
 export default function Layout({ children }: { children: ReactNode }) {
-    const { authData } = useContext(AuthContext)
+    const { userData } = useContext(AuthContext)
+    const router = useRouter()
+
+    if ((userData?.tipo !== "administrador") && /admin/.test(router.pathname)) {
+        return (
+            <>
+                {userData && <ResponsiveAppBar cookies={userData} />}
+                <Main style={{ paddingTop: userData?.token ? "84px" : "0" }}>
+                    
+                </Main>
+            </>
+        )
+    }
 
     return (
         <>
-            {authData && <ResponsiveAppBar />}
-            <Main style={{ paddingTop: authData ? "84px" : "0" }}>
+            {userData && <ResponsiveAppBar cookies={userData} />}
+            <Main style={{ paddingTop: userData?.token ? "84px" : "0" }}>
                 {children}
             </Main>
         </>

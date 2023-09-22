@@ -183,7 +183,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
     const { id, type } = context.query;
 
-    const userID = parseCookies(context)["id"];
+    const userID = parseCookies(context)["client_id"];
 
     if (userID !== id) {
         return {

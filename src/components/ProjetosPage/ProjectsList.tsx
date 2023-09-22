@@ -10,6 +10,7 @@ export default function ProjectsList() {
         return <Paper elevation={8} sx={{p:3}}>Nenhum projeto disponível.</Paper>
     }
 
+    console.log(projetos)
 
     return (
         <Grid

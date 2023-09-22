@@ -15,7 +15,7 @@ const StyledListItem = styled(ListItem)`
 export default function ProjectsListItem({ projeto }: { projeto: Projeto }) {
     return (
         <StyledListItem>
-            {projeto.nome}
+            {projeto.ano}-{projeto.numero > 9 ? projeto.numero : `0${projeto.numero}`}-{projeto.nome}
             <ProjectsListItemOptions projeto={projeto} />
         </StyledListItem>
     )
