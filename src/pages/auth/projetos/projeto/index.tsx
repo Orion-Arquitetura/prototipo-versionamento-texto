@@ -13,6 +13,8 @@ export default function Projeto({ projectID, tipoDeUsuarioAcessando, idUsuarioAc
     const { data: project, isLoading: isLoadingProject } = useGetOneProject(projectID);
     const [selectedDiscipline, setSelectedDiscipline] = useState({ nome: "", sigla: "" })
 
+    console.log({tipoDeUsuarioAcessando, idUsuarioAcessando})
+
     return (
         <Container sx={{ mt: 2 }}>
             {!isLoadingProject && <ProjectsPageToolbar project={project} tipoDeUsuarioAcessando={tipoDeUsuarioAcessando} idUsuarioAcessando={idUsuarioAcessando} />}
@@ -56,7 +58,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         props: {
             projectID: context.query.id,
             tipoDeUsuarioAcessando: cookies.client_tipo,
-            idUsuarioAcessando: cookies.client_tipo
+            idUsuarioAcessando: cookies.client_id
         }
     }
 }

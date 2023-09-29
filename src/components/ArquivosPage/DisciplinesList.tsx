@@ -1,4 +1,4 @@
-import { useGetDisciplines } from "@/hooks/disciplinas";
+import { useGetDisciplines } from "@/hooks/filesConfigs";
 import { Box, List, ListItemButton, Typography } from "@mui/material";
 import { theme } from "@/theme/theme";
 import styled from "@emotion/styled";

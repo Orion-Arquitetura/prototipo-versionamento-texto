@@ -18,7 +18,7 @@ export default function Layout({ children }: { children: ReactNode }) {
         return (
             <>
                 {userData && <ResponsiveAppBar cookies={userData} />}
-                <Main style={{ paddingTop: userData?.token ? "84px" : "0" }}>
+                <Main style={{ paddingTop: userData?.nome ? "84px" : "0" }}>
                     
                 </Main>
             </>
@@ -28,7 +28,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     return (
         <>
             {userData && <ResponsiveAppBar cookies={userData} />}
-            <Main style={{ paddingTop: userData?.token ? "84px" : "0" }}>
+            <Main style={{ paddingTop: userData?.nome ? "84px" : "0" }}>
                 {children}
             </Main>
         </>

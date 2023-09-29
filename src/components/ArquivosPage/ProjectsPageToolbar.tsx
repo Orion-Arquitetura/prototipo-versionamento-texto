@@ -5,7 +5,6 @@ import { Projeto } from "@/utils/types";
 import GerenciarProjetistasButton from "./GerenciarProjetistasButton";
 
 export default function ProjectsPageToolbar({ project, tipoDeUsuarioAcessando, idUsuarioAcessando }: { project: Projeto, tipoDeUsuarioAcessando: string, idUsuarioAcessando: string }) {
-    console.log(project.usuarios)
     const isUserProjectLider = project.usuarios.lider?._id === idUsuarioAcessando
 
     return (

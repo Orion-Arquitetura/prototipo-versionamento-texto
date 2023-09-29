@@ -28,6 +28,8 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
   const [tipoTarefas, setTipoTarefas] = useState("emAndamento");
   const [deleteUserModalState, setDeleteUserModalState] = useState(false);
 
+  console.log(usuario)
+
   function openDeleteUserModalState() {
     setDeleteUserModalState(true);
   }

@@ -1,4 +1,4 @@
-import { useGetTiposDeConteudos } from "@/hooks/tiposDeDocumento";
+import { useGetTiposDeDocumento } from "@/hooks/filesConfigs";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function TipoDeDocumentoSelect({
@@ -8,7 +8,7 @@ export default function TipoDeDocumentoSelect({
   setTipoDeDocumento: (disciplina: string) => void;
   selectedTipoDeDocumento: string;
 }) {
-  const { data: tiposDeDocumento, isLoading } = useGetTiposDeConteudos();//falta mudar o nome para TipoDeDocumento aqui
+  const { data: tiposDeDocumento, isLoading } = useGetTiposDeDocumento();
 
   return (
     <FormControl fullWidth>

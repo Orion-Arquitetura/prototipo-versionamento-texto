@@ -1,6 +1,7 @@
 import PageTitle from "@/components/PageTitle";
 import { Container, List, ListItemButton } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { parseCookies } from "nookies";
 import PeopleIcon from "@mui/icons-material/People";
 import BusinessCenterIcon from "@mui/icons-material/BusinessCenter";
@@ -36,7 +37,28 @@ export default function AdminPage() {
                     <BusinessCenterIcon />
                     Projetos
                 </StyledListItem>
+                <StyledListItem LinkComponent={Link} href="/auth/admin/arquivos">
+                    <SettingsIcon />
+                    Configurações de arquivos
+                </StyledListItem>
             </List>
         </Container>
     )
+}
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+    const cookies = parseCookies(context);
+
+    if ((cookies.client_tipo !== "administrador") || (cookies.client_tipo === undefined)) {
+        return {
+            redirect: {
+                destination: "/",
+                permanent: false
+            }
+        }
+    }
+
+    return {
+        props: {}
+    }
 }

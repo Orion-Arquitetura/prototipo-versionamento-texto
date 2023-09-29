@@ -39,7 +39,6 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     formData.append("projectId", project._id);
     createFile({ fileData: formData });
     acceptedFiles.pop();
-    handleClose();
     return;
     // }
 

@@ -1,4 +1,4 @@
-import { useGetTiposDeConteudos } from "@/hooks/tiposDeDocumento";
+import { useGetTiposDeConteudos } from "@/hooks/filesConfigs";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function TipoDeConteudoSelect({

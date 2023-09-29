@@ -19,27 +19,27 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   const { data: userCookies } = useQuery({
     queryKey: ["user-cookies"],
     queryFn: async () => {
-      const response = await fetch("https://orion-code-backend.onrender.com/users/getCookies", {
+      const response = await fetch("http://localhost:4000/users/getCookies", {
         credentials: "include",
-      }).then((res) => {
-        if (res.status === 400) {
+      }).then(async (res) => {
+        const resp = await res.json()
+        if (resp.message === "No cookies available") {
           return false;
         }
 
-        return res.json();
+        return resp;
       });
+
+      setUserData(response)
+
       return response;
     },
   });
 
-  useEffect(() => {
-    setUserData(userCookies);
-  }, [userCookies]);
-
   async function auth(email: string, senha: string) {
     setIsLoadingUserData(true);
 
-    const response = await fetch("https://orion-code-backend.onrender.com/users/authUser", {
+    const response = await fetch("http://localhost:4000/users/authUser", {
       method: "POST",
       body: JSON.stringify({ email, senha }),
       credentials: "include",
@@ -48,7 +48,8 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
       },
     }).then(async (res) => {
       await queryClient.invalidateQueries(["user-cookies"]);
-      return res.json();
+      const reponse = res.json()
+      return reponse;
     });
 
     if (response.erro) {
@@ -102,26 +103,52 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   async function logOff() {
     try {
       setIsLoadingUserData(true);
-      await fetch("https://orion-code-backend.onrender.com/users/logOff", {
+      await fetch("http://localhost:4000/users/logOff", {
         credentials: "include",
       }).then(async (res) => {
-        await queryClient.invalidateQueries(["user-cookies"]);
-      });
+        destroyCookie(null, "client_tipo", {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "none",
+          secure: true,
+        });
+        destroyCookie(null, "client_id", {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "none",
+          secure: true,
+        });
+        destroyCookie(null, "client_nome", {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "none",
+          secure: true,
+        });
+        destroyCookie(null, "client_email", {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "none",
+          secure: true,
+        });
+        destroyCookie(null, "client_projetos", {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "none",
+          secure: true,
+        });
+        destroyCookie(null, "client_tarefas", {
+          path: "/",
+          maxAge: 60 * 60 * 24,
+          sameSite: "none",
+          secure: true,
+        });
+        await Router.replace("/");
+        setUserData(null)
+      })
       setIsLoadingUserData(false);
-    } finally {
-      destroyCookie(null, "client_tipo", {
-        path: "/",
-        maxAge: 60 * 60 * 24,
-        sameSite: "none",
-        secure: true,
-      });
-      destroyCookie(null, "client_id", {
-        path: "/",
-        maxAge: 60 * 60 * 24,
-        sameSite: "none",
-        secure: true,
-      });
-      await Router.replace("/");
+    } catch (e) {
+      window.alert(e)
+      return
     }
     return;
   }

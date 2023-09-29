@@ -9,8 +9,9 @@ import Link from "next/link";
 import { useContext } from "react";
 import Button from "@mui/material/Button";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { IconButton } from "@mui/material";
 
-export default function ResponsiveAppBar({cookies}:{cookies: any}) {
+export default function ResponsiveAppBar({ cookies }: { cookies: any }) {
   const { logOff } = useContext(AuthContext);
 
   return (
@@ -41,7 +42,7 @@ export default function ResponsiveAppBar({cookies}:{cookies: any}) {
               Projetos
             </Link>
             <Link
-              href={`/auth/perfil?id=${cookies?.id}&type=${cookies?.tipo}`}
+              href={`/auth/perfil?id=${cookies?._id}&type=${cookies?.tipo}`}
               style={{ color: "black" }}
             >
               Perfil
@@ -59,18 +60,9 @@ export default function ResponsiveAppBar({cookies}:{cookies: any}) {
               Painel do administrador
             </Link>}
             <Tooltip title="Sair">
-              <Button
-                variant="outlined"
-                onClick={logOff}
-                sx={{
-                  textTransform: "capitalize",
-                  color: "black",
-                  width: "fit-content",
-                  borderRadius: 50,
-                }}
-              >
+              <IconButton onClick={logOff}>
                 <LogoutIcon />
-              </Button>
+              </IconButton>
             </Tooltip>
           </Box>
         </Box>

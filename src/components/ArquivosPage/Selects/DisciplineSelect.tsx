@@ -1,4 +1,4 @@
-import { useGetDisciplines } from "@/hooks/disciplinas";
+import { useGetDisciplines } from "@/hooks/filesConfigs";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 export default function DisciplinesSelect({

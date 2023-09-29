@@ -2,9 +2,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const createFile = async ({ fileData }: { fileData: any }) => {
   try {
-    const resposta = await fetch("/api/arquivos/createFile", {
+    const resposta = await fetch("https://orion-code-backend.onrender.com/arquivos/createFile", {
       method: "POST",
       body: fileData,
+      credentials: "include"
     }).then((result) => result.json());
 
     if (resposta.Erro) {
@@ -13,33 +14,19 @@ const createFile = async ({ fileData }: { fileData: any }) => {
   } catch (e) {
     window.alert(e);
   }
-
-  // try {
-  //   const resposta = await fetch("https://orion-code-backend.onrender.com/arquivos/createFile", {
-  //     method: "POST",
-  //     body: fileData,
-  //     headers: {
-  //       "Content-Type": "multipart/form-data"
-  //     }
-  //   }).then((result) => result.json());
-
-  //   if (resposta.Erro) {
-  //     throw new Error(resposta.Erro);
-  //   }
-  // } catch (e) {
-  //   window.alert(e);
-  // }
 };
 
 const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: string }) => {
   await fetch(`https://orion-code-backend.onrender.com/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`, {
     method: "DELETE",
+    credentials: "include",
   });
 };
 
 const getProjectFiles = async (projectID: string) => {
   const files = await fetch(
-    `https://orion-code-backend.onrender.com/arquivos/getProjectFiles?projectID=${projectID}`
+    `https://orion-code-backend.onrender.com/arquivos/getProjectFiles?projectID=${projectID}`,
+    { credentials: "include" }
   ).then((res) => res.json());
   return files;
 };
@@ -52,7 +39,10 @@ const getFilesByDiscipline = async ({
   discipline: string;
 }) => {
   const files = await fetch(
-    `https://orion-code-backend.onrender.com/arquivos/getFilesByDiscipline?projectID=${projectID}&discipline=${discipline}`
+    `https://orion-code-backend.onrender.com/arquivos/getFilesByDiscipline?projectID=${projectID}&discipline=${discipline}`,
+    {
+      credentials: "include",
+    }
   ).then((res) => {
     return res.json();
   });
@@ -60,7 +50,9 @@ const getFilesByDiscipline = async ({
 };
 
 const getFileBinaries = async (fileID: string) => {
-  const fileUrl = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileBinaries?id=${fileID}`)
+  const fileUrl = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileBinaries?id=${fileID}`, {
+    credentials: "include",
+  })
     .then((res) => res.blob())
     .then((res) => URL.createObjectURL(res));
 
@@ -68,9 +60,9 @@ const getFileBinaries = async (fileID: string) => {
 };
 
 const getFileMetadata = async (fileID: string) => {
-  const file = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileMetadata?id=${fileID}`).then(
-    (res) => res.json()
-  );
+  const file = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileMetadata?id=${fileID}`, {
+    credentials: "include",
+  }).then((res) => res.json());
   return file;
 };
 
@@ -108,9 +100,10 @@ const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
 };
 
 const createNewFileFromRevision = async ({ fileData }: any) => {
-  await fetch("/api/arquivos/createNewFileFromRevision", {
+  await fetch("https://orion-code-backend.onrender.com/arquivos/createNewFileFromReviewRequest", {
     method: "POST",
     body: fileData,
+    credentials: "include",
   });
 };
 
@@ -124,6 +117,8 @@ export const useCreateFile = ({
   discipline: string;
 }) => {
   const queryClient = useQueryClient();
+  let disciplina = "";
+
   return useMutation({
     mutationFn: createFile,
     onSuccess: async () => {

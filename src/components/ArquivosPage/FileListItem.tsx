@@ -91,10 +91,7 @@ export default function FileListItem({ file }: { file: any }) {
               })}
             </Typography>
             <Typography>Disciplina: {file.metadata.disciplina}</Typography>
-            <Typography>Tipo de documento: {file.metadata.tipo}</Typography>
-            <Typography>
-              Conteudo do documento: {file.metadata.conteudo}
-            </Typography>
+            <Typography>Tipo de documento: {file.metadata.tipoDeDocumento}</Typography>
             <Typography>Etapa do projeto: {file.metadata.etapa}</Typography>
             {file.metadata.emRevisao && (
               <>

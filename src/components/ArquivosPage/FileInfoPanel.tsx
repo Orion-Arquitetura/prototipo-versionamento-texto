@@ -38,9 +38,11 @@ export default function FileInfoPanel({ file, userData }: any) {
         setSendReviewdFileModalState(false)
     }
 
-    const isUserProjectLider = file.metadata.projeto.usuarios.lider._id === userData?.id;
+    const isUserProjectLider = file.metadata.projeto.usuarios.lider._id === userData?._id;
 
-    const isUserReviewResponsible = file.metadata.responsavelRevisao?.id === userData?.id;
+    const isUserReviewResponsible = file.metadata.responsavelRevisao?.id === userData?._id;
+
+    console.log(userData)
 
     return (
         <Paper sx={{ p: 3 }} elevation={8}>

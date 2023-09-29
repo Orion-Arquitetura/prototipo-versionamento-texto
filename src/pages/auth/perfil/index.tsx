@@ -103,7 +103,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                                                     sx={{ p: 3, mt: 2 }}
                                                 >
                                                     {projetoData.projeto.nome} <br />
-                                                    Função: {projetoData.roles.join(" - ")}
+                                                    Função: {projetoData.roles[1]}
                                                 </Grid>
                                             );
                                         }
@@ -173,7 +173,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                     <ChangePasswordModal open={changePasswordModalState} handleClose={closeChangePasswordModalState} user={usuario} />
                     <ChangeEmailModal open={changeEmailModalState} handleClose={closeChangeEmailModalState} user={usuario} />
                     <Button variant="contained" onClick={openChangePasswordModalState}>Alterar senha</Button>
-                    <Button variant="contained" onClick={openChangeEmailModalState}>Alterar email</Button>
+                    {/* <Button variant="contained" onClick={openChangeEmailModalState}>Alterar email</Button> */}
                 </Box>
             </Paper>
         </Container>

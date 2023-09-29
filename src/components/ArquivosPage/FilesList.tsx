@@ -3,6 +3,7 @@ import List from "@mui/material/List";
 import FileListItem from "./FileListItem";
 import { useGetFilesByDiscipline } from "@/hooks/arquivos";
 import { Paper, Typography } from "@mui/material";
+import { useEffect } from "react";
 
 const ListBoxStyles = {
   flexBasis: "100%",
