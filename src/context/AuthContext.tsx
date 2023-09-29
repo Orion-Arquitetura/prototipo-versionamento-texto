@@ -19,7 +19,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   const { data: userCookies } = useQuery({
     queryKey: ["user-cookies"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:4000/users/getCookies", {
+      const response = await fetch("https://orion-code-backend.onrender.com/users/getCookies", {
         credentials: "include",
       }).then(async (res) => {
         const resp = await res.json()
@@ -39,7 +39,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   async function auth(email: string, senha: string) {
     setIsLoadingUserData(true);
 
-    const response = await fetch("http://localhost:4000/users/authUser", {
+    const response = await fetch("https://orion-code-backend.onrender.com/users/authUser", {
       method: "POST",
       body: JSON.stringify({ email, senha }),
       credentials: "include",
@@ -103,7 +103,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   async function logOff() {
     try {
       setIsLoadingUserData(true);
-      await fetch("http://localhost:4000/users/logOff", {
+      await fetch("https://orion-code-backend.onrender.com/users/logOff", {
         credentials: "include",
       }).then(async (res) => {
         destroyCookie(null, "client_tipo", {
