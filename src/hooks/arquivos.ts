@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const createFile = async ({ fileData }: { fileData: any }) => {
   try {
-    const resposta = await fetch("https://orion-code-backend.onrender.com/arquivos/createFile", {
+    const resposta = await fetch("http://localhost:4000/arquivos/createFile", {
       method: "POST",
       body: fileData,
       credentials: "include"
@@ -17,7 +17,7 @@ const createFile = async ({ fileData }: { fileData: any }) => {
 };
 
 const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`, {
+  await fetch(`http://localhost:4000/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`, {
     method: "DELETE",
     credentials: "include",
   });
@@ -25,7 +25,7 @@ const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: st
 
 const getProjectFiles = async (projectID: string) => {
   const files = await fetch(
-    `https://orion-code-backend.onrender.com/arquivos/getProjectFiles?projectID=${projectID}`,
+    `http://localhost:4000/arquivos/getProjectFiles?projectID=${projectID}`,
     { credentials: "include" }
   ).then((res) => res.json());
   return files;
@@ -39,7 +39,7 @@ const getFilesByDiscipline = async ({
   discipline: string;
 }) => {
   const files = await fetch(
-    `https://orion-code-backend.onrender.com/arquivos/getFilesByDiscipline?projectID=${projectID}&discipline=${discipline}`,
+    `http://localhost:4000/arquivos/getFilesByDiscipline?projectID=${projectID}&discipline=${discipline}`,
     {
       credentials: "include",
     }
@@ -50,7 +50,7 @@ const getFilesByDiscipline = async ({
 };
 
 const getFileBinaries = async (fileID: string) => {
-  const fileUrl = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileBinaries?id=${fileID}`, {
+  const fileUrl = await fetch(`http://localhost:4000/arquivos/getFileBinaries?id=${fileID}`, {
     credentials: "include",
   })
     .then((res) => res.blob())
@@ -60,14 +60,14 @@ const getFileBinaries = async (fileID: string) => {
 };
 
 const getFileMetadata = async (fileID: string) => {
-  const file = await fetch(`https://orion-code-backend.onrender.com/arquivos/getFileMetadata?id=${fileID}`, {
+  const file = await fetch(`http://localhost:4000/arquivos/getFileMetadata?id=${fileID}`, {
     credentials: "include",
   }).then((res) => res.json());
   return file;
 };
 
 const createFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
-  await fetch("https://orion-code-backend.onrender.com/arquivos/createFileReviewRequest", {
+  await fetch("http://localhost:4000/arquivos/createFileReviewRequest", {
     method: "POST",
     body: JSON.stringify({ file, usuario, prazo, texto }),
     headers: {
@@ -78,7 +78,7 @@ const createFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => 
 };
 
 const cancelFileReviewRequest = async (file: any) => {
-  await fetch("https://orion-code-backend.onrender.com/arquivos/cancelFileReviewRequest", {
+  await fetch("http://localhost:4000/arquivos/cancelFileReviewRequest", {
     method: "DELETE",
     body: JSON.stringify(file),
     headers: {
@@ -89,7 +89,7 @@ const cancelFileReviewRequest = async (file: any) => {
 };
 
 const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
-  await fetch("https://orion-code-backend.onrender.com/arquivos/editFileReviewRequest", {
+  await fetch("http://localhost:4000/arquivos/editFileReviewRequest", {
     method: "PATCH",
     body: JSON.stringify({ file, usuario, prazo, texto }),
     headers: {
@@ -100,7 +100,7 @@ const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
 };
 
 const createNewFileFromRevision = async ({ fileData }: any) => {
-  await fetch("https://orion-code-backend.onrender.com/arquivos/createNewFileFromReviewRequest", {
+  await fetch("http://localhost:4000/arquivos/createNewFileFromReviewRequest", {
     method: "POST",
     body: fileData,
     credentials: "include",

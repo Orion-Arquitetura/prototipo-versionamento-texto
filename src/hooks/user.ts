@@ -1,33 +1,33 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getUsers = async () => {
-  const users = await fetch("https://orion-code-backend.onrender.com/users/getAllUsers").then((res) => res.json());
+  const users = await fetch("http://localhost:4000/users/getAllUsers").then((res) => res.json());
   return users;
 };
 
 const getOneUser = async ({ id, type }) => {
-  const user = await fetch(`https://orion-code-backend.onrender.com/users/getOneUser?id=${id}&type=${type}`).then(
+  const user = await fetch(`http://localhost:4000/users/getOneUser?id=${id}&type=${type}`).then(
     (res) => res.json()
   );
   return user;
 };
 
 const getClientes = async () => {
-  const clientes = await fetch("https://orion-code-backend.onrender.com/users/getAllClientes").then((res) =>
+  const clientes = await fetch("http://localhost:4000/users/getAllClientes").then((res) =>
     res.json()
   );
   return clientes;
 };
 
 const getFuncionarios = async () => {
-  const funcionarios = await fetch("https://orion-code-backend.onrender.com/users/getAllFuncionarios").then((res) =>
+  const funcionarios = await fetch("http://localhost:4000/users/getAllFuncionarios").then((res) =>
     res.json()
   );
   return funcionarios;
 };
 
 const createUser = async (userData: any) => {
-  const response = await fetch("https://orion-code-backend.onrender.com/users/createUser", {
+  const response = await fetch("http://localhost:4000/users/createUser", {
     method: "POST",
     body: JSON.stringify(userData),
     headers: {
@@ -43,20 +43,20 @@ const createUser = async (userData: any) => {
 };
 
 const deleteUser = async (userID: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/users/deleteUser?id=${userID}`, {
+  await fetch(`http://localhost:4000/users/deleteUser?id=${userID}`, {
     method: "DELETE",
   });
 };
 
 const addUserToProjects = async ({ userData, projetosSelecionados }: any) => {
-  return await fetch("https://orion-code-backend.onrender.com/users/addUserToProjects", {
+  return await fetch("http://localhost:4000/users/addUserToProjects", {
     method: "POST",
     body: JSON.stringify({ userData, projetosSelecionados }),
   });
 };
 
 const removeUserFromProjects = async ({ userID, projectsIDs }: any) => {
-  return await fetch("https://orion-code-backend.onrender.com/users/removeUserFromProjects", {
+  return await fetch("http://localhost:4000/users/removeUserFromProjects", {
     method: "POST",
     body: JSON.stringify({ userID, projectsIDs }),
   });
@@ -69,7 +69,7 @@ const changeUserPassword = async ({
   newPassword: string;
   userID: any;
 }) => {
-  await fetch("https://orion-code-backend.onrender.com/users/changePassword", {
+  await fetch("http://localhost:4000/users/changePassword", {
     method: "PATCH",
     body: JSON.stringify({ newPassword, userID }),
     headers: {
@@ -79,7 +79,7 @@ const changeUserPassword = async ({
 };
 
 const changeUserEmail = async ({ newEmail, userID }: { newEmail: string; userID: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/users/changeEmail", {
+  await fetch("http://localhost:4000/users/changeEmail", {
     method: "PATCH",
     body: JSON.stringify({ newEmail, userID }),
     headers: {

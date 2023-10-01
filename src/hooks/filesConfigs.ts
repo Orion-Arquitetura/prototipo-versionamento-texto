@@ -1,28 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getDisciplines = async () => {
-  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getDisciplines").then((res) =>
+  const disciplinas = await fetch("http://localhost:4000/filesProps/getDisciplines").then((res) =>
     res.json()
   );
   return disciplinas;
 };
 
 const getEtapasDoProjeto = async () => {
-  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getEtapasDoProjeto").then(
+  const disciplinas = await fetch("http://localhost:4000/filesProps/getEtapasDoProjeto").then(
     (res) => res.json()
   );
   return disciplinas;
 };
 
 const getTiposDeDocumento = async () => {
-  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getTiposDeDocumento").then(
+  const disciplinas = await fetch("http://localhost:4000/filesProps/getTiposDeDocumento").then(
     (res) => res.json()
   );
   return disciplinas;
 };
 
 const createDiscipline = async (data: { nome: string; sigla: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/filesProps/createDiscipline", {
+  await fetch("http://localhost:4000/filesProps/createDiscipline", {
     method: "POST",
     credentials: "include",
     body: JSON.stringify(data),
@@ -42,7 +42,7 @@ const createDiscipline = async (data: { nome: string; sigla: string }) => {
 };
 
 const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/filesProps/createEtapaDoProjeto", {
+  await fetch("http://localhost:4000/filesProps/createEtapaDoProjeto", {
     method: "POST",
     credentials: "include",
     body: JSON.stringify(data),
@@ -62,7 +62,7 @@ const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
 };
 
 const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/filesProps/createTipoDeDocumento", {
+  await fetch("http://localhost:4000/filesProps/createTipoDeDocumento", {
     method: "POST",
     credentials: "include",
     body: JSON.stringify(data),
@@ -82,28 +82,28 @@ const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
 };
 
 const deleteDiscipline = async (id: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/deleteDiscipline?id=${id}`, {
+  await fetch(`http://localhost:4000/filesProps/deleteDiscipline?id=${id}`, {
     method: "DELETE",
     credentials: "include",
   });
 };
 
 const deleteEtapaDoProjeto = async (id: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/deleteEtapaDoProjeto?id=${id}`, {
+  await fetch(`http://localhost:4000/filesProps/deleteEtapaDoProjeto?id=${id}`, {
     method: "DELETE",
     credentials: "include",
   });
 };
 
 const deleteTipoDeDocumento = async (id: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/deleteTipoDeDocumento?id=${id}`, {
+  await fetch(`http://localhost:4000/filesProps/deleteTipoDeDocumento?id=${id}`, {
     method: "DELETE",
     credentials: "include",
   });
 };
 
 const updateDiscipline = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/updateDiscipline`, {
+  await fetch(`http://localhost:4000/filesProps/updateDiscipline`, {
     method: "PATCH",
     credentials: "include",
     body: JSON.stringify(data),
@@ -120,7 +120,7 @@ const updateDiscipline = async (data: { nome: string; sigla: string; id: string 
 };
 
 const updateEtapaDoProjeto = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/updateEtapaDoProjeto`, {
+  await fetch(`http://localhost:4000/filesProps/updateEtapaDoProjeto`, {
     method: "PATCH",
     credentials: "include",
     body: JSON.stringify(data),
@@ -137,7 +137,7 @@ const updateEtapaDoProjeto = async (data: { nome: string; sigla: string; id: str
 };
 
 const updateTipoDeDocumento = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/updateTipoDeDocumento`, {
+  await fetch(`http://localhost:4000/filesProps/updateTipoDeDocumento`, {
     method: "PATCH",
     credentials: "include",
     body: JSON.stringify(data),
