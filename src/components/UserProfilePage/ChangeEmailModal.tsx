@@ -1,10 +1,9 @@
 import { ClienteUser, FuncionarioUser } from "@/utils/types";
 import { Box, Button, Modal, Paper, TextField, Typography } from "@mui/material";
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useChangeUserEmail } from "@/hooks/user";
 import { sanitizeEmail } from "@/utils/sanitizeInput";
+import { DialogModalContext } from "@/context/DialogModalContext";
 
 export default function ChangeEmailModal({
     open,
@@ -17,7 +16,7 @@ export default function ChangeEmailModal({
 }) {
     const [newEmail, setNewEmail] = useState("")
     const { mutate: changeEmail } = useChangeUserEmail()
-
+    const { open:openWarning } = useContext(DialogModalContext)
 
     function cancelSubmit() {
         setNewEmail("")
@@ -26,7 +25,7 @@ export default function ChangeEmailModal({
 
     function submitNewEmail() {
         if (!sanitizeEmail(newEmail)) {
-            window.alert("Digite um email válido")
+            openWarning("Digite um email válido")
             return
         }
         changeEmail({ newEmail, userID: user._id })

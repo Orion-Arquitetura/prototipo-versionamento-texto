@@ -6,6 +6,7 @@ import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { theme } from "@/theme/theme";
 import { useAddProjetistasToProject, useRemoveProjetistaFromProject } from "@/hooks/projetos";
+import { useQueryClient } from "@tanstack/react-query";
 
 const StyledListItem = styled(ListItem)`
   background-color: ${theme.palette.primary.main};
@@ -23,7 +24,7 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
         addProjetista({ users: [userData], project });
     }
 
-    function remove(userData: { nome: string, id: string }) {
+    async function remove(userData: { nome: string, id: string }) {
         removeProjetista({ user: userData, project });
     }
 

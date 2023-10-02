@@ -1,7 +1,8 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Router from "next/router";
 import { destroyCookie, setCookie } from "nookies";
-import { ReactNode, createContext, useEffect, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
+import { DialogModalContext } from "./DialogModalContext";
 
 type AuthContextType = {
   userData: any;
@@ -19,7 +20,10 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   const { data: userCookies } = useQuery({
     queryKey: ["user-cookies"],
     queryFn: async () => {
-      const response = await fetch("http://localhost:4000/users/getCookies", {
+      const response = await fetch(`${process.env.NODE_ENV === "development"
+          ? "http://localhost:4000"
+          : "https://orion-code-backend.onrender.com"
+        }/users/getCookies`, {
         credentials: "include",
       }).then(async (res) => {
         const resp = await res.json()
@@ -36,10 +40,15 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     },
   });
 
+  const { open: openWarning } = useContext(DialogModalContext)
+
   async function auth(email: string, senha: string) {
     setIsLoadingUserData(true);
 
-    const response = await fetch("http://localhost:4000/users/authUser", {
+    const response = await fetch(`${process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+      }/users/authUser`, {
       method: "POST",
       body: JSON.stringify({ email, senha }),
       credentials: "include",
@@ -53,7 +62,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     });
 
     if (response.erro) {
-      window.alert(response.erro);
+      openWarning(response.erro);
       setIsLoadingUserData(false);
       return;
     }
@@ -103,7 +112,10 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   async function logOff() {
     try {
       setIsLoadingUserData(true);
-      await fetch("http://localhost:4000/users/logOff", {
+      await fetch(`${process.env.NODE_ENV === "development"
+          ? "http://localhost:4000"
+          : "https://orion-code-backend.onrender.com"
+        }/users/logOff`, {
         credentials: "include",
       }).then(async (res) => {
         destroyCookie(null, "client_tipo", {
@@ -147,7 +159,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
       })
       setIsLoadingUserData(false);
     } catch (e) {
-      window.alert(e)
+      openWarning(e)
       return
     }
     return;

@@ -1,65 +1,107 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getUsers = async () => {
-  const users = await fetch("http://localhost:4000/users/getAllUsers").then((res) => res.json());
+  const users = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/getAllUsers`
+  ).then((res) => res.json());
   return users;
 };
 
 const getOneUser = async ({ id, type }) => {
-  const user = await fetch(`http://localhost:4000/users/getOneUser?id=${id}&type=${type}`).then(
-    (res) => res.json()
-  );
+  const user = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/getOneUser?id=${id}&type=${type}`
+  ).then((res) => res.json());
   return user;
 };
 
 const getClientes = async () => {
-  const clientes = await fetch("http://localhost:4000/users/getAllClientes").then((res) =>
-    res.json()
-  );
+  const clientes = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/getAllClientes`
+  ).then((res) => res.json());
   return clientes;
 };
 
 const getFuncionarios = async () => {
-  const funcionarios = await fetch("http://localhost:4000/users/getAllFuncionarios").then((res) =>
-    res.json()
-  );
+  const funcionarios = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/getAllFuncionarios`
+  ).then((res) => res.json());
   return funcionarios;
 };
 
 const createUser = async (userData: any) => {
-  const response = await fetch("http://localhost:4000/users/createUser", {
-    method: "POST",
-    body: JSON.stringify(userData),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((res) => res.json());
-
-  if (response.erro) {
-    window.alert(response.erro);
-  }
+  const response = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/createUser`,
+    {
+      method: "POST",
+      body: JSON.stringify(userData),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then((res) => res.json());
 
   return response;
 };
 
 const deleteUser = async (userID: string) => {
-  await fetch(`http://localhost:4000/users/deleteUser?id=${userID}`, {
-    method: "DELETE",
-  });
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/deleteUser?id=${userID}`,
+    {
+      method: "DELETE",
+    }
+  );
 };
 
 const addUserToProjects = async ({ userData, projetosSelecionados }: any) => {
-  return await fetch("http://localhost:4000/users/addUserToProjects", {
-    method: "POST",
-    body: JSON.stringify({ userData, projetosSelecionados }),
-  });
+  return await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/addUserToProjects`,
+    {
+      method: "POST",
+      body: JSON.stringify({ userData, projetosSelecionados }),
+    }
+  );
 };
 
 const removeUserFromProjects = async ({ userID, projectsIDs }: any) => {
-  return await fetch("http://localhost:4000/users/removeUserFromProjects", {
-    method: "POST",
-    body: JSON.stringify({ userID, projectsIDs }),
-  });
+  return await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/removeUserFromProjects`,
+    {
+      method: "POST",
+      body: JSON.stringify({ userID, projectsIDs }),
+    }
+  );
 };
 
 const changeUserPassword = async ({
@@ -69,23 +111,37 @@ const changeUserPassword = async ({
   newPassword: string;
   userID: any;
 }) => {
-  await fetch("http://localhost:4000/users/changePassword", {
-    method: "PATCH",
-    body: JSON.stringify({ newPassword, userID }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/changePassword`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ newPassword, userID }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 const changeUserEmail = async ({ newEmail, userID }: { newEmail: string; userID: string }) => {
-  await fetch("http://localhost:4000/users/changeEmail", {
-    method: "PATCH",
-    body: JSON.stringify({ newEmail, userID }),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/users/changeEmail`,
+    {
+      method: "PATCH",
+      body: JSON.stringify({ newEmail, userID }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
 };
 
 //////////////////CUSTOM HOOKS AREA///////////////////

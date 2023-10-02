@@ -3,7 +3,7 @@ import List from "@mui/material/List";
 import FileListItem from "./FileListItem";
 import { useGetFilesByDiscipline } from "@/hooks/arquivos";
 import { Paper, Typography } from "@mui/material";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 const ListBoxStyles = {
   flexBasis: "100%",
@@ -18,7 +18,7 @@ const ListStyles = {
 };
 
 export default function FilesList({ discipline, projectID }: any) {
-  const { data: files, isLoading } = useGetFilesByDiscipline({
+  const { data: files, isLoading, isStale, refetch } = useGetFilesByDiscipline({
     projectID,
     discipline,
   });

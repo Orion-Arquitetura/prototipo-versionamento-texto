@@ -2,8 +2,9 @@ import { ClienteUser, FuncionarioUser } from "@/utils/types";
 import { Box, Button, Modal, Paper, TextField, Typography } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useChangeUserPassword } from "@/hooks/user";
+import { DialogModalContext } from "@/context/DialogModalContext";
 
 export default function ChangePasswordModal({
     open,
@@ -17,6 +18,7 @@ export default function ChangePasswordModal({
     const [visible, setVisibility] = useState(false)
     const [newPassword, setNewPassword] = useState("")
     const { mutate: changePassword } = useChangeUserPassword()
+    const { open: openWarning } = useContext(DialogModalContext)
 
     function toggleVisibility() {
         setVisibility(prev => !prev)
@@ -30,7 +32,7 @@ export default function ChangePasswordModal({
 
     function submitNewPassword() {
         if (newPassword.length < 8) {
-            window.alert("Sua senha deve ter no mínimo 8 caracteres.")
+            openWarning("Sua senha deve ter no mínimo 8 caracteres.")
             return
         }
         changePassword({ newPassword, userID: user._id })

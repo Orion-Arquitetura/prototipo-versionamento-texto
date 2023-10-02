@@ -4,6 +4,7 @@ import styled from "@emotion/styled";
 import ResponsiveAppBar from "./ResponsiveAppBar";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/router";
+import WarningModal from "./WarningModal";
 
 const Main = styled.main`
     min-height: 100vh;
@@ -17,9 +18,10 @@ export default function Layout({ children }: { children: ReactNode }) {
     if ((userData?.tipo !== "administrador") && /admin/.test(router.pathname)) {
         return (
             <>
+                {<WarningModal />}
                 {userData && <ResponsiveAppBar cookies={userData} />}
                 <Main style={{ paddingTop: userData?.nome ? "84px" : "0" }}>
-                    
+
                 </Main>
             </>
         )
@@ -27,6 +29,7 @@ export default function Layout({ children }: { children: ReactNode }) {
 
     return (
         <>
+            {<WarningModal />}
             {userData && <ResponsiveAppBar cookies={userData} />}
             <Main style={{ paddingTop: userData?.nome ? "84px" : "0" }}>
                 {children}

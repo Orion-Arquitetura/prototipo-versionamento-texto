@@ -38,6 +38,17 @@ export default function RequireReviewModal({ handleClose, isOpen, file }: any) {
     }
 
     function setPrazo(prazo: string) {
+        if (prazo === "") {
+            setFormData((prevState: any) => {
+                return {
+                    ...prevState,
+                    prazo: "",
+                };
+            });
+
+            return
+        }
+
         const [year, month, day] = prazo.split("-");
 
         setFormData((prevState: any) => {
@@ -61,6 +72,14 @@ export default function RequireReviewModal({ handleClose, isOpen, file }: any) {
 
     function enviar() {
         createFileReviewRequest({ file, usuario: formData.usuario, prazo: formData.prazo, texto });
+        
+        setFormData({
+            usuario: { nome: "", id: "" },
+            prazo: "",
+        });
+
+        setTexto("");
+
         handleClose();
     }
 
@@ -87,10 +106,10 @@ export default function RequireReviewModal({ handleClose, isOpen, file }: any) {
                                                 </MenuItem>
                                             );
                                         })}
-                                        <MenuItem value={file.metadata.projeto.usuarios.lider.nome} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                                            <Typography variant="body1">{file.metadata.projeto.usuarios.lider.nome}</Typography>
+                                        {file.metadata.projeto.usuarios.lider && <MenuItem value={file.metadata.projeto.usuarios.lider?.nome} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                            <Typography variant="body1">{file.metadata.projeto.usuarios.lider?.nome}</Typography>
                                             <Typography variant="caption" sx={{ color: "#92929290" }}>Líder</Typography>
-                                        </MenuItem>
+                                        </MenuItem>}
                                     </Select>
                                 </FormControl>
                             </Grid>
