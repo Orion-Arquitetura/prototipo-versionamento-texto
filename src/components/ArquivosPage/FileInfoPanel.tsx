@@ -7,7 +7,7 @@ import SendReviewedFileModal from "./SendReviewedFileModal";
 
 //aqui devo verificar se o usuario é admin ou lider do projeto para permitir cancelar ou modificar o pedido de revisao
 
-export default function FileInfoPanel({ file, userData, fileUrl, fileUrl }: any) {
+export default function FileInfoPanel({ file, userData, fileUrl }: any) {
     const [fileReviewModalState, setFileReviewModalState] = useState(false);
     const [fileEditReviewModalState, setFileEditReviewModalState] = useState(false);
     const [sendReviewdFileModalState, setSendReviewdFileModalState] = useState(false);

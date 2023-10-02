@@ -21,8 +21,8 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     queryKey: ["user-cookies"],
     queryFn: async () => {
       const response = await fetch(`${process.env.NODE_ENV === "development"
-          ? "http://localhost:4000"
-          : "https://orion-code-backend.onrender.com"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
         }/users/getCookies`, {
         credentials: "include",
       }).then(async (res) => {
@@ -46,8 +46,8 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     setIsLoadingUserData(true);
 
     const response = await fetch(`${process.env.NODE_ENV === "development"
-        ? "http://localhost:4000"
-        : "https://orion-code-backend.onrender.com"
+      ? "http://localhost:4000"
+      : "https://orion-code-backend.onrender.com"
       }/users/authUser`, {
       method: "POST",
       body: JSON.stringify({ email, senha }),
@@ -113,8 +113,8 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     try {
       setIsLoadingUserData(true);
       await fetch(`${process.env.NODE_ENV === "development"
-          ? "http://localhost:4000"
-          : "https://orion-code-backend.onrender.com"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
         }/users/logOff`, {
         credentials: "include",
       }).then(async (res) => {
@@ -159,7 +159,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
       })
       setIsLoadingUserData(false);
     } catch (e) {
-      openWarning(e)
+      openWarning(e as string)
       return
     }
     return;
