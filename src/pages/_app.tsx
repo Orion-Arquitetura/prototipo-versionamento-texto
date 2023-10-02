@@ -6,6 +6,7 @@ import { theme } from "@/theme/theme";
 import Layout from '@/components/Layout';
 import Head from 'next/head';
 import AuthContextProvider from '@/context/AuthContext';
+import DialogModalContextProvider from '@/context/DialogModalContext';
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
 
@@ -18,15 +19,17 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/orion-estrela.png" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <AuthContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </AuthContextProvider>
-        </ThemeProvider>
-      </QueryClientProvider>
+      <DialogModalContextProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider theme={theme}>
+            <AuthContextProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </AuthContextProvider>
+          </ThemeProvider>
+        </QueryClientProvider>
+      </DialogModalContextProvider>
     </>
   )
 }

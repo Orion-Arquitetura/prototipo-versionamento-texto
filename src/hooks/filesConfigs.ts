@@ -1,156 +1,201 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 const getDisciplines = async () => {
-  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getDisciplines").then((res) =>
-    res.json()
-  );
+  const disciplinas = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/getDisciplines`
+  ).then((res) => res.json());
   return disciplinas;
 };
 
 const getEtapasDoProjeto = async () => {
-  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getEtapasDoProjeto").then(
-    (res) => res.json()
-  );
+  const disciplinas = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/getEtapasDoProjeto`
+  ).then((res) => res.json());
   return disciplinas;
 };
 
 const getTiposDeDocumento = async () => {
-  const disciplinas = await fetch("https://orion-code-backend.onrender.com/filesProps/getTiposDeDocumento").then(
-    (res) => res.json()
-  );
+  const disciplinas = await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/getTiposDeDocumento`
+  ).then((res) => res.json());
   return disciplinas;
 };
 
 const createDiscipline = async (data: { nome: string; sigla: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/filesProps/createDiscipline", {
-    method: "POST",
-    credentials: "include",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => {
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/createDiscipline`,
+    {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
     const response = await res.json();
     console.log(response);
-    if (response.Erro) {
-      window.alert(response.Erro);
-      return;
-    }
-
-    window.alert(response.Success);
   });
 };
 
 const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/filesProps/createEtapaDoProjeto", {
-    method: "POST",
-    credentials: "include",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => {
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/createEtapaDoProjeto`,
+    {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
     const response = await res.json();
     console.log(response);
-    if (response.Erro) {
-      window.alert(response.Erro);
-      return;
-    }
-
-    window.alert(response.Success);
   });
 };
 
 const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
-  await fetch("https://orion-code-backend.onrender.com/filesProps/createTipoDeDocumento", {
-    method: "POST",
-    credentials: "include",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => {
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/createTipoDeDocumento`,
+    {
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
     const response = await res.json();
     console.log(response);
-    if (response.Erro) {
-      window.alert(response.Erro);
-      return;
-    }
-
-    window.alert(response.Success);
   });
 };
 
 const deleteDiscipline = async (id: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/deleteDiscipline?id=${id}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/deleteDiscipline?id=${id}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    }
+  );
 };
 
 const deleteEtapaDoProjeto = async (id: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/deleteEtapaDoProjeto?id=${id}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/deleteEtapaDoProjeto?id=${id}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    }
+  );
 };
 
 const deleteTipoDeDocumento = async (id: string) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/deleteTipoDeDocumento?id=${id}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/deleteTipoDeDocumento?id=${id}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    }
+  );
 };
 
 const updateDiscipline = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/updateDiscipline`, {
-    method: "PATCH",
-    credentials: "include",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => {
-    const response = await res.json();
-    if (response.Erro) {
-      window.alert("Erro: operação não foi concluída.");
-      return;
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/updateDiscipline`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
+  ).then(async (res) => {
+    const response = await res.json();
   });
 };
 
 const updateEtapaDoProjeto = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/updateEtapaDoProjeto`, {
-    method: "PATCH",
-    credentials: "include",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => {
-    const response = await res.json();
-    if (response.Erro) {
-      window.alert("Erro: operação não foi concluída.");
-      return;
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/updateEtapaDoProjeto`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
     }
+  ).then(async (res) => {
+    const response = await res.json();
   });
 };
 
 const updateTipoDeDocumento = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(`https://orion-code-backend.onrender.com/filesProps/updateTipoDeDocumento`, {
-    method: "PATCH",
-    credentials: "include",
-    body: JSON.stringify(data),
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(async (res) => {
+  await fetch(
+    `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+    }/filesProps/updateTipoDeDocumento`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  ).then(async (res) => {
     const response = await res.json();
     console.log(response);
-    if (response.Erro) {
-      window.alert("Erro: operação não foi concluída.");
-      return;
-    }
   });
 };
 

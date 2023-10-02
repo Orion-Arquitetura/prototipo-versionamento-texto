@@ -13,7 +13,8 @@ import {
     MenuItem,
     Select,
 } from "@mui/material";
-import { ChangeEvent, useState } from "react";
+import { useContext, useState } from "react";
+import { DialogModalContext } from "@/context/DialogModalContext";
 
 export default function AddProjectModal({
     open,
@@ -39,6 +40,8 @@ export default function AddProjectModal({
     });
 
     const clientes = users?.filter((user: ClienteUser) => user.tipo === "cliente");
+
+    const { open: openWarning } = useContext(DialogModalContext)
 
     const funcionarios = users?.filter(
         (user: FuncionarioUser) => user.tipo === "funcionario"
@@ -81,20 +84,19 @@ export default function AddProjectModal({
 
     function handleCreateProject() {
         if (projectData.nome.match(/[^a-zA-Z_\d]/g)) {
-            window.alert("Nome de projeto inválido, apenas letras, números e underline são permitidos.");
+            openWarning("Nome de projeto inválido, apenas letras, números e underline são permitidos.");
             return;
         }
 
         if (!/^\d+$/.test(projectData.ano)) {
-            window.alert("Ano de projeto inválido, apenas números são permitidos.");
+            openWarning("Ano de projeto inválido, apenas números são permitidos.");
             return;
         }
 
         if (projectData.ano.length < 4) {
-            window.alert("Digite o ano inteiro.");
+            openWarning("Digite o ano inteiro.");
         }
 
-        console.log(projectData)
         createProject(projectData)
 
         setProjectData({

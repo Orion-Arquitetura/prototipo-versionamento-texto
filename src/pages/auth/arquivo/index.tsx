@@ -28,7 +28,7 @@ export default function Arquivo({ fileId }: { fileId: string }) {
         </Grid>
 
         <Grid item xs={true}>
-          {!isLoadingFile && <FileInfoPanel file={file} userData={userData} />}
+          {!isLoadingFile && <FileInfoPanel file={file} userData={userData} fileUrl={url} />}
         </Grid>
       </Grid>
     </Container>

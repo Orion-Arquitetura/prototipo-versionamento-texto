@@ -1,9 +1,9 @@
 import { Button, Grid, Modal, Paper, TextField, Typography } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import FileUploadInput from "./FileUploadInput";
 import { useDropzone } from "react-dropzone";
 import { useSendReviewedFile } from "@/hooks/arquivos";
-
+import { DialogModalContext } from "@/context/DialogModalContext";
 
 export default function SendReviewedFileModal({ isOpen, handleClose, oldFileVersionData }: any) {
     const [text, setTexto] = useState("");
@@ -11,6 +11,7 @@ export default function SendReviewedFileModal({ isOpen, handleClose, oldFileVers
         useDropzone({ multiple: false });
 
     const { mutate: sendReviewedFile } = useSendReviewedFile(oldFileVersionData)
+    const { open: openWarning } = useContext(DialogModalContext)
 
     function enviar(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -26,7 +27,7 @@ export default function SendReviewedFileModal({ isOpen, handleClose, oldFileVers
             return;
         }
 
-        window.alert("Formato de arquivo inválido.");
+        openWarning("Formato de arquivo inválido.");
         acceptedFiles.pop();
         return;
     }

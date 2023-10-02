@@ -12,7 +12,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function EditReviewModal({ handleClose, isOpen, file }: any) {
     const { data: users, isLoading } = useGetFuncionarios();
@@ -23,6 +23,20 @@ export default function EditReviewModal({ handleClose, isOpen, file }: any) {
         usuario: { nome: file.metadata.responsavelRevisao ? file.metadata.responsavelRevisao.nome : "", id: file.metadata.responsavelRevisao ? file.metadata.responsavelRevisao.id : "" },
         prazo: "",
     });
+
+    function translateDate(date: string) {
+        if (date === "" || date === "Sem prazo definido" || date === undefined) {
+            return ""
+        }
+        return date.split("/").reverse().join("-")
+    }
+
+    useEffect(() => {
+        setFormData({
+            usuario: { nome: file.metadata.responsavelRevisao ? file.metadata.responsavelRevisao.nome : "", id: file.metadata.responsavelRevisao ? file.metadata.responsavelRevisao.id : "" },
+            prazo: file.metadata.prazoRevisao === "Sem prazo definido" ? "" : file.metadata.prazoRevisao,
+        })
+    }, [file])
 
     const [texto, setTexto] = useState(file.metadata.comentarioRevisao ? file.metadata.comentarioRevisao : "");
 
@@ -39,6 +53,17 @@ export default function EditReviewModal({ handleClose, isOpen, file }: any) {
     }
 
     function setPrazo(prazo: string) {
+        if (prazo === "") {
+            setFormData((prevState: any) => {
+                return {
+                    ...prevState,
+                    prazo: "",
+                };
+            });
+
+            return
+        }
+
         const [year, month, day] = prazo.split("-");
 
         setFormData((prevState: any) => {
@@ -50,7 +75,7 @@ export default function EditReviewModal({ handleClose, isOpen, file }: any) {
     }
 
     function cancel() {
-        setFormData(prev => ({...prev, prazo: ""}))
+        setFormData(prev => ({ ...prev, prazo: file.metadata.prazoRevisao === "Sem prazo definido" ? "" : file.metadata.prazoRevisao }))
         handleClose();
     }
 
@@ -83,10 +108,10 @@ export default function EditReviewModal({ handleClose, isOpen, file }: any) {
                                                 </MenuItem>
                                             );
                                         })}
-                                        <MenuItem value={file.metadata.projeto.usuarios.lider.nome} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                                        {file.metadata.projeto.usuarios.lider && <MenuItem value={file.metadata.projeto.usuarios.lider.nome} sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                                             <Typography variant="body1">{file.metadata.projeto.usuarios.lider.nome}</Typography>
                                             <Typography variant="caption" sx={{ color: "#92929290" }}>Líder</Typography>
-                                        </MenuItem>
+                                        </MenuItem>}
                                     </Select>
                                 </FormControl>
                             </Grid>
@@ -96,6 +121,7 @@ export default function EditReviewModal({ handleClose, isOpen, file }: any) {
                                     min={new Date().toISOString().split("T")[0]}
                                     onChange={(ev) => setPrazo(ev.target.value)}
                                     style={{ padding: 12, height: "100%", float: "right", width: "100%" }}
+                                    defaultValue={(translateDate(formData.prazo))}
                                 />
                             </Grid>
                             <Grid item xs={12}>

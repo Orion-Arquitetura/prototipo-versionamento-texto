@@ -1,11 +1,13 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { Grid, Paper, Modal, Button, Typography, TextField } from "@mui/material";
+import { Grid, Paper, Modal, Button, Typography, TextField, Box } from "@mui/material";
 import { useCreateFile } from "@/hooks/arquivos";
 import DisciplinesSelect from "./Selects/DisciplineSelect";
 import EtapaDoProjetoSelect from "./Selects/EtapaDoProjetoSelect";
 import FileUploadInput from "./FileUploadInput";
 import TipoDeDocumentoSelect from "./Selects2/TipoDeDocumentoSelect";
+import { BarLoader } from "react-spinners";
+import { DialogModalContext } from "@/context/DialogModalContext";
 
 export default function AddFileModal({ open, handleClose, project }: any) {
   const [fileFilters, setFileFilters] = useState({
@@ -14,9 +16,13 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     etapaDoProjeto: "",
   });
 
+  const { open: openWarning } = useContext(DialogModalContext)
+
   const [numeroPrancha, setNumeroPrancha] = useState("")
 
   const { getRootProps, getInputProps, isDragActive, acceptedFiles } = useDropzone({ multiple: false });
+
+  const [loading, setLoading] = useState(false)
 
   const { mutate: createFile } = useCreateFile({
     projectID: project._id,
@@ -25,29 +31,39 @@ export default function AddFileModal({ open, handleClose, project }: any) {
 
   async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setLoading(true)
 
     if (numeroPrancha.length < 3 || numeroPrancha.length === 0) {
-      window.alert("Número da prancha deve conter 3 caracteres.")
+      setLoading(false)
+      openWarning("Número da prancha deve conter 3 caracteres.")
       return
     }
 
-    // if (acceptedFiles[0].path.match(/\.pdf$/)) {
-    const formData = new FormData();
-    formData.append("arquivo", acceptedFiles[0]);
-    formData.append("fileFilters", JSON.stringify(fileFilters));
-    formData.append("numeroPrancha", numeroPrancha)
-    formData.append("projectId", project._id);
-    createFile({ fileData: formData });
+    if (acceptedFiles[0].path.match(/\.pdf$/)) {
+      const formData = new FormData();
+      formData.append("arquivo", acceptedFiles[0]);
+      formData.append("fileFilters", JSON.stringify(fileFilters));
+      formData.append("numeroPrancha", numeroPrancha)
+      formData.append("projectId", project._id);
+      createFile({ fileData: formData });
+      setTimeout(() => {
+        handleClose()
+        setLoading(false)
+        acceptedFiles.pop();
+      }, 2000)
+      return;
+    }
+
+    openWarning("Formato de arquivo inválido.");
     acceptedFiles.pop();
     return;
-    // }
-
-    // window.alert("Formato de arquivo inválido.");
-    // acceptedFiles.pop();
-    // return;
   }
 
   function cancelSubmit() {
+    if (loading) {
+      return
+    }
+
     setFileFilters({
       tipoDeDocumento: "",
       disciplina: "",
@@ -95,7 +111,7 @@ export default function AddFileModal({ open, handleClose, project }: any) {
       sx={{ display: "grid", placeItems: "center" }}
     >
       <Paper elevation={8} sx={{ p: 3, width: "50%" }}>
-        <form onSubmit={submitNewFileData}>
+        {!loading && <form onSubmit={submitNewFileData}>
           <Grid
             container
             rowGap={1}
@@ -145,13 +161,18 @@ export default function AddFileModal({ open, handleClose, project }: any) {
               <Button
                 variant="contained"
                 type="submit"
-                disabled={acceptedFiles.length === 0 ? true : false}
+                disabled={acceptedFiles.length === 0 ? true : false || fileFilters.disciplina === "" || fileFilters.tipoDeDocumento === "" || fileFilters.etapaDoProjeto === "" || numeroPrancha === ""}
               >
                 Enviar
               </Button>
             </Grid>
           </Grid>
-        </form>
+        </form>}
+        {loading && (
+          <Box sx={{ height: "40vh", display: "grid", placeItems: "center" }}>
+            <BarLoader />
+          </Box>
+        )}
       </Paper>
     </Modal >
   )

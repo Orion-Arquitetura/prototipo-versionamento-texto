@@ -7,7 +7,7 @@ import SendReviewedFileModal from "./SendReviewedFileModal";
 
 //aqui devo verificar se o usuario é admin ou lider do projeto para permitir cancelar ou modificar o pedido de revisao
 
-export default function FileInfoPanel({ file, userData, fileUrl }: any) {
+export default function FileInfoPanel({ file, userData, fileUrl, fileUrl }: any) {
     const [fileReviewModalState, setFileReviewModalState] = useState(false);
     const [fileEditReviewModalState, setFileEditReviewModalState] = useState(false);
     const [sendReviewdFileModalState, setSendReviewdFileModalState] = useState(false);
@@ -38,11 +38,9 @@ export default function FileInfoPanel({ file, userData, fileUrl }: any) {
         setSendReviewdFileModalState(false)
     }
 
-    const isUserProjectLider = file.metadata.projeto.usuarios.lider._id === userData?._id;
+    const isUserProjectLider = file.metadata.projeto.usuarios.lider?._id === userData?._id;
 
     const isUserReviewResponsible = file.metadata.responsavelRevisao?.id === userData?._id;
-
-    console.log(userData)
 
     return (
         <Paper sx={{ p: 3 }} elevation={8}>
@@ -60,16 +58,16 @@ export default function FileInfoPanel({ file, userData, fileUrl }: any) {
             {
                 file?.metadata.emRevisao ? <Typography>Prazo para revisão: <br /> {file?.metadata.prazoRevisao}</Typography> : null
             }
-            <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column", rowGap: 2 }}>
-                <Button variant="outlined" href={fileUrl} download={`${file.filename}.pdf`}>Download</Button>
+            <Box sx={{ display: "flex", alignItems: "center", flexDirection: "column", rowGap: 1, mt: 2 }}>
+                <Button variant="outlined" fullWidth href={fileUrl} download={`${file.filename}.pdf`}>Download</Button>
 
                 {(userData?.tipo === "administrador" || isUserProjectLider) && file?.metadata.emRevisao &&
                     (
                         <Button
                             variant="contained"
                             color={file?.metadata.emRevisao ? "error" : "primary"}
-                            sx={{ mt: 2 }}
                             onClick={handleOpenFileEditReviewModal}
+                            fullWidth
                         >
                             Editar revisao
                         </Button>
@@ -79,7 +77,7 @@ export default function FileInfoPanel({ file, userData, fileUrl }: any) {
                         <Button
                             variant="contained"
                             color={file?.metadata.emRevisao ? "error" : "primary"}
-
+                            fullWidth
                             onClick={file?.metadata.emRevisao ? () => cancelFileRevisionRequest(file) : handleOpenFileReviewModal}
                         >
                             {file?.metadata.emRevisao
@@ -92,6 +90,7 @@ export default function FileInfoPanel({ file, userData, fileUrl }: any) {
                         color="primary"
                         sx={{ mt: 2 }}
                         onClick={handleOpenSendReviewedFileModal}
+                        fullWidth
                     >
                         Enviar nova versao
                     </Button>}
