@@ -1,4 +1,6 @@
+import { DialogModalContext } from "@/context/DialogModalContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useContext } from "react";
 
 const getDisciplines = async () => {
   const disciplinas = await fetch(
@@ -34,7 +36,7 @@ const getTiposDeDocumento = async () => {
 };
 
 const createDiscipline = async (data: { nome: string; sigla: string }) => {
-  await fetch(
+  const create = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -48,10 +50,11 @@ const createDiscipline = async (data: { nome: string; sigla: string }) => {
         "Content-Type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const response = await res.json();
-    console.log(response);
-  });
+  ).then((res) => res.json());
+
+  if (!!create.Error) {
+    throw create.Error as Error;
+  }
 };
 
 const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
@@ -69,10 +72,7 @@ const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
         "Content-Type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const response = await res.json();
-    console.log(response);
-  });
+  );
 };
 
 const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
@@ -90,10 +90,7 @@ const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
         "Content-Type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const response = await res.json();
-    console.log(response);
-  });
+  );
 };
 
 const deleteDiscipline = async (id: string) => {
@@ -227,11 +224,15 @@ export const useGetTiposDeDocumento = () => {
 
 export const useCreateDiscipline = () => {
   const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
 
   return useMutation({
     mutationFn: createDiscipline,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["disciplines"]);
+    },
+    onError: (e) => {
+      open(`Uma disciplina de ${Object.keys(e.keyValue)[0]} ${Object.values(e.keyValue)[0]} já existe.`);
     },
   });
 };

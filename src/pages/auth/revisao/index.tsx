@@ -43,7 +43,7 @@ export default function Revisao({ id }: { id: string }) {
                         <Typography>Data de atribuição: {formatDate(revisao.createdAt)} </Typography>
                         <Typography>Prazo: {revisao.prazo}</Typography>
                         <Typography>Finalizada: {revisao.finalizada ? "Sim" : "Não"}</Typography>
-                        {revisao.finalizada && <Typography>Data de finalização: </Typography>}
+                        {revisao.finalizada && <Typography>Data de finalização: {revisao.dataFinalizacao} </Typography>}
                         <Typography mt={2}>Texto de requerimento:</Typography>
                         <Paper sx={{ p: 1, backgroundColor: theme.palette.primary.main, color: theme.palette.primary.light }}>
                             <Typography>{revisao.textoRequerimento}</Typography>

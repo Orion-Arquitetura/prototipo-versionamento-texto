@@ -121,9 +121,9 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                 tarefasNaoConcluidas.map((tarefa) => (
                   <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
                     <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
-                    <Typography>Prazo: {tarefa.prazo}</Typography>
+                    <Typography>Prazo para entrega: {tarefa.prazo}</Typography>
                     <Typography>Atribuído por: {tarefa.atribuidaPor.nome}</Typography>
-                    <Button sx={{mt: 2}} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver detalhes</Button>
+                    <Button sx={{ mt: 2 }} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver detalhes</Button>
                   </Paper>
                 )))}
 
@@ -134,12 +134,13 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                 </Paper>
               )) ||
                 tarefasConcluidas.map((tarefa) => {
-                  console.log(tarefa.dataFinalizacao); return (
+                  return (
                     <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
-                      <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
-                      <Typography>Prazo: {tarefa.prazo}</Typography>
+                      <Typography>Arquivo revisado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
+                      <Typography>Arquivo gerado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoFinal.id } }}>{tarefa.arquivoFinal.nome}</Link></Typography>
+                      <Typography>Prazo para entrega: {tarefa.prazo}</Typography>
                       <Typography>Data de finalização: {formatDate(tarefa.dataFinalizacao)}</Typography>
-                      <Button sx={{mt: 2}} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver mais detalhes</Button>
+                      <Button sx={{ mt: 2 }} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver mais detalhes</Button>
                     </Paper>
                   )
                 }))}
@@ -164,12 +165,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookies = parseCookies(context);
 
   if ((cookies.client_tipo !== "administrador") || (cookies.client_tipo === undefined)) {
-      return {
-          redirect: {
-              destination: "/",
-              permanent: false
-          }
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
       }
+    }
   }
 
   return {

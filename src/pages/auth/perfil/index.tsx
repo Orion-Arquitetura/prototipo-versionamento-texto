@@ -142,7 +142,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                             {tipoTarefas === "emAndamento" &&
                                 ((tarefasNaoConcluidas.length === 0 && (
                                     <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
-                                        Usuário não tem nenhuma tarefa em andamento.
+                                        Usuário não tem nenhuma revisão em andamento.
                                     </Paper>
                                 )) ||
                                     tarefasNaoConcluidas.map((tarefa) => (
@@ -155,14 +155,14 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                             {tipoTarefas === "concluidas" &&
                                 ((tarefasConcluidas.length === 0 && (
                                     <Paper elevation={8} sx={{ p: 3, mt: 2 }}>
-                                        Usuário não tem nenhuma tarefa concluida.
+                                        Usuário não tem nenhuma revisão concluida.
                                     </Paper>
                                 )) ||
                                     tarefasConcluidas.map((tarefa) => (
                                         <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
-                                            <Typography>Arquivo a revisar: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
-                                            <Typography>Prazo: {tarefa.prazo}</Typography>
-                                            <Typography>Arquivo resultado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoFinal.id } }}>{tarefa.arquivoFinal.nome}</Link></Typography>
+                                            <Typography>Arquivo revisado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
+                                            <Typography>Arquivo gerado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoFinal.id } }}>{tarefa.arquivoFinal.nome}</Link></Typography>
+                                            <Typography>Prazo para entrega: {tarefa.prazo}</Typography>
                                             <Typography>Data de conclusão: {formatDate(tarefa.dataFinalizacao)}</Typography>
                                         </Paper>
                                     )))}
@@ -173,7 +173,6 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                     <ChangePasswordModal open={changePasswordModalState} handleClose={closeChangePasswordModalState} user={usuario} />
                     <ChangeEmailModal open={changeEmailModalState} handleClose={closeChangeEmailModalState} user={usuario} />
                     <Button variant="contained" onClick={openChangePasswordModalState}>Alterar senha</Button>
-                    {/* <Button variant="contained" onClick={openChangeEmailModalState}>Alterar email</Button> */}
                 </Box>
             </Paper>
         </Container>
