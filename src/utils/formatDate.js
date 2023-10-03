@@ -1,8 +1,9 @@
 export default function formatDate(date) {
-    const a = new Date(date)
-    const day = a.getDate() <= 9 ? `0${a.getDate()}` : a.getDate()
-    const month = a.getMonth() + 1 <= 9 ? `0${a.getMonth() + 1}`: a.getMonth()
-    const year = a.getFullYear()
+    const parsedDate = new Date(date);
+
+    const day = String(parsedDate.getUTCDate()).padStart(2, "0");
+    const month = String(parsedDate.getUTCMonth() + 1).padStart(2, "0");
+    const year = parsedDate.getUTCFullYear();
 
     return (`${day}/${month}/${year}`)
 }

@@ -28,8 +28,6 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
   const [tipoTarefas, setTipoTarefas] = useState("emAndamento");
   const [deleteUserModalState, setDeleteUserModalState] = useState(false);
 
-  console.log(usuario)
-
   function openDeleteUserModalState() {
     setDeleteUserModalState(true);
   }
@@ -79,7 +77,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                     sx={{ p: 3, mt: 2 }}
                   >
                     {projetoData.projeto.nome} <br />
-                    Função: {projetoData.roles.join(" - ")}
+                    Função: {projetoData.roles[1]}
                   </Grid>
                 );
               })) || (
@@ -125,6 +123,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                     <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
                     <Typography>Prazo: {tarefa.prazo}</Typography>
                     <Typography>Atribuído por: {tarefa.atribuidaPor.nome}</Typography>
+                    <Button sx={{mt: 2}} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver detalhes</Button>
                   </Paper>
                 )))}
 
@@ -140,6 +139,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
                       <Typography>Arquivo: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
                       <Typography>Prazo: {tarefa.prazo}</Typography>
                       <Typography>Data de finalização: {formatDate(tarefa.dataFinalizacao)}</Typography>
+                      <Button sx={{mt: 2}} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver mais detalhes</Button>
                     </Paper>
                   )
                 }))}

@@ -21,7 +21,7 @@ const createFile = async ({ fileData }: { fileData: any }) => {
       throw new Error(resposta.Erro);
     }
   } catch (e) {
-    throw e
+    throw e;
   }
 };
 
@@ -141,6 +141,7 @@ const cancelFileReviewRequest = async (file: any) => {
 };
 
 const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
+  console.log({ file, usuario, prazo, texto });
   await fetch(
     `${
       process.env.NODE_ENV === "development"
@@ -194,7 +195,7 @@ export const useCreateFile = ({
       }, 2000);
     },
     onError: (error) => {
-      open(error.toString())
+      open(error.toString());
     },
   });
 };

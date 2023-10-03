@@ -14,7 +14,7 @@ import PictureAsPdfOutlinedIcon from "@mui/icons-material/PictureAsPdfOutlined";
 import { useContext, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
-import { useDeleteFile } from "@/hooks/arquivos";
+import { useDeleteFile, useGetFileBinaries } from "@/hooks/arquivos";
 import { theme } from "@/theme/theme";
 import DeleteFileModal from "./DeleteFileModal";
 
@@ -56,6 +56,25 @@ export default function FileListItem({ file }: { file: any }) {
 
   function handleDeleteFile() {
     deleteFile({ fileID: file._id, projectID: file.metadata.projeto.id });
+  }
+
+  async function download() {
+    const fileUrl = await fetch(
+      `${process.env.NODE_ENV === "development"
+        ? "http://localhost:4000"
+        : "https://orion-code-backend.onrender.com"
+      }/arquivos/getFileBinaries?id=${file._id}`,
+      {
+        credentials: "include",
+      }
+    )
+      .then((res) => res.blob())
+      .then((res) => URL.createObjectURL(res))
+
+      const link = document.createElement("a")
+      link.href = fileUrl
+      link.download = `${file.filename}.pdf`
+      link.click()
   }
 
   return (
@@ -112,8 +131,10 @@ export default function FileListItem({ file }: { file: any }) {
                 query: { id: file._id }
               }}
             >
-              <Typography component={({ children }) => <Button color="secondary" variant="contained">{children}</Button>}>Visualizar</Typography>
+              <Typography component={({ children }) => <Button sx={{backgroundColor: theme.palette.secondary.main}} variant="contained">{children}</Button>}>Visualizar</Typography>
             </Link>
+
+            <Button sx={{backgroundColor: theme.palette.primary.dark, ml: 1}}  variant="contained" onClick={download}>Download</Button>
 
             {userData.tipo === "administrador" && file.metadata.ultimaVersao && (
               <Button

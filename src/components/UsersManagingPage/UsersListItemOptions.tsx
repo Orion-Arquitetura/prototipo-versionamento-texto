@@ -5,20 +5,11 @@ import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
 import { FuncionarioUser, ClienteUser } from "@/utils/types";
-import AddUserToProjectsModal from "./AddUserToProjectsModal";
-import RemoveUserFromProjectsModal from "./RemoveUserFromProjectsModal";
 import DeleteUserModal from "./DeleteUserModal";
 
 export default function UsersListItemOptions({ user }: { user: FuncionarioUser | ClienteUser }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-
-  const [addUserToProjectsModalState, setAddUserToProjectsModalState] =
-    useState(false);
-  const [
-    removeUserFromProjectsModalState,
-    setRemoveUserFromProjectsModalState,
-  ] = useState(false);
 
   const [deleteUserModalState, setDeleteUserModalState] = useState(false);
 
@@ -31,26 +22,6 @@ export default function UsersListItemOptions({ user }: { user: FuncionarioUser |
     setDeleteUserModalState(false);
   }
 
-  const { mutate } = useDeleteUser();
-
-  function openAddUserToProjectsModal() {
-    setAddUserToProjectsModalState(true);
-    handleCloseMenu();
-  }
-
-  function closeAddUserToProjectsModal() {
-    setAddUserToProjectsModalState(false);
-  }
-
-  function openRemoveUserFromProjectsModal() {
-    setRemoveUserFromProjectsModalState(true);
-    handleCloseMenu();
-  }
-
-  function closeRemoveUserFromProjectsModal() {
-    setRemoveUserFromProjectsModalState(false);
-  }
-
   function handleClickMenu(event: any) {
     setAnchorEl(event.currentTarget);
   }
@@ -59,23 +30,8 @@ export default function UsersListItemOptions({ user }: { user: FuncionarioUser |
     setAnchorEl(null);
   }
 
-  function handleDeleteUser() {
-    mutate(user);
-    handleCloseMenu();
-  }
-
   return (
     <>
-      <AddUserToProjectsModal
-        isOpen={addUserToProjectsModalState}
-        handleClose={closeAddUserToProjectsModal}
-        user={user}
-      />
-      <RemoveUserFromProjectsModal
-        isOpen={removeUserFromProjectsModalState}
-        handleClose={closeRemoveUserFromProjectsModal}
-        user={user}
-      />
       <DeleteUserModal
         open={deleteUserModalState}
         handleClose={closeDeleteUserModalState}
@@ -91,12 +47,6 @@ export default function UsersListItemOptions({ user }: { user: FuncionarioUser |
         onClose={handleCloseMenu}
         anchorOrigin={{ vertical: "center", horizontal: "left" }}
       >
-        {/* <MenuItem onClick={openAddUserToProjectsModal}>
-          Adicionar a projetos
-        </MenuItem>
-        <MenuItem onClick={openRemoveUserFromProjectsModal}>
-          Remover de projetos
-        </MenuItem> */}
         <MenuItem sx={{ p: 0 }}>
           <Link
             href={{
