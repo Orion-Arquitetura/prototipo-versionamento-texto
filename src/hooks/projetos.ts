@@ -21,7 +21,10 @@ const getOneProject = async (id: string) => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/projetos/getOneProject?id=${id}`
+    }/projetos/getOneProject?id=${id}`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return project;
 };
@@ -51,6 +54,7 @@ const createProject = async ({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -64,6 +68,7 @@ const deleteProject = async (project: Projeto) => {
     }/projetos/deleteProject?id=${project._id}`,
     {
       method: "DELETE",
+      credentials: "include",
     }
   );
 };
@@ -87,6 +92,7 @@ const addLiderToProject = async ({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -110,6 +116,7 @@ const addClientesToProject = async ({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -133,6 +140,7 @@ const addProjetistasToProject = async ({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -150,6 +158,7 @@ const removeProjectLider = async ({ user, project }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -167,6 +176,7 @@ const removeProjetistaFromProject = async ({ user, project }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -184,6 +194,7 @@ const removeClienteFromProject = async ({ user, project }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -201,6 +212,7 @@ const changeProjectLider = async ({ user, project }) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
