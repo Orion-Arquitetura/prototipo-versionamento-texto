@@ -9,6 +9,7 @@ async function getRevisao(id: string) {
     }/revisoes/getRevision?id=${id}`,
     {
       method: "GET",
+      credentials: "include"
     }
   ).then((res) => res.json());
   return revisao

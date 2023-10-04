@@ -6,7 +6,10 @@ const getUsers = async () => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/users/getAllUsers`
+    }/users/getAllUsers`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return users;
 };
@@ -17,7 +20,10 @@ const getOneUser = async ({ id, type }) => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/users/getOneUser?id=${id}&type=${type}`
+    }/users/getOneUser?id=${id}&type=${type}`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return user;
 };
@@ -28,7 +34,10 @@ const getClientes = async () => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/users/getAllClientes`
+    }/users/getAllClientes`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return clientes;
 };
@@ -39,7 +48,10 @@ const getFuncionarios = async () => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/users/getAllFuncionarios`
+    }/users/getAllFuncionarios`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return funcionarios;
 };
@@ -57,6 +69,7 @@ const createUser = async (userData: any) => {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   ).then((res) => res.json());
 
@@ -72,6 +85,7 @@ const deleteUser = async (userID: string) => {
     }/users/deleteUser?id=${userID}`,
     {
       method: "DELETE",
+      credentials: "include",
     }
   );
 };
@@ -86,6 +100,7 @@ const addUserToProjects = async ({ userData, projetosSelecionados }: any) => {
     {
       method: "POST",
       body: JSON.stringify({ userData, projetosSelecionados }),
+      credentials: "include",
     }
   );
 };
@@ -100,6 +115,7 @@ const removeUserFromProjects = async ({ userID, projectsIDs }: any) => {
     {
       method: "POST",
       body: JSON.stringify({ userID, projectsIDs }),
+      credentials: "include",
     }
   );
 };
@@ -123,6 +139,7 @@ const changeUserPassword = async ({
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };
@@ -140,6 +157,7 @@ const changeUserEmail = async ({ newEmail, userID }: { newEmail: string; userID:
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: "include",
     }
   );
 };

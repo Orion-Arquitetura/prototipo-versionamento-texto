@@ -8,7 +8,10 @@ const getDisciplines = async () => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/filesProps/getDisciplines`
+    }/filesProps/getDisciplines`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return disciplinas;
 };
@@ -19,7 +22,10 @@ const getEtapasDoProjeto = async () => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/filesProps/getEtapasDoProjeto`
+    }/filesProps/getEtapasDoProjeto`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return disciplinas;
 };
@@ -30,7 +36,10 @@ const getTiposDeDocumento = async () => {
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/filesProps/getTiposDeDocumento`
+    }/filesProps/getTiposDeDocumento`,
+    {
+      credentials: "include",
+    }
   ).then((res) => res.json());
   return disciplinas;
 };
@@ -232,7 +241,9 @@ export const useCreateDiscipline = () => {
       await queryClient.invalidateQueries(["disciplines"]);
     },
     onError: (e) => {
-      open(`Uma disciplina de ${Object.keys(e.keyValue)[0]} ${Object.values(e.keyValue)[0]} já existe.`);
+      open(
+        `Uma disciplina de ${Object.keys(e.keyValue)[0]} ${Object.values(e.keyValue)[0]} já existe.`
+      );
     },
   });
 };
