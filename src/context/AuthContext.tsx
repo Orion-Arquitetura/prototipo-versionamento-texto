@@ -56,16 +56,17 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
         "Content-Type": "application/json",
       },
     }).then(async (res) => {
-      await queryClient.invalidateQueries(["user-cookies"]);
       const reponse = res.json()
       return reponse;
-    });
+    })
 
-    if (response.erro) {
-      openWarning(response.erro);
+    if (response.error) {
+      openWarning(response.message);
       setIsLoadingUserData(false);
       return;
     }
+
+    await queryClient.invalidateQueries(["user-cookies"]);
 
     setCookie(null, "client_tipo", response.tipo, {
       path: "/",
