@@ -50,7 +50,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
       <PageTitle title={`Gerenciar usuário - ${usuario.nome}`} hasBackButton />
       <Paper elevation={8} sx={{ p: 3 }}>
         <Typography variant="h5">{usuario.nome}</Typography>
-        <Typography variant="caption">Adicionado em: {formatDate(usuario.dataCriacao)}</Typography>
+        <Typography variant="caption">Adicionado em: {formatDate(usuario.createdAt)}</Typography>
 
         <Paper
           elevation={8}
