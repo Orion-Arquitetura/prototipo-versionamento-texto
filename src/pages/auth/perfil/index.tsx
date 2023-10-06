@@ -148,7 +148,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                                     tarefasNaoConcluidas.map((tarefa) => (
                                         <Paper elevation={8} sx={{ p: 3, mt: 2 }} key={tarefa._id}>
                                             <Typography>Arquivo a revisar: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
-                                            <Typography>Prazo: {tarefa.prazo}</Typography>
+                                            <Typography>Prazo para entrega: {tarefa.prazo}</Typography>
                                         </Paper>
                                     )))}
 
@@ -164,6 +164,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                                             <Typography>Arquivo gerado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoFinal.id } }}>{tarefa.arquivoFinal.nome}</Link></Typography>
                                             <Typography>Prazo para entrega: {tarefa.prazo}</Typography>
                                             <Typography>Data de conclusão: {formatDate(tarefa.dataFinalizacao)}</Typography>
+                                            <Button sx={{ mt: 2 }} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver detalhes</Button>
                                         </Paper>
                                     )))}
                         </Paper>

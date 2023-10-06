@@ -20,14 +20,14 @@ export default function Arquivo({ fileId }: { fileId: string }) {
       <PageTitle title={`${file?.filename}${file?.metadata.emRevisao ? " - em revisão" : ""}`} hasBackButton />
       <Grid
         container
-        columnGap={2}
+        columnGap={1}
         sx={{ height: "100vh", position: "relative", justifyContent: "space-between" }}
       >
-        <Grid item xs={9}>
+        <Grid item xs={true}>
           {url && !isLoadingFile && <PdfViewer url={url} />}
         </Grid>
 
-        <Grid item xs={true}>
+        <Grid item xs={3}>
           {!isLoadingFile && <FileInfoPanel file={file} userData={userData} fileUrl={url} />}
         </Grid>
       </Grid>
