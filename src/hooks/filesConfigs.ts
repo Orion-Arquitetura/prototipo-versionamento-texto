@@ -45,7 +45,7 @@ const getTiposDeDocumento = async () => {
 };
 
 const createDiscipline = async (data: { nome: string; sigla: string }) => {
-  const create = await fetch(
+  const result = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -61,13 +61,13 @@ const createDiscipline = async (data: { nome: string; sigla: string }) => {
     }
   ).then((res) => res.json());
 
-  if (!!create.Error) {
-    throw create.Error as Error;
+  if (result.error) {
+    throw result as Error;
   }
 };
 
 const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
-  await fetch(
+  const result = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -81,11 +81,15 @@ const createEtapaDoProjeto = async (data: { nome: string; sigla: string }) => {
         "Content-Type": "application/json",
       },
     }
-  );
+  ).then((res) => res.json());
+
+  if (result.error) {
+    throw result as Error;
+  }
 };
 
 const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
-  await fetch(
+  const result = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -99,7 +103,11 @@ const createTipoDeDocumento = async (data: { nome: string; sigla: string }) => {
         "Content-Type": "application/json",
       },
     }
-  );
+  ).then((res) => res.json());
+
+  if (result.error) {
+    throw result as Error;
+  }
 };
 
 const deleteDiscipline = async (id: string) => {
@@ -145,7 +153,7 @@ const deleteTipoDeDocumento = async (id: string) => {
 };
 
 const updateDiscipline = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(
+  const result = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -159,13 +167,15 @@ const updateDiscipline = async (data: { nome: string; sigla: string; id: string 
         "Content-Type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const response = await res.json();
-  });
+  ).then((res) => res.json());
+
+  if (result.error) {
+    throw result as Error;
+  }
 };
 
 const updateEtapaDoProjeto = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(
+  const result = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -179,13 +189,15 @@ const updateEtapaDoProjeto = async (data: { nome: string; sigla: string; id: str
         "Content-Type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const response = await res.json();
-  });
+  ).then((res) => res.json());
+
+  if (result.error) {
+    throw result as Error;
+  }
 };
 
 const updateTipoDeDocumento = async (data: { nome: string; sigla: string; id: string }) => {
-  await fetch(
+  const result = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
@@ -199,10 +211,11 @@ const updateTipoDeDocumento = async (data: { nome: string; sigla: string; id: st
         "Content-Type": "application/json",
       },
     }
-  ).then(async (res) => {
-    const response = await res.json();
-    console.log(response);
-  });
+  ).then((res) => res.json());
+
+  if (result.error) {
+    throw result as Error;
+  }
 };
 
 //////////////////// CUSTOM HOOKS AREA /////////////////////////
@@ -241,31 +254,37 @@ export const useCreateDiscipline = () => {
       await queryClient.invalidateQueries(["disciplines"]);
     },
     onError: (e) => {
-      open(
-        `Uma disciplina de ${Object.keys(e.keyValue)[0]} ${Object.values(e.keyValue)[0]} já existe.`
-      );
+      open(e.message);
     },
   });
 };
 
 export const useCreateEtapaDoProjeto = () => {
   const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
 
   return useMutation({
     mutationFn: createEtapaDoProjeto,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["etapas-de-projeto"]);
     },
+    onError: (e) => {
+      open(e.message);
+    },
   });
 };
 
 export const useCreateTipoDeDocumento = () => {
   const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
 
   return useMutation({
     mutationFn: createTipoDeDocumento,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["tipos-de-documento"]);
+    },
+    onError: (e) => {
+      open(e.message);
     },
   });
 };
@@ -305,33 +324,45 @@ export const useDeleteTipoDeDocumento = () => {
 
 export const useUpdateDiscipline = () => {
   const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
 
   return useMutation({
     mutationFn: updateDiscipline,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["disciplines"]);
     },
+    onError: (e) => {
+      open(e.message);
+    },
   });
 };
 
 export const useUpdateEtapaDoProjeto = () => {
   const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
 
   return useMutation({
     mutationFn: updateEtapaDoProjeto,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["etapas-de-projeto"]);
     },
+    onError: (e) => {
+      open(e.message);
+    },
   });
 };
 
 export const useUpdateTipoDeDocumento = () => {
   const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
 
   return useMutation({
     mutationFn: updateTipoDeDocumento,
     onSuccess: async () => {
       await queryClient.invalidateQueries(["tipos-de-documento"]);
+    },
+    onError: (e) => {
+      open(e.message);
     },
   });
 };
