@@ -1,6 +1,6 @@
 import { DialogModalContext } from "@/context/DialogModalContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 const createFile = async ({ fileData }: { fileData: any }) => {
   try {
@@ -104,61 +104,6 @@ const getFileMetadata = async (fileID: string) => {
   return file;
 };
 
-const createFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
-  await fetch(
-    `${
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:4000"
-        : "https://orion-code-backend.onrender.com"
-    }/arquivos/createFileReviewRequest`,
-    {
-      method: "POST",
-      body: JSON.stringify({ file, usuario, prazo, texto }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    }
-  );
-};
-
-const cancelFileReviewRequest = async (file: any) => {
-  await fetch(
-    `${
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:4000"
-        : "https://orion-code-backend.onrender.com"
-    }/arquivos/cancelFileReviewRequest`,
-    {
-      method: "DELETE",
-      body: JSON.stringify(file),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    }
-  );
-};
-
-const editFileReviewRequest = async ({ file, usuario, prazo, texto }: any) => {
-  console.log({ file, usuario, prazo, texto });
-  await fetch(
-    `${
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:4000"
-        : "https://orion-code-backend.onrender.com"
-    }/arquivos/editFileReviewRequest`,
-    {
-      method: "PATCH",
-      body: JSON.stringify({ file, usuario, prazo, texto }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    }
-  );
-};
-
 const createNewFileFromRevision = async ({ fileData }: any) => {
   await fetch(
     `${
@@ -192,7 +137,7 @@ export const useCreateFile = ({
       setTimeout(async () => {
         console.log(projectID, discipline);
         await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
-      }, 2000);
+      }, 3000);
     },
     onError: (error) => {
       open(error.toString());
@@ -260,48 +205,6 @@ export const useGetFileMetadata = (fileID: string) => {
     queryFn: () => getFileMetadata(fileID),
     refetchOnWindowFocus: false,
     staleTime: Infinity,
-  });
-};
-
-export const useCreateFileReviewRequest = (file) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createFileReviewRequest,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
-      await queryClient.invalidateQueries([
-        `project-${file.metadata.projeto._id}-${file.metadata.disciplina}-files`,
-      ]);
-    },
-  });
-};
-
-export const useCancelFileReviewRequest = (file) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: cancelFileReviewRequest,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
-      await queryClient.invalidateQueries([
-        `project-${file.metadata.projeto._id}-${file.metadata.disciplina}-files`,
-      ]);
-    },
-  });
-};
-
-export const useEditFileReviewRequest = (file) => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: editFileReviewRequest,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries([`file-${file._id}-metadata`]);
-      await queryClient.invalidateQueries([
-        `project-${file.metadata.projeto._id}-${file.metadata.disciplina}-files`,
-      ]);
-    },
   });
 };
 

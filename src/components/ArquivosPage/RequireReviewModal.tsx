@@ -1,4 +1,4 @@
-import { useCreateFileReviewRequest } from "@/hooks/arquivos";
+import { useCreateFileRevisionRequest } from "@/hooks/revisoes";
 import { useGetFuncionarios, useGetUsers } from "@/hooks/user";
 import {
     Button,
@@ -25,7 +25,7 @@ export default function RequireReviewModal({ handleClose, isOpen, file }: any) {
     });
     const [texto, setTexto] = useState("");
 
-    const { mutate: createFileReviewRequest } = useCreateFileReviewRequest(file);
+    const { mutate: createFileReviewRequest } = useCreateFileRevisionRequest(file);
 
     function setUser(userName: string) {
         const user = users.find((user: any) => user.nome === userName);

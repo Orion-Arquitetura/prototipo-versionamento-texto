@@ -1,13 +1,14 @@
-import { FormEvent, useContext, useState } from "react";
-import { useDropzone } from "react-dropzone";
+import { FormEvent, useCallback, useContext, useEffect, useState } from "react";
+import { useDropzone, FileWithPath } from "react-dropzone";
 import { Grid, Paper, Modal, Button, Typography, TextField, Box } from "@mui/material";
 import { useCreateFile } from "@/hooks/arquivos";
 import DisciplinesSelect from "./Selects/DisciplineSelect";
 import EtapaDoProjetoSelect from "./Selects/EtapaDoProjetoSelect";
 import FileUploadInput from "./FileUploadInput";
 import TipoDeDocumentoSelect from "./Selects2/TipoDeDocumentoSelect";
-import { BarLoader } from "react-spinners";
+import { LinearProgress } from "@mui/material";
 import { DialogModalContext } from "@/context/DialogModalContext";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AddFileModal({ open, handleClose, project }: any) {
   const [fileFilters, setFileFilters] = useState({
@@ -29,6 +30,8 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     discipline: fileFilters.disciplina,
   });
 
+  const queryClient = useQueryClient();
+
   async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true)
@@ -39,18 +42,27 @@ export default function AddFileModal({ open, handleClose, project }: any) {
       return
     }
 
-    if (acceptedFiles[0].path.match(/\.pdf$/)) {
+    if ((acceptedFiles[0] as FileWithPath).path!.match(/\.pdf$/)) {
       const formData = new FormData();
       formData.append("arquivo", acceptedFiles[0]);
       formData.append("fileFilters", JSON.stringify(fileFilters));
       formData.append("numeroPrancha", numeroPrancha)
       formData.append("projectId", project._id);
-      createFile({ fileData: formData });
+
+      setLoading(true)
+
+      createFile({ fileData: formData })
+      
       setTimeout(() => {
-        handleClose()
         setLoading(false)
-        acceptedFiles.pop();
-      }, 2000)
+        setFileFilters({
+          tipoDeDocumento: "",
+          disciplina: "",
+          etapaDoProjeto: "",
+        })
+        setNumeroPrancha("")
+        handleClose()
+      }, 3000)
       return;
     }
 
@@ -170,7 +182,7 @@ export default function AddFileModal({ open, handleClose, project }: any) {
         </form>}
         {loading && (
           <Box sx={{ height: "40vh", display: "grid", placeItems: "center" }}>
-            <BarLoader />
+            <LinearProgress sx={{ width: "100%" }} />
           </Box>
         )}
       </Paper>

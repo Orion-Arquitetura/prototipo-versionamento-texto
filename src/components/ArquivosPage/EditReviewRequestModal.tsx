@@ -1,4 +1,4 @@
-import { useEditFileReviewRequest } from "@/hooks/arquivos";
+import { useEditFileRevisionRequest } from "@/hooks/revisoes";
 import { useGetFuncionarios, useGetUsers } from "@/hooks/user";
 import {
     Button,
@@ -40,7 +40,7 @@ export default function EditReviewModal({ handleClose, isOpen, file }: any) {
 
     const [texto, setTexto] = useState(file.metadata.comentarioRevisao ? file.metadata.comentarioRevisao : "");
 
-    const { mutate: editFileReviewRequest } = useEditFileReviewRequest(file);
+    const { mutate: editFileReviewRequest } = useEditFileRevisionRequest(file);
 
     function setUser(userName: string) {
         const user = users.find((user: any) => user.nome === userName);

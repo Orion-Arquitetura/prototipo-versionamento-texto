@@ -1,7 +1,7 @@
 import { Paper, Typography, Button, Box } from "@mui/material";
 import RequireReviewModal from "./RequireReviewModal";
 import { useState } from "react";
-import { useCancelFileReviewRequest } from "@/hooks/arquivos";
+import { useCancelFileRevisionRequest } from "@/hooks/revisoes";
 import EditReviewModal from "./EditReviewRequestModal";
 import SendReviewedFileModal from "./SendReviewedFileModal";
 
@@ -12,7 +12,7 @@ export default function FileInfoPanel({ file, userData, fileUrl }: any) {
     const [fileEditReviewModalState, setFileEditReviewModalState] = useState(false);
     const [sendReviewdFileModalState, setSendReviewdFileModalState] = useState(false);
 
-    const { mutate: cancelFileRevisionRequest } = useCancelFileReviewRequest(file);
+    const { mutate: cancelFileRevisionRequest } = useCancelFileRevisionRequest(file);
 
     function handleOpenFileReviewModal() {
         setFileReviewModalState(true)
