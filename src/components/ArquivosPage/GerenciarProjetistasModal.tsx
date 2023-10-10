@@ -1,12 +1,11 @@
 import { useGetFuncionarios } from "@/hooks/user";
-import { FuncionarioUser, Projeto } from "@/utils/types";
+import { FuncionarioUser } from "@/utils/types";
 import styled from "@emotion/styled";
-import { Box, Button, Grid, List, ListItem, Modal, Paper, Typography } from "@mui/material";
+import { Button, Grid, List, ListItem, Modal, Paper, Typography } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import PersonRemoveIcon from "@mui/icons-material/PersonRemove";
 import { theme } from "@/theme/theme";
 import { useAddProjetistasToProject, useRemoveProjetistaFromProject } from "@/hooks/projetos";
-import { useQueryClient } from "@tanstack/react-query";
 
 const StyledListItem = styled(ListItem)`
   background-color: ${theme.palette.primary.main};
@@ -32,9 +31,9 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
     const funcionariosDentroDoProjeto: any = [];
 
     funcionarios?.forEach((funcionario: FuncionarioUser) => {
-        const isFuncionarioInsideProject = funcionario.projetos.some(
+        const isFuncionarioInsideProject = funcionario.projetos.length > 0 ? funcionario.projetos.some(
             (projetoData: any) => projetoData.projeto._id === project._id
-        );
+        ) : false
 
         if (isFuncionarioInsideProject) {
             if (project.usuarios.lider?._id === funcionario._id) {

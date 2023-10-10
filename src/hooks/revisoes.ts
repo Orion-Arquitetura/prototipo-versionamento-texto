@@ -26,7 +26,7 @@ const createFileRevisionRequest = async ({ file, usuario, prazo, texto }: any) =
     }/revisoes/createFileRevisionRequest`,
     {
       method: "POST",
-      body: JSON.stringify({ file, usuario, prazo, texto }),
+      body: JSON.stringify({ project: file.metadata.projeto, file, usuario, prazo, texto }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -44,7 +44,7 @@ const cancelFileRevisionRequest = async (file: any) => {
     }/revisoes/cancelFileRevisionRequest`,
     {
       method: "DELETE",
-      body: JSON.stringify(file),
+      body: JSON.stringify({ project: file.metadata.projeto, file }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -54,7 +54,6 @@ const cancelFileRevisionRequest = async (file: any) => {
 };
 
 const editFileRevisionRequest = async ({ file, usuario, prazo, texto }: any) => {
-  console.log({ file, usuario, prazo, texto });
   await fetch(
     `${
       process.env.NODE_ENV === "development"
@@ -63,7 +62,7 @@ const editFileRevisionRequest = async ({ file, usuario, prazo, texto }: any) => 
     }/revisoes/editFileRevisionRequest`,
     {
       method: "PATCH",
-      body: JSON.stringify({ file, usuario, prazo, texto }),
+      body: JSON.stringify({ project: file.metadata.projeto, file, usuario, prazo, texto }),
       headers: {
         "Content-Type": "application/json",
       },
@@ -72,7 +71,7 @@ const editFileRevisionRequest = async ({ file, usuario, prazo, texto }: any) => 
   );
 };
 
-////////////////////////////////
+//////////////////// CUSTOM HOOKS AREA /////////////////////////
 
 export const useGetRevisao = (id: string) => {
   return useQuery({

@@ -1,9 +1,9 @@
-import { Button } from "@mui/material";
+import { Button, Tooltip } from "@mui/material";
 import GerenciarProjetistasModal from "./GerenciarProjetistasModal";
 import { useState } from "react";
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
-export default function GerenciarProjetistasButton({project}:any) {
+export default function GerenciarProjetistasButton({ project }: any) {
     const [modalState, setModalState] = useState(false)
 
     function openModal() {
@@ -16,11 +16,13 @@ export default function GerenciarProjetistasButton({project}:any) {
 
     return (
         <>
-            <GerenciarProjetistasModal isOpen={modalState} close={closeModal} project={project}/>
-            <Button onClick={openModal} variant="contained"
-                title="Gerenciar projetistas">
-                <PeopleAltIcon />
-            </Button>
+            <GerenciarProjetistasModal isOpen={modalState} close={closeModal} project={project} />
+            <Tooltip title="Gerenciar projetistas" placement="top">
+                <Button onClick={openModal} variant="contained"
+                    title="Gerenciar projetistas">
+                    <PeopleAltIcon />
+                </Button>
+            </Tooltip>
         </>
     )
 }

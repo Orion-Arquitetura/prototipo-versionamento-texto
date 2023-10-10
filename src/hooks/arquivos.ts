@@ -31,8 +31,12 @@ const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: st
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/arquivos/deleteFile?fileID=${fileID}&projectID=${projectID}`,
+    }/arquivos/deleteFile`,
     {
+      body: JSON.stringify({ projectID, fileID }),
+      headers: {
+        "Content-Type": "application/json"
+      },
       method: "DELETE",
       credentials: "include",
     }

@@ -228,7 +228,7 @@ export const useGetProjects = () => {
 
 export const useGetOneProject = (id: string) => {
   return useQuery({
-    queryKey: ["get-one-project"],
+    queryKey: [`projeto-${id}`],
     queryFn: () => getOneProject(id),
     refetchOnWindowFocus: false,
   });

@@ -36,6 +36,8 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     event.preventDefault();
     setLoading(true)
 
+    console.log(acceptedFiles[0])
+
     if (numeroPrancha.length < 3 || numeroPrancha.length === 0) {
       setLoading(false)
       openWarning("Número da prancha deve conter 3 caracteres.")
@@ -52,7 +54,7 @@ export default function AddFileModal({ open, handleClose, project }: any) {
       setLoading(true)
 
       createFile({ fileData: formData })
-      
+
       setTimeout(() => {
         setLoading(false)
         setFileFilters({

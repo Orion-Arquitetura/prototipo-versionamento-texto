@@ -3,8 +3,9 @@ import Add from "@mui/icons-material/Add";
 import { useState } from "react";
 import { Projeto } from "@/utils/types";
 import AddFileModal from "./AddFileModal";
+import { Tooltip } from "@mui/material";
 
-export default function AddFileButton({project}:{project:Projeto}) {
+export default function AddFileButton({ project }: { project: Projeto }) {
   const [addFileModalState, setAddFileModalState] = useState(false);
 
   function openAddFileModal() {
@@ -17,14 +18,16 @@ export default function AddFileButton({project}:{project:Projeto}) {
 
   return (
     <>
-    <AddFileModal open={addFileModalState} handleClose={closeAddFileModal} project={project} />
-      <Button
-        onClick={openAddFileModal}
-        variant="contained"
-        title="Adicionar primeira versão de arquivo"
-      >
-        <Add />
-      </Button>
+      <AddFileModal open={addFileModalState} handleClose={closeAddFileModal} project={project} />
+      <Tooltip title="Adicionar primeira versão de arquivo" placement="top">
+        <Button
+          onClick={openAddFileModal}
+          variant="contained"
+          title="Adicionar primeira versão de arquivo"
+        >
+          <Add />
+        </Button>
+      </Tooltip>
     </>
   );
 }
