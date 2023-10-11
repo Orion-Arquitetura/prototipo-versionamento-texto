@@ -3,6 +3,7 @@ import { Box, Button, Grid, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
 import OneFileForm from "./OneFileForm";
 import { DialogModalContext } from "@/context/DialogModalContext";
+import { useCreateMultipleFiles } from "@/hooks/arquivos";
 
 type FormDataType = {
     key: number;
@@ -16,6 +17,7 @@ type FormDataType = {
 
 export default function FormsWrapper({ project }) {
     const { open } = useContext(DialogModalContext)
+    const { mutate: createMultipleFiles } = useCreateMultipleFiles(project._id)
 
     const [forms, setForms] = useState<FormDataType[]>([
         {
@@ -31,31 +33,38 @@ export default function FormsWrapper({ project }) {
 
     function checkFormsBeforeSending() {
         const someEmpty = forms.some(f => (f.tipoDeDocumento === "" || f.disciplina === "" || f.etapaDoProjeto === "" || f.numeroPrancha === "" || f.arquivo === null))
-        const pranchaErro = forms.some(f => /^(?![a-z])\d{3}(?!.)/i.test(f.numeroPrancha))
+        const pranchaErro = forms.some(f => !(/^(?![a-z])\d{3}(?!.)/i.test(f.numeroPrancha)))
 
-        if (someEmpty || pranchaErro) {
-            open("Preencha todos os campos corretamente.")
+        if (someEmpty) {
+            throw Error("Preencha todos os campos")
+        }
+        if (pranchaErro) {
+            throw Error("Erro no número de prancha")
         }
     }
 
     function sendForms() {
-        checkFormsBeforeSending()
-        console.log(forms)
-        const formsData = forms.map((f: FormDataType) => {
+        try {
+            checkFormsBeforeSending()
+            console.log(forms)
             const formData = new FormData()
-            formData.append("arquivo", f.arquivo);
-            formData.append("fileFilters", JSON.stringify({
-                tipoDeDocumento: f.tipoDeDocumento,
-                disciplina: f.disciplina,
-                etapaDoProjeto: f.etapaDoProjeto,
-            }));
-            formData.append("numeroPrancha", f.numeroPrancha)
-            formData.append("projectId", project._id);
-        })
 
-        formsData.forEach(fd => {
+            forms.forEach((f: FormDataType, index: number) => {
+                const fileData = {
+                    projectID: project._id,
+                    disciplina: f.disciplina,
+                    etapaDoProjeto: f.etapaDoProjeto,
+                    numeroPrancha: f.numeroPrancha,
+                    tipoDeDocumento: f.tipoDeDocumento
+                };
+                formData.append(`filesData`, JSON.stringify(fileData));
+                formData.append(`files`, f.arquivo as Blob);
+            })
 
-        })
+            createMultipleFiles({ fileData: formData })
+        } catch (e) {
+            open(e.message)
+        }
     }
 
     function addForm() {
@@ -72,7 +81,7 @@ export default function FormsWrapper({ project }) {
                 disciplina: "",
                 etapaDoProjeto: "",
                 numeroPrancha: "",
-                arquivo: "",
+                arquivo: null,
             },
         ]);
     }

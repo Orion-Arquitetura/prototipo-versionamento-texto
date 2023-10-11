@@ -25,6 +25,29 @@ const createFile = async ({ fileData }: { fileData: any }) => {
   }
 };
 
+const createMultipleFiles = async ({ fileData }: { fileData: any }) => {
+  try {
+    const resposta = await fetch(
+      `${
+        process.env.NODE_ENV === "development"
+          ? "http://localhost:4000"
+          : "https://orion-code-backend.onrender.com"
+      }/arquivos/createMultipleFiles`,
+      {
+        method: "POST",
+        body: fileData,
+        credentials: "include",
+      }
+    ).then((result) => result.json());
+
+    if (resposta.error) {
+      throw Error(resposta.message);
+    }
+  } catch (e) {
+    throw e;
+  }
+};
+
 const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: string }) => {
   await fetch(
     `${
@@ -35,7 +58,7 @@ const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: st
     {
       body: JSON.stringify({ projectID, fileID }),
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       method: "DELETE",
       credentials: "include",
@@ -145,6 +168,23 @@ export const useCreateFile = ({
     },
     onError: (error) => {
       open(error.toString());
+    },
+  });
+};
+
+export const useCreateMultipleFiles = (projectID: string) => {
+  const queryClient = useQueryClient();
+  const { open } = useContext(DialogModalContext);
+
+  return useMutation({
+    mutationFn: createMultipleFiles,
+    onSuccess: async () => {
+      setTimeout(async () => {
+        // await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
+      }, 3000);
+    },
+    onError: (error: any) => {
+      open(`${error.message} Nenhum arquivo dos enviados foi salvo no banco de dados.`);
     },
   });
 };
