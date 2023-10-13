@@ -17,8 +17,8 @@ const createFile = async ({ fileData }: { fileData: any }) => {
       }
     ).then((result) => result.json());
 
-    if (resposta.Erro) {
-      throw new Error(resposta.Erro);
+    if (resposta.error) {
+      throw Error(resposta.message);
     }
   } catch (e) {
     throw e;
@@ -162,12 +162,12 @@ export const useCreateFile = ({
     mutationFn: createFile,
     onSuccess: async () => {
       setTimeout(async () => {
-        console.log(projectID, discipline);
         await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
       }, 3000);
     },
     onError: (error) => {
-      open(error.toString());
+      console.log(error)
+      open(error.message);
     },
   });
 };
