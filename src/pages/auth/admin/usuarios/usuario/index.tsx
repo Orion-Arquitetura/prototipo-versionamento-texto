@@ -23,8 +23,8 @@ const StyledSwitch = styled(Switch)`
   }
 `;
 
-export default function Usuario({ id, type }: { id: string; type: string }) {
-  const { data: usuario, isLoading } = useGetOneUser({ id, type });
+export default function Usuario({ id }: { id: string }) {
+  const { data: usuario, isLoading } = useGetOneUser({ id });
   const [tipoTarefas, setTipoTarefas] = useState("emAndamento");
   const [deleteUserModalState, setDeleteUserModalState] = useState(false);
 
@@ -160,7 +160,7 @@ export default function Usuario({ id, type }: { id: string; type: string }) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { id, type } = context.query;
+  const { id } = context.query;
 
   const cookies = parseCookies(context);
 
@@ -176,7 +176,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       id,
-      type,
     },
   };
 }

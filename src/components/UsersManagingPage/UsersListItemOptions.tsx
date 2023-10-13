@@ -1,5 +1,3 @@
-import { useDeleteUser } from "@/hooks/user";
-import projetos from "@/pages/auth/projetos";
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -51,7 +49,7 @@ export default function UsersListItemOptions({ user }: { user: User }) {
           <Link
             href={{
               pathname: `/auth/admin/usuarios/usuario`,
-              query: { id: user._id, type: user.tipo },
+              query: { id: user._id },
             }}
             style={{ padding: "8px", paddingLeft: "16px", width: "100%" }}
           >

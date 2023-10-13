@@ -14,13 +14,13 @@ const getUsers = async () => {
   return users;
 };
 
-const getOneUser = async ({ id, type }) => {
+const getOneUser = async ({ id }) => {
   const user = await fetch(
     `${
       process.env.NODE_ENV === "development"
         ? "http://localhost:4000"
         : "https://orion-code-backend.onrender.com"
-    }/users/getOneUser?id=${id}&type=${type}`,
+    }/users/getOneUser?id=${id}`,
     {
       credentials: "include",
     }
@@ -172,10 +172,10 @@ export const useGetUsers = () => {
   });
 };
 
-export const useGetOneUser = ({ id, type }) => {
+export const useGetOneUser = ({ id }) => {
   return useQuery({
     queryKey: ["get-one-user"],
-    queryFn: () => getOneUser({ id, type }),
+    queryFn: () => getOneUser({ id }),
   });
 };
 
