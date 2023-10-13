@@ -1,5 +1,5 @@
 import { useGetFuncionarios } from "@/hooks/user";
-import { FuncionarioUser } from "@/utils/types";
+import { User } from "@/utils/types";
 import styled from "@emotion/styled";
 import { Button, Grid, List, ListItem, Modal, Paper, Typography } from "@mui/material";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
@@ -30,7 +30,7 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
     const funcionariosForaDoProjeto: any = [];
     const funcionariosDentroDoProjeto: any = [];
 
-    funcionarios?.forEach((funcionario: FuncionarioUser) => {
+    funcionarios?.forEach((funcionario: User) => {
         const isFuncionarioInsideProject = funcionario.projetos.length > 0 ? funcionario.projetos.some(
             (projetoData: any) => projetoData.projeto._id === project._id
         ) : false
@@ -70,7 +70,7 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
                         </Grid>
                         <Grid item>
                             <List>
-                                {funcionariosDentroDoProjeto.map((f) => (
+                                {funcionariosDentroDoProjeto.map((f: User) => (
                                     <StyledListItem key={f.nome}>
                                         {f.nome}{" "}
                                         <Button onClick={() => remove({ nome: f.nome, id: f._id })}>
@@ -86,7 +86,7 @@ export default function GerenciarProjetistasModal({ close, isOpen, project }: an
                         </Grid>
                         <Grid item>
                             <List>
-                                {funcionariosForaDoProjeto.map((f) => (
+                                {funcionariosForaDoProjeto.map((f: User) => (
                                     <StyledListItem key={f.nome}>
                                         {f.nome}
                                         <Button onClick={() => add({ nome: f.nome, id: f._id })}>

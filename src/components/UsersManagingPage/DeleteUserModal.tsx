@@ -1,5 +1,5 @@
 import { useDeleteUser } from "@/hooks/user";
-import { ClienteUser, FuncionarioUser } from "@/utils/types";
+import { User } from "@/utils/types";
 import { Box, Button, Modal, Paper, Typography } from "@mui/material";
 import Router from "next/router";
 
@@ -10,7 +10,7 @@ export default function DeleteUserModal({
 }: {
   open: boolean;
   handleClose: () => void;
-  user: ClienteUser | FuncionarioUser;
+  user: User;
 }) {
   const { mutate: deleteUser } = useDeleteUser();
 

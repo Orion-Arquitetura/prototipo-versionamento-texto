@@ -1,47 +1,15 @@
-export type FuncionarioUser = {
+export type User = {
   _id: string;
   nome: string;
   email: string;
-  tipo: "funcionario" | "administrador";
+  tipo: "funcionario" | "administrador" | "cliente";
   projetos: {
     projeto: Projeto;
     roles: Array<"projetista" | "lider" | "funcionario">;
   }[];
-  tarefas: {
-    concluidas: [
-      {
-        arquivo: {
-          nome: string;
-          id: string;
-        };
-        prazo: string;
-        dataRequerimento: string;
-        dataConclusao: string;
-        projeto: {
-          nome: string;
-          id: string;
-        };
-        textoRequerimento: string;
-        textoResposta: string;
-      }
-    ];
-    emAndamento: [
-      {
-        arquivo: {
-          nome: string;
-          id: string;
-        };
-        dataRequerimento: string;
-        prazo: string;
-        projeto: {
-          nome: string;
-          id: string;
-        };
-        textoRequerimento: string;
-      }
-    ];
-  };
-  dataCriacao: string;
+  tarefas: string[]
+  createdAt: string;
+  updatedAt: string
 };
 
 export type ClienteUser = {

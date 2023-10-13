@@ -1,6 +1,6 @@
 import { useAddClientesToProject } from "@/hooks/projetos";
 import { useGetClientes, useGetUsers } from "@/hooks/user";
-import { Projeto, ClienteUser } from "@/utils/types";
+import { Projeto, User } from "@/utils/types";
 import { Button, Checkbox, FormControlLabel, FormGroup, Modal, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 
@@ -38,7 +38,7 @@ export default function AddClientesToProjectModal({
         }
     }
 
-    const availableUsers = (users && users.filter((user: ClienteUser) =>  !user.projetos.some(projetoData => projetoData.projeto.nome === project.nome))) || []
+    const availableUsers = (users && users.filter((user: User) =>  !user.projetos.some(projetoData => projetoData.projeto.nome === project.nome))) || []
 
     function handleAddClientesToProject() {
         addClientesToProject({ projectID: project._id, users: usuariosSelecionados })
@@ -57,7 +57,7 @@ export default function AddClientesToProjectModal({
                 <Typography variant="h6">Adicionar clientes - {project.nome}</Typography>
                 <FormGroup onChange={(ev) => adicionarOuRemoverUsuariosDoState((ev.target as HTMLInputElement).value)}>
                     {
-                        availableUsers.map((user: ClienteUser) => (
+                        availableUsers.map((user: User) => (
                             <FormControlLabel
                                 key={user._id}
                                 control={

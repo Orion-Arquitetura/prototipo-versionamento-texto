@@ -1,6 +1,6 @@
 import { useCreateProject } from "@/hooks/projetos";
 import { useGetUsers } from "@/hooks/user";
-import { ClienteUser, FuncionarioUser } from "@/utils/types";
+import { ClienteUser, User } from "@/utils/types";
 import {
     Modal,
     Paper,
@@ -44,7 +44,7 @@ export default function AddProjectModal({
     const { open: openWarning } = useContext(DialogModalContext)
 
     const funcionarios = users?.filter(
-        (user: FuncionarioUser) => user.tipo === "funcionario"
+        (user: User) => user.tipo === "funcionario"
     );
 
     function setNome(value: string) {
@@ -186,7 +186,7 @@ export default function AddProjectModal({
                                     onChange={(ev) => setLider(ev.target.value)}
                                 >
                                     {!isLoading &&
-                                        funcionarios.map((funcionario: FuncionarioUser) => {
+                                        funcionarios.map((funcionario: User) => {
                                             if (projectData.projetista?.id === funcionario._id) {
                                                 return null
                                             }
@@ -215,7 +215,7 @@ export default function AddProjectModal({
                                     onChange={(ev) => setProjetista(ev.target.value)}
                                 >
                                     {!isLoading &&
-                                        funcionarios.map((funcionario: FuncionarioUser) => {
+                                        funcionarios.map((funcionario: User) => {
                                             if (projectData.lider?.id === funcionario._id) {
                                                 return null
                                             }

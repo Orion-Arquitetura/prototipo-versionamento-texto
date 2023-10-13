@@ -1,6 +1,6 @@
 import { useAddProjetistasToProject } from "@/hooks/projetos";
 import { useGetFuncionarios } from "@/hooks/user";
-import { Projeto, FuncionarioUser } from "@/utils/types";
+import { Projeto, User } from "@/utils/types";
 import {
     Button,
     Checkbox,
@@ -50,7 +50,7 @@ export default function AddProjetistasToProjectModal({
         }
     }
 
-    const availableUsers = (users && users?.filter((user: FuncionarioUser) => !user.projetos.some(projetoData => projetoData.projeto.nome === project.nome))) || []
+    const availableUsers = (users && users?.filter((user: User) => !user.projetos.some(projetoData => projetoData.projeto.nome === project.nome))) || []
 
     function handleAddProjetistasToProject() {
         addProjetistasToProject({ project, users: usuariosSelecionados });
@@ -81,7 +81,7 @@ export default function AddProjetistasToProjectModal({
                         )
                     }
                 >
-                    {availableUsers.map((user: FuncionarioUser) => (
+                    {availableUsers.map((user: User) => (
                         <FormControlLabel
                             key={user._id}
                             control={

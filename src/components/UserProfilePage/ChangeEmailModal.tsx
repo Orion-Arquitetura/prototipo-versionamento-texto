@@ -1,4 +1,4 @@
-import { ClienteUser, FuncionarioUser } from "@/utils/types";
+import { User } from "@/utils/types";
 import { Box, Button, Modal, Paper, TextField, Typography } from "@mui/material";
 import { useState, useContext } from "react";
 import { useChangeUserEmail } from "@/hooks/user";
@@ -12,11 +12,11 @@ export default function ChangeEmailModal({
 }: {
     open: boolean;
     handleClose: () => void;
-    user: ClienteUser | FuncionarioUser;
+    user: User;
 }) {
     const [newEmail, setNewEmail] = useState("")
     const { mutate: changeEmail } = useChangeUserEmail()
-    const { open:openWarning } = useContext(DialogModalContext)
+    const { open: openWarning } = useContext(DialogModalContext)
 
     function cancelSubmit() {
         setNewEmail("")

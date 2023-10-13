@@ -1,4 +1,4 @@
-import { ClienteUser, FuncionarioUser } from "@/utils/types";
+import { User } from "@/utils/types";
 import { Box, Button, Modal, Paper, TextField, Typography } from "@mui/material";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -13,7 +13,7 @@ export default function ChangePasswordModal({
 }: {
     open: boolean;
     handleClose: () => void;
-    user: ClienteUser | FuncionarioUser;
+    user: User;
 }) {
     const [visible, setVisibility] = useState(false)
     const [newPassword, setNewPassword] = useState("")

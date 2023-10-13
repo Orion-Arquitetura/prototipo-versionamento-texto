@@ -4,10 +4,10 @@ import { Button, Menu, MenuItem, Typography } from "@mui/material";
 import Link from "next/link";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useState } from "react";
-import { FuncionarioUser, ClienteUser } from "@/utils/types";
+import { User } from "@/utils/types";
 import DeleteUserModal from "./DeleteUserModal";
 
-export default function UsersListItemOptions({ user }: { user: FuncionarioUser | ClienteUser }) {
+export default function UsersListItemOptions({ user }: { user: User }) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
