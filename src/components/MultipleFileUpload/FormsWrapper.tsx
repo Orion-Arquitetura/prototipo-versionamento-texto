@@ -34,6 +34,25 @@ export default function FormsWrapper({ project }: { project: any }) {
     function checkFormsBeforeSending() {
         const someEmpty = forms.some(f => (f.tipoDeDocumento === "" || f.disciplina === "" || f.etapaDoProjeto === "" || f.numeroPrancha === "" || f.arquivo === null))
         const pranchaErro = forms.some(f => !(/^(?![a-z])\d{3}(?!.)/i.test(f.numeroPrancha)))
+        let someDuplicate: undefined | FormDataType;
+
+        forms.forEach((f, index1) => {
+            forms.find((f2, index2) => {
+                if ((f.tipoDeDocumento === f2.tipoDeDocumento) && (f.disciplina === f2.disciplina) && (f.etapaDoProjeto === f2.etapaDoProjeto) && (f.numeroPrancha === f2.numeroPrancha) && (index1 !== index2)) {
+                    someDuplicate = f2
+                    return true
+                }
+            })
+        })
+
+        if (someDuplicate) {
+            console.log(someDuplicate)
+            throw Error(`Você está tentando enviar mais de um item do tipo:
+            Numero de prancha: ${someDuplicate.numeroPrancha}
+            Tipo de documento: ${someDuplicate.tipoDeDocumento}
+            Disciplina: ${someDuplicate.disciplina}
+            Etapa do projeto: ${someDuplicate.etapaDoProjeto}`)
+        }
 
         if (someEmpty) {
             throw Error("Preencha todos os campos")
