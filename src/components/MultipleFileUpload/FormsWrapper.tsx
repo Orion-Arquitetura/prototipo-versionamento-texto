@@ -15,7 +15,7 @@ type FormDataType = {
     arquivo: File | null;
 };
 
-export default function FormsWrapper({ project }) {
+export default function FormsWrapper({ project }: { project: any }) {
     const { open } = useContext(DialogModalContext)
     const { mutate: createMultipleFiles } = useCreateMultipleFiles(project._id)
 
