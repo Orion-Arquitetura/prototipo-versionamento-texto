@@ -13,7 +13,6 @@ const ListStyles = {
     backgroundColor: "rgba(0,0,0,0)"
 }
 
-
 export default function UsersList() {
     const { data: users, isLoading } = useGetUsers();
     const [filters, setFilters] = useState({
