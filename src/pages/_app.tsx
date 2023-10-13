@@ -8,7 +8,7 @@ import Head from 'next/head';
 import AuthContextProvider from '@/context/AuthContext';
 import DialogModalContextProvider from '@/context/DialogModalContext';
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false } } });
+const queryClient = new QueryClient({ defaultOptions: { queries: { refetchOnWindowFocus: false, retry: false } } });
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
