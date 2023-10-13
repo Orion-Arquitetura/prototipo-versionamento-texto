@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { useGetOneProject } from "@/hooks/projetos";
-import { Container, Paper } from "@mui/material";
+import { Container, Paper, Typography } from "@mui/material";
 import PageTitle from "@/components/PageTitle";
 import FormsWrapper from "@/components/MultipleFileUpload/FormsWrapper";
 import { theme } from "@/theme/theme";
@@ -15,7 +15,8 @@ export default function AddFiles({ id }) {
         <Container sx={{ pb: 20 }}>
             <PageTitle title={isLoading ? "Carregando..." : `Adicionar múltiplos arquivos ao projeto ${projeto.nome}`} hasBackButton />
             <Paper elevation={8} sx={{ backgroundColor: theme.palette.secondary.light, p: 2 }}>
-                <FormsWrapper project={projeto} />
+                {isLoading && <Typography>Carregando...</Typography>}
+                {!isLoading && <FormsWrapper project={projeto} />}
             </Paper>
         </Container>
     )
