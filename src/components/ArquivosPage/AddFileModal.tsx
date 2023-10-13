@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import { useDropzone, FileWithPath } from "react-dropzone";
 import { Grid, Paper, Modal, Button, Typography, TextField, Box } from "@mui/material";
 import { useCreateFile } from "@/hooks/arquivos";
@@ -29,8 +29,6 @@ export default function AddFileModal({ open, handleClose, project }: any) {
     projectID: project._id,
     discipline: fileFilters.disciplina,
   });
-
-  const queryClient = useQueryClient();
 
   async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();

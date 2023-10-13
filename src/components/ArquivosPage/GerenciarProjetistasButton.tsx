@@ -18,8 +18,7 @@ export default function GerenciarProjetistasButton({ project }: any) {
         <>
             <GerenciarProjetistasModal isOpen={modalState} close={closeModal} project={project} />
             <Tooltip title="Gerenciar projetistas" placement="top">
-                <Button onClick={openModal} variant="contained"
-                    title="Gerenciar projetistas">
+                <Button onClick={openModal} variant="contained">
                     <PeopleAltIcon />
                 </Button>
             </Tooltip>
