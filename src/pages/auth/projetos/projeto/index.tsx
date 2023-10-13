@@ -10,8 +10,17 @@ import { useState } from "react";
 
 
 export default function Projeto({ projectID, tipoDeUsuarioAcessando, idUsuarioAcessando }: { projectID: string, tipoDeUsuarioAcessando: string, idUsuarioAcessando: string }) {
-    const { data: project, isLoading: isLoadingProject } = useGetOneProject(projectID);
+    const { data: project, isLoading: isLoadingProject, isError } = useGetOneProject(projectID);
     const [selectedDiscipline, setSelectedDiscipline] = useState({ nome: "", sigla: "" })
+
+    if (isError) {
+        return (
+            <Container sx={{ mt: 2 }}>
+                <PageTitle title="Voltar" hasBackButton />
+                <Paper sx={{ p: 2 }}>Projeto não existe.</Paper>
+            </Container>
+        )
+    }
 
     return (
         <Container sx={{ mt: 2 }}>
