@@ -4,6 +4,7 @@ import { useContext, useState } from "react";
 import OneFileForm from "./OneFileForm";
 import { DialogModalContext } from "@/context/DialogModalContext";
 import { useCreateMultipleFiles } from "@/hooks/arquivos";
+import LoadingUploadModal from "./LoadingUploadModal";
 
 type FormDataType = {
     key: number;
@@ -18,6 +19,7 @@ type FormDataType = {
 export default function FormsWrapper({ project }: { project: any }) {
     const { open } = useContext(DialogModalContext)
     const { mutate: createMultipleFiles } = useCreateMultipleFiles(project._id)
+    const [loadingUpload, setLoadingUpload] = useState(false)
 
     const [forms, setForms] = useState<FormDataType[]>([
         {
@@ -64,8 +66,14 @@ export default function FormsWrapper({ project }: { project: any }) {
 
     function sendForms() {
         try {
+            setLoadingUpload(true)
+
+            setTimeout(() => {
+                setLoadingUpload(false)
+            }, 2999)
+
             checkFormsBeforeSending()
-            console.log(forms)
+
             const formData = new FormData()
 
             forms.forEach((f: FormDataType, index: number) => {
@@ -81,7 +89,9 @@ export default function FormsWrapper({ project }: { project: any }) {
             })
 
             createMultipleFiles({ fileData: formData })
+
         } catch (e) {
+            setLoadingUpload(false)
             open(e.message)
         }
     }
@@ -178,6 +188,7 @@ export default function FormsWrapper({ project }: { project: any }) {
 
     return (
         <Box>
+            <LoadingUploadModal close={() => setLoadingUpload(false)} loadingUpload={loadingUpload} />
             <Grid container rowGap={2} alignItems={"center"} justifyContent={"space-between"}>
                 {forms.map((form) => (
                     <OneFileForm

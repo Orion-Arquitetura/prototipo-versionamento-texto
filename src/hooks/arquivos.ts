@@ -179,9 +179,7 @@ export const useCreateMultipleFiles = (projectID: string) => {
   return useMutation({
     mutationFn: createMultipleFiles,
     onSuccess: async () => {
-      setTimeout(async () => {
-        // await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
-      }, 3000);
+      open("Arquivos criados com sucesso.")
     },
     onError: (error: any) => {
       open(`${error.message} Nenhum arquivo dos enviados foi salvo no banco de dados.`);
