@@ -1,6 +1,6 @@
 import { DialogModalContext } from "@/context/DialogModalContext";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 
 const createFile = async ({ fileData }: { fileData: any }) => {
   try {
@@ -25,28 +25,28 @@ const createFile = async ({ fileData }: { fileData: any }) => {
   }
 };
 
-const createMultipleFiles = async ({ fileData }: { fileData: any }) => {
-  try {
-    const resposta = await fetch(
-      `${
-        process.env.NODE_ENV === "development"
-          ? "http://localhost:4000"
-          : "https://orion-code-backend.onrender.com"
-      }/arquivos/createMultipleFiles`,
-      {
-        method: "POST",
-        body: fileData,
-        credentials: "include",
-      }
-    ).then((result) => result.json());
+// const createOneFile = async (data: any) => {
+//   try {
+//     const resposta = await fetch(
+//       `${
+//         process.env.NODE_ENV === "development"
+//           ? "http://localhost:4000"
+//           : "https://orion-code-backend.onrender.com"
+//       }/arquivos/createOneFile`,
+//       {
+//         method: "POST",
+//         body: data,
+//         credentials: "include",
+//       }
+//     ).then((result) => result.json());
 
-    if (resposta.error) {
-      throw Error(resposta.message);
-    }
-  } catch (e) {
-    throw e;
-  }
-};
+//     if (resposta.error) {
+//       throw Error(resposta.message);
+//     }
+//   } catch (e) {
+//     throw e;
+//   }
+// };
 
 const deleteFile = async ({ fileID, projectID }: { fileID: string; projectID: string }) => {
   await fetch(
@@ -151,9 +151,11 @@ const createNewFileFromRevision = async ({ fileData }: any) => {
 export const useCreateFile = ({
   projectID,
   discipline,
+  finish,
 }: {
   projectID: string;
   discipline: string;
+  finish: () => void;
 }) => {
   const queryClient = useQueryClient();
   const { open } = useContext(DialogModalContext);
@@ -161,48 +163,41 @@ export const useCreateFile = ({
   return useMutation({
     mutationFn: createFile,
     onSuccess: async () => {
-      setTimeout(async () => {
-        await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
-      }, 3000);
+      finish();
+      await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
     },
     onError: (error) => {
-      console.log(error)
+      console.log(error);
       open(error.message);
     },
   });
 };
 
-export const useCreateMultipleFiles = (projectID: string) => {
-  const queryClient = useQueryClient();
-  const { open } = useContext(DialogModalContext);
+// export const useCreateOneFile = (projectID: string) => {
+//   const queryClient = useQueryClient();
+//   const { open } = useContext(DialogModalContext);
 
-  return useMutation({
-    mutationFn: createMultipleFiles,
-    onSuccess: async () => {
-      open("Arquivos criados com sucesso.")
-    },
-    onError: (error: any) => {
-      open(`${error.message} Nenhum arquivo dos enviados foi salvo no banco de dados.`);
-    },
-  });
-};
+//   return useMutation({
+//     mutationFn: createOneFile,
+//   });
+// };
 
-export const useDeleteFile = ({
-  projectID,
-  discipline,
-}: {
-  projectID: string;
-  discipline: string;
-}) => {
-  const queryClient = useQueryClient();
+// export const useDeleteFile = ({
+//   projectID,
+//   discipline,
+// }: {
+//   projectID: string;
+//   discipline: string;
+// }) => {
+//   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: deleteFile,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
-    },
-  });
-};
+//   return useMutation({
+//     mutationFn: deleteFile,
+//     onSuccess: async () => {
+//       await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
+//     },
+//   });
+// };
 
 export const useGetProjectFiles = (projectID: string) => {
   return useQuery({

@@ -1,4 +1,4 @@
-import { Box, Grid, IconButton, Paper, TextField, Tooltip, Typography } from "@mui/material";
+import { Box, Grid, IconButton, LinearProgress, Paper, TextField, Tooltip, Typography } from "@mui/material";
 import EtapaDoProjetoSelect from "../ArquivosPage/Selects2/EtapaDoProjetoSelect";
 import DisciplinesSelect from "../ArquivosPage/Selects2/DisciplineSelect";
 import TipoDeDocumentoSelect from "../ArquivosPage/Selects2/TipoDeDocumentoSelect";
@@ -16,7 +16,8 @@ export default function OneFileForm({
     setEtapaDoProjeto,
     setNumeroPrancha,
     setArquivo,
-    removeForm
+    removeForm,
+    uploadState
 }: {
     index: number;
     tipoDeDocumento: any;
@@ -30,12 +31,41 @@ export default function OneFileForm({
     setNumeroPrancha: any,
     setArquivo: any,
     removeForm: any
+    uploadState: {
+        sent: boolean,
+        error: false | { message: string },
+        isLoading: boolean
+    }
 }) {
 
     function selecionarArquivo() {
         const input = document.getElementById(`fileInput-${index}`) as HTMLInputElement
         console.log(input)
         input.click()
+    }
+
+    if (uploadState.isLoading) {
+        return (
+            <Paper elevation={2} sx={{ p: 2, width: "100%" }} >
+                <LinearProgress />
+            </Paper>
+        )
+    }
+
+    if (uploadState.sent) {
+        return (
+            <Paper elevation={2} sx={{ p: 2, width: "100%" }} >
+                <Typography>Upload realizado com sucesso.</Typography>
+            </Paper>
+        )
+    }
+
+    if (uploadState.error) {
+        return (
+            <Paper elevation={2} sx={{ p: 2, width: "100%" }} >
+                <Typography>Erro: {uploadState.error.message} Upload não foi realizado</Typography>
+            </Paper>
+        )
     }
 
     return (

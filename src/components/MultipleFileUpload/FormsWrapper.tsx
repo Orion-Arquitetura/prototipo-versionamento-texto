@@ -3,8 +3,7 @@ import { Box, Button, Grid, Tooltip } from "@mui/material";
 import { useContext, useState } from "react";
 import OneFileForm from "./OneFileForm";
 import { DialogModalContext } from "@/context/DialogModalContext";
-import { useCreateMultipleFiles } from "@/hooks/arquivos";
-import LoadingUploadModal from "./LoadingUploadModal";
+// import { useCreateOneFile } from "@/hooks/arquivos";
 
 type FormDataType = {
     key: number;
@@ -14,12 +13,17 @@ type FormDataType = {
     etapaDoProjeto: string;
     numeroPrancha: string;
     arquivo: File | null;
+    uploadState: {
+        sent: boolean,
+        error: false | { message: string },
+        isLoading: boolean
+    }
+
 };
 
 export default function FormsWrapper({ project }: { project: any }) {
     const { open } = useContext(DialogModalContext)
-    const { mutate: createMultipleFiles } = useCreateMultipleFiles(project._id)
-    const [loadingUpload, setLoadingUpload] = useState(false)
+    // const { mutate: createOneFile } = useCreateOneFile(project._id)
 
     const [forms, setForms] = useState<FormDataType[]>([
         {
@@ -30,6 +34,11 @@ export default function FormsWrapper({ project }: { project: any }) {
             etapaDoProjeto: "",
             numeroPrancha: "",
             arquivo: null,
+            uploadState: {
+                sent: false,
+                error: false,
+                isLoading: false
+            }
         },
     ]);
 
@@ -64,34 +73,80 @@ export default function FormsWrapper({ project }: { project: any }) {
         }
     }
 
-    function sendForms() {
+    async function sendForms() {
         try {
-            setLoadingUpload(true)
-
-            setTimeout(() => {
-                setLoadingUpload(false)
-            }, 2999)
-
             checkFormsBeforeSending()
 
-            const formData = new FormData()
+            setForms((prev) => prev.map(f => {
+                f.uploadState.isLoading = true;
+                return f
+            }))
 
-            forms.forEach((f: FormDataType, index: number) => {
+            const formsData = forms.map((f) => {
+                const formData = new FormData();
                 const fileData = {
                     projectID: project._id,
                     disciplina: f.disciplina,
                     etapaDoProjeto: f.etapaDoProjeto,
                     numeroPrancha: f.numeroPrancha,
-                    tipoDeDocumento: f.tipoDeDocumento
+                    tipoDeDocumento: f.tipoDeDocumento,
                 };
-                formData.append(`filesData`, JSON.stringify(fileData));
-                formData.append(`files`, f.arquivo as Blob);
-            })
+                formData.append(`fileData`, JSON.stringify(fileData));
+                formData.append(`file`, f.arquivo as Blob);
+                return { formData, formIndex: f.index };
+            });
 
-            createMultipleFiles({ fileData: formData })
+            for (const formData of formsData) {
+                await (async () => {
+                    try {
+                        const resposta = await fetch(
+                            `${process.env.NODE_ENV === "development"
+                                ? "http://localhost:4000"
+                                : "https://orion-code-backend.onrender.com"
+                            }/arquivos/createOneFile`,
+                            {
+                                method: "POST",
+                                body: formData.formData,
+                                credentials: "include",
+                            }
+                        ).then((result) => result.json());
+
+                        if (!resposta.error) {
+                            setForms(prev => {
+                                return prev.map(f => {
+                                    if (f.index === formData.formIndex) {
+                                        f.uploadState = {
+                                            error: false,
+                                            isLoading: false,
+                                            sent: true
+                                        }
+                                    }
+                                    return f
+                                })
+                            })
+                        }
+
+                        if (resposta.error) {
+                            setForms(prev => {
+                                return prev.map(f => {
+                                    if (f.index === formData.formIndex) {
+                                        f.uploadState = {
+                                            error: { message: resposta.message },
+                                            isLoading: false,
+                                            sent: false
+                                        }
+                                    }
+                                    return f
+                                })
+                            })
+                        }
+                    } catch (e) {
+                        throw e;
+                    }
+                })()
+            }
 
         } catch (e) {
-            setLoadingUpload(false)
             open(e.message)
         }
     }
@@ -111,6 +166,11 @@ export default function FormsWrapper({ project }: { project: any }) {
                 etapaDoProjeto: "",
                 numeroPrancha: "",
                 arquivo: null,
+                uploadState: {
+                    sent: false,
+                    error: false,
+                    isLoading: false
+                }
             },
         ]);
     }
@@ -188,7 +248,6 @@ export default function FormsWrapper({ project }: { project: any }) {
 
     return (
         <Box>
-            <LoadingUploadModal close={() => setLoadingUpload(false)} loadingUpload={loadingUpload} />
             <Grid container rowGap={2} alignItems={"center"} justifyContent={"space-between"}>
                 {forms.map((form) => (
                     <OneFileForm
@@ -205,6 +264,7 @@ export default function FormsWrapper({ project }: { project: any }) {
                         setNumeroPrancha={setNumeroPrancha}
                         setArquivo={setArquivo}
                         removeForm={removeForm}
+                        uploadState={form.uploadState}
                     />
                 ))}
                 <Grid item xs={true} display="flex" alignItems={"center"} justifyContent={"space-between"}>

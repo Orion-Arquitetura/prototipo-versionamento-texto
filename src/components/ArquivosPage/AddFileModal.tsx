@@ -28,6 +28,16 @@ export default function AddFileModal({ open, handleClose, project }: any) {
   const { mutate: createFile } = useCreateFile({
     projectID: project._id,
     discipline: fileFilters.disciplina,
+    finish: () => {
+      setLoading(false)
+      setFileFilters({
+        tipoDeDocumento: "",
+        disciplina: "",
+        etapaDoProjeto: "",
+      })
+      setNumeroPrancha("")
+      handleClose()
+    }
   });
 
   async function submitNewFileData(event: FormEvent<HTMLFormElement>) {
@@ -51,16 +61,6 @@ export default function AddFileModal({ open, handleClose, project }: any) {
 
       createFile({ fileData: formData })
 
-      setTimeout(() => {
-        setLoading(false)
-        setFileFilters({
-          tipoDeDocumento: "",
-          disciplina: "",
-          etapaDoProjeto: "",
-        })
-        setNumeroPrancha("")
-        handleClose()
-      }, 3000)
       return;
     }
 
