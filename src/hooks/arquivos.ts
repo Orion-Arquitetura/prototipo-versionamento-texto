@@ -182,22 +182,22 @@ export const useCreateFile = ({
 //   });
 // };
 
-// export const useDeleteFile = ({
-//   projectID,
-//   discipline,
-// }: {
-//   projectID: string;
-//   discipline: string;
-// }) => {
-//   const queryClient = useQueryClient();
+export const useDeleteFile = ({
+  projectID,
+  discipline,
+}: {
+  projectID: string;
+  discipline: string;
+}) => {
+  const queryClient = useQueryClient();
 
-//   return useMutation({
-//     mutationFn: deleteFile,
-//     onSuccess: async () => {
-//       await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
-//     },
-//   });
-// };
+  return useMutation({
+    mutationFn: deleteFile,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries([`project-${projectID}-${discipline}-files`]);
+    },
+  });
+};
 
 export const useGetProjectFiles = (projectID: string) => {
   return useQuery({
