@@ -163,7 +163,7 @@ export default function Usuario({ id, type }: { id: string, type: string }) {
                                             <Typography>Arquivo revisado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoInicial.id } }}>{tarefa.arquivoInicial.nome}</Link></Typography>
                                             <Typography>Arquivo gerado: <Link style={{ borderBottom: "solid 1px black" }} href={{ pathname: "/auth/arquivo", query: { id: tarefa.arquivoFinal.id } }}>{tarefa.arquivoFinal.nome}</Link></Typography>
                                             <Typography>Prazo para entrega: {tarefa.prazo}</Typography>
-                                            <Typography>Data de conclusão: {formatDate(tarefa.dataFinalizacao)}</Typography>
+                                            <Typography>Data de conclusão: {tarefa.dataFinalizacao}</Typography>
                                             <Button sx={{ mt: 2 }} variant="contained" color="inherit" href={`/auth/revisao?id=${tarefa._id}`} LinkComponent={Link}>Ver detalhes</Button>
                                         </Paper>
                                     )))}
