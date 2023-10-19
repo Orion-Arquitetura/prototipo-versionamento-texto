@@ -23,7 +23,7 @@ export default function AddProjetistasToProjectModal({
 }) {
     const { data: users } = useGetFuncionarios();
 
-    const { mutate: addProjetistasToProject } = useAddProjetistasToProject();
+    const { mutate: addProjetistasToProject } = useAddProjetistasToProject(project._id);
 
     const [usuariosSelecionados, setUsuariosSelecionados] = useState<
         { id: string; nome: string }[]

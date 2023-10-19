@@ -30,7 +30,7 @@ export default function ChangeProjectLiderModal({
   } | null>(null);
 
   const { data: users, isLoading } = useGetFuncionarios();
-  const { mutate: changeProjectLider } = useChangeProjectLider();
+  const { mutate: changeProjectLider } = useChangeProjectLider(project._id);
 
   const projectLider = project.usuarios.lider
 

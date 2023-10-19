@@ -21,9 +21,9 @@ type ProjectUsersType = {
 
 export default function ProjectUsers({ project, tipo }: ProjectUsersType) {
 
-    const { mutate: removeClienteFromProject } = useRemoveClienteFromProject()
-    const { mutate: removeProjetistaFromProject } = useRemoveProjetistaFromProject()
-    const { mutate: removeLiderFromProject } = useRemoveProjectLider()
+    const { mutate: removeClienteFromProject } = useRemoveClienteFromProject(project._id)
+    const { mutate: removeProjetistaFromProject } = useRemoveProjetistaFromProject(project._id)
+    const { mutate: removeLiderFromProject } = useRemoveProjectLider(project._id)
 
     const [changeLiderModalState, setChangeLiderModalState] = useState(false)
 

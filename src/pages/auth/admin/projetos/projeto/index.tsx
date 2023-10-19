@@ -7,11 +7,9 @@ import {
   Button,
   Container,
   Paper,
-  Select,
   Typography,
 } from "@mui/material";
 import { GetServerSidePropsContext } from "next";
-import Router from "next/router";
 import { parseCookies } from "nookies";
 import { useState } from "react";
 
@@ -24,7 +22,6 @@ export default function Projeto({ id }: { id: string }) {
   }
 
   function closeDeleteProjectModal() {
-    console.log(Router.pathname)
     setDeleteProjectModalState(false)
   }
 

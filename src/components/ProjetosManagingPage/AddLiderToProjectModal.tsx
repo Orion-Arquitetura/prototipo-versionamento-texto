@@ -9,7 +9,7 @@ export default function AddLiderToProjectModal({ open, handleClose, project }: {
     const [selectedUser, setSelectedUser] = useState<{ nome: string, _id: string } | null>(null)
 
     const { data: users, isLoading } = useGetFuncionarios()
-    const { mutate: addLiderToProject } = useAddLiderToProject()
+    const { mutate: addLiderToProject } = useAddLiderToProject(project._id)
 
     function handleAddLiderToProject() {
         addLiderToProject({ project, user: selectedUser! })

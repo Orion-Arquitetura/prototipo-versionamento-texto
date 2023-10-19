@@ -252,91 +252,91 @@ export const useDeleteProject = () => {
   });
 };
 
-export const useAddLiderToProject = () => {
+export const useAddLiderToProject = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addLiderToProject,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-funcionarios"]);
     },
   });
 };
 
-export const useAddClientesToProject = () => {
+export const useAddClientesToProject = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addClientesToProject,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-clientes"]);
     },
   });
 };
 
-export const useAddProjetistasToProject = () => {
+export const useAddProjetistasToProject = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addProjetistasToProject,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-funcionarios"]);
     },
   });
 };
 
-export const useRemoveProjectLider = () => {
+export const useRemoveProjectLider = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: removeProjectLider,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-funcionarios"]);
     },
   });
 };
 
-export const useRemoveProjetistaFromProject = () => {
+export const useRemoveProjetistaFromProject = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: removeProjetistaFromProject,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-funcionarios"]);
     },
   });
 };
 
-export const useRemoveClienteFromProject = () => {
+export const useRemoveClienteFromProject = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: removeClienteFromProject,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-clientes"]);
     },
   });
 };
 
-export const useChangeProjectLider = () => {
+export const useChangeProjectLider = (projectID: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: changeProjectLider,
     onSuccess: async () => {
-      await queryClient.invalidateQueries(["get-one-project"]);
+      await queryClient.invalidateQueries([`projeto-${projectID}`]);
       await queryClient.invalidateQueries(["get-users"]);
       await queryClient.invalidateQueries(["get-funcionarios"]);
     },

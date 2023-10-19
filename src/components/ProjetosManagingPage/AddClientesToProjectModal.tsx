@@ -15,7 +15,7 @@ export default function AddClientesToProjectModal({
 }) {
     const { data: users } = useGetClientes();
 
-    const { mutate: addClientesToProject } = useAddClientesToProject()
+    const { mutate: addClientesToProject } = useAddClientesToProject(project._id)
 
     const [usuariosSelecionados, setUsuariosSelecionados] = useState<
         { id: string; nome: string }[]
