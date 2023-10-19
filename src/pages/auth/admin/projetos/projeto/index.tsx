@@ -32,6 +32,17 @@ export default function Projeto({ id }: { id: string }) {
     return null;
   }
 
+  if (projeto.message === "Projeto não existe") {
+    return (
+      <Container sx={{ pb: 5 }}>
+        <PageTitle title="Voltar" hasBackButton />
+        <Paper elevation={8} sx={{ p: 3 }}>
+          <Typography variant="h5">{projeto.message}</Typography>
+        </Paper>
+      </Container>
+    )
+  }
+
   function formatDate(date: string) {
     return date.split("T")[0].split("-").reverse().join("/");
   }
@@ -80,12 +91,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookies = parseCookies(context);
 
   if ((cookies.client_tipo !== "administrador") || (cookies.client_tipo === undefined)) {
-      return {
-          redirect: {
-              destination: "/",
-              permanent: false
-          }
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false
       }
+    }
   }
 
   return {
