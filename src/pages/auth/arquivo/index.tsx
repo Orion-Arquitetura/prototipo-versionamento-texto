@@ -17,7 +17,7 @@ export default function Arquivo({ fileId }: { fileId: string }) {
 
   return (
     <Container sx={{ mt: 2, overflow: "hidden", pb: 10 }}>
-      <PageTitle title={`${file?.filename}${file?.metadata.emRevisao ? " - em revisão" : ""}`} hasBackButton />
+      {isLoadingFile ? <PageTitle title="Carregando..." hasBackButton /> : <PageTitle title={`${file?.filename}${file?.metadata.emRevisao ? " - em revisão" : ""}`} hasBackButton />}
       <Grid
         container
         columnGap={1}
