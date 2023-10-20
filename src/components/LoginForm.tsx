@@ -10,6 +10,7 @@ export default function LoginForm() {
         register,
         handleSubmit,
         formState: { errors },
+        
     } = useForm({});
 
     const { auth, isLoadingUserData } = useContext(AuthContext);
@@ -57,8 +58,8 @@ export default function LoginForm() {
                                         {...register("email", {
                                             required: true,
                                             maxLength: {
-                                                value: 30,
-                                                message: "Máximo 30 caracteres",
+                                                value: 80,
+                                                message: "Máximo 80 caracteres",
                                             },
                                         })}
                                         label="Email"
